@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarCinema_Api", "StarCinema_Api\StarCinema_Api.csproj", "{19911CD2-8C00-4C1B-8D5E-1DB53BCC3564}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19911CD2-8C00-4C1B-8D5E-1DB53BCC3564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19911CD2-8C00-4C1B-8D5E-1DB53BCC3564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19911CD2-8C00-4C1B-8D5E-1DB53BCC3564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19911CD2-8C00-4C1B-8D5E-1DB53BCC3564}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F92E79D-DE4D-4112-AD48-E4B7E02F1A3D}
+	EndGlobalSection
+EndGlobal

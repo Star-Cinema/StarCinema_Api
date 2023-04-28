@@ -24,13 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Entities\" />
-    <Folder Include="Data\Seed\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Helper\" />
-    <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Profiles\" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
-//using StarCinema_Api.Data;
+using StarCinema_Api.Data;
 //using StarCinema_Api.Profiles;
 //using StarCinema_Api.Repositories;
 //using StarCinema_Api.Services;
-//using StarCinema_Api.Data.Seed;
+using StarCinema_Api.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -25,13 +25,13 @@ services.AddCors(o =>
             .AllowAnyHeader()
             .AllowAnyMethod()));
 
-//var connectionString = builder
-//    .Configuration.GetConnectionString("MyDB");
-//services.AddDbContext<MyDbContext>
-//(option =>
-//{
-//    option.UseSqlServer(connectionString);
-//}, ServiceLifetime.Transient);
+var connectionString = builder
+    .Configuration.GetConnectionString("MyDB");
+services.AddDbContext<MyDbContext>
+(option =>
+{
+    option.UseSqlServer(connectionString);
+}, ServiceLifetime.Transient);
 
 
 // Add scoped repository
@@ -98,19 +98,19 @@ var app = builder.Build();
 
 // Add seed data
 
-//using var scope = app.Services.CreateScope();
-//var servicesProvider = scope.ServiceProvider;
-//try
-//{
-//    var context = servicesProvider.GetRequiredService<MyDbContext>();
-//    context.Database.Migrate();
-//    Seed.SeedUsers(context);
-//}
-//catch (Exception e)
-//{
-//    var logger = servicesProvider.GetRequiredService<ILogger<Program>>();
-//    logger.LogError(e, "Migration failed");
-//}
+using var scope = app.Services.CreateScope();
+var servicesProvider = scope.ServiceProvider;
+try
+{
+    var context = servicesProvider.GetRequiredService<MyDbContext>();
+    context.Database.Migrate();
+    Seed.SeedUsers(context);
+}
+catch (Exception e)
+{
+    var logger = servicesProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogError(e, "Migration failed");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

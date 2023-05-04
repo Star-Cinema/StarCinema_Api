@@ -15,5 +15,6 @@ namespace StarCinema_Api.Data.Entities
 
         public virtual User User { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }
+        public virtual List<BookingService> BookingServices { get; set; }
     }
 }

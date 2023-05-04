@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using StarCinema_Api.Services;
+using StarCinema_Api.Repositories;
+using StarCinema_Api.Repositories.ScheduleRepository;
+using StarCinema_Api.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +35,17 @@ services.AddDbContext<MyDbContext>
 (option =>
 {
     option.UseSqlServer(connectionString);
-}, ServiceLifetime.Transient);
+});
 
 
 // Add scoped repository
+services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 
 // Add scoped services
+services.AddScoped<ISchedulesService, SchedulesService>();
 
-
-//services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
+services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

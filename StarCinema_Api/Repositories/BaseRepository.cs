@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarCinema_Api.Data;
 
-namespace InstagramSystem.Repositories
+namespace StarCinema_Api.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {

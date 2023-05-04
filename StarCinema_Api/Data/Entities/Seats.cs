@@ -6,18 +6,18 @@ namespace StarCinema_Api.Data.Entities
     public class Seats
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public int roomId { get; set; }
+        public int RoomId { get; set; }
 
         [DefaultValue(false)]
-        public string isDelete { get; set; }
+        public string IsDelete { get; set; }
 
         public virtual Rooms Room { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }

@@ -24,260 +24,260 @@ namespace StarCinema_Api.Migrations
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingDetail", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("bookingId")
+                    b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("seatId")
+                    b.Property<int>("SeatId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ticketId")
+                    b.Property<int>("TicketId")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("bookingId");
+                    b.HasIndex("BookingId");
 
-                    b.HasIndex("seatId");
+                    b.HasIndex("SeatId");
 
-                    b.HasIndex("ticketId");
+                    b.HasIndex("TicketId");
 
                     b.ToTable("BookingDetails");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("createAt")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Categories", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Films", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Categoryid")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("country")
+                    b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("director")
+                    b.Property<string>("Director")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("duration")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<string>("isDelete")
+                    b.Property<string>("IsDelete")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<string>("producer")
+                    b.Property<string>("Producer")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("release")
+                    b.Property<DateTime>("Release")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Categoryid");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Films");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Images", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("filmId")
+                    b.Property<int>("FilmId")
                         .HasColumnType("int");
 
-                    b.Property<string>("path")
+                    b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("filmId");
+                    b.HasIndex("FilmId");
 
                     b.ToTable("Images");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Role", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Rooms", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("isDelete")
+                    b.Property<string>("IsDelete")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Schedules", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("endTime")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("filmId")
+                    b.Property<int>("FilmId")
                         .HasColumnType("int");
 
-                    b.Property<int>("roomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("startTime")
+                    b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("filmId");
+                    b.HasIndex("FilmId");
 
-                    b.HasIndex("roomId");
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Seats", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("isDelete")
+                    b.Property<string>("IsDelete")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("roomId")
+                    b.Property<int>("RoomId")
                         .HasMaxLength(50)
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("roomId");
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Seats");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Tickets", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("price")
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("scheduleId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("scheduleId")
+                    b.HasIndex("ScheduleId")
                         .IsUnique();
 
                     b.ToTable("Tickets");
@@ -285,12 +285,37 @@ namespace StarCinema_Api.Migrations
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.User", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Dob")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool?>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
@@ -300,45 +325,20 @@ namespace StarCinema_Api.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("avatar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("dob")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool?>("gender")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("isDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isEmailVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("phone")
+                    b.Property<string>("Phone")
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
-                    b.Property<int>("roleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("token")
+                    b.Property<string>("Token")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("roleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("User");
                 });
@@ -347,19 +347,19 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Bookings", "Booking")
                         .WithMany("BookingDetails")
-                        .HasForeignKey("bookingId")
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StarCinema_Api.Data.Entities.Seats", "Seat")
                         .WithMany("BookingDetails")
-                        .HasForeignKey("seatId")
+                        .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StarCinema_Api.Data.Entities.Tickets", "Ticket")
                         .WithMany("BookingDetails")
-                        .HasForeignKey("ticketId")
+                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -374,7 +374,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -385,7 +385,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Categories", "Category")
                         .WithMany("Films")
-                        .HasForeignKey("Categoryid")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -396,7 +396,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Films", "Film")
                         .WithMany("Images")
-                        .HasForeignKey("filmId")
+                        .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -407,13 +407,13 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Films", "Film")
                         .WithMany("Schedules")
-                        .HasForeignKey("filmId")
+                        .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StarCinema_Api.Data.Entities.Rooms", "Room")
                         .WithMany("Schedules")
-                        .HasForeignKey("roomId")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,7 +426,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Rooms", "Room")
                         .WithMany("Seats")
-                        .HasForeignKey("roomId")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -437,7 +437,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Schedules", "Schedule")
                         .WithOne("Ticket")
-                        .HasForeignKey("StarCinema_Api.Data.Entities.Tickets", "scheduleId")
+                        .HasForeignKey("StarCinema_Api.Data.Entities.Tickets", "ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -448,7 +448,7 @@ namespace StarCinema_Api.Migrations
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("roleId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

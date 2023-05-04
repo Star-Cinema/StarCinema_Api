@@ -5,19 +5,19 @@ namespace StarCinema_Api.Data.Entities
     public class Schedules
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public int filmId { get; set; }
+        public int FilmId { get; set; }
 
         [Required]
-        public int roomId { get; set; }
+        public int RoomId { get; set; }
 
         [Required]
-        public DateTime startTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         [Required]
-        public DateTime endTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         public virtual Films Film { get; set; }
 

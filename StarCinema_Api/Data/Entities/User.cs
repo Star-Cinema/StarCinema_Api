@@ -9,35 +9,35 @@ namespace StarCinema_Api.Data.Entities
     {
         [Key]
         [MaxLength(10)]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Required]
         [MaxLength(256)]
         [DataType(DataType.EmailAddress)]
         [EmailAddress]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [MaxLength(256)]
-        public string name { get; set; }
-        public string? avatar { get; set; }
+        public string Name { get; set; }
+        public string? Avatar { get; set; }
         [MaxLength(12)]
         [Phone]
-        public string? phone { get; set; }
-        public DateTime? dob { get; set; }
+        public string? Phone { get; set; }
+        public DateTime? Dob { get; set; }
 
         [DefaultValue(false)]
-        public bool? isDelete { get; set; }
+        public bool? IsDelete { get; set; }
 
         [Required]
         [Range(0, 100)]
-        public int roleId { get; set; }
+        public int RoleId { get; set; }
         [MaxLength(512)]
-        public string? token { get; set; }
+        public string? Token { get; set; }
 
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public bool? gender { get; set; }
-        public bool isEmailVerified { get; set; }
+        public bool? Gender { get; set; }
+        public bool IsEmailVerified { get; set; }
 
         public virtual Role Role { get; set; }
 

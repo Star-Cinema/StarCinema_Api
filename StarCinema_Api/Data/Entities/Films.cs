@@ -6,31 +6,31 @@ namespace StarCinema_Api.Data.Entities
     public class Films
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Required]
         [MaxLength(255)]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [MaxLength(255)]
-        public string producer { get; set; }
+        public string Producer { get; set; }
 
         [MaxLength(255)]
-        public string director { get; set; }
+        public string Director { get; set; }
 
         [Required]
         [Range(1, 1000, ErrorMessage = "Duration must be greater than 0")]
-        public int duration { get; set; }
+        public int Duration { get; set; }
 
         [MaxLength(255)]
-        public string description { get; set; }
+        public string Description { get; set; }
 
         [MaxLength(255)]
-        public string country { get; set; }
+        public string Country { get; set; }
 
-        public DateTime release { get; set; }
+        public DateTime Release { get; set; }
 
         [DefaultValue(false)]
-        public string isDelete { get; set; }
+        public string IsDelete { get; set; }
 
 
         public virtual Categories Category { get; set; }

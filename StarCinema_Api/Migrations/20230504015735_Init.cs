@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarCinema_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class dbInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,13 @@ namespace StarCinema_Api.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,40 +41,40 @@ namespace StarCinema_Api.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    isDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.id);
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Films",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    producer = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    director = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    duration = table.Column<int>(type: "int", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    country = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    release = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    isDelete = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    categoryid = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Producer = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Director = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Release = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Films", x => x.id);
+                    table.PrimaryKey("PK_Films", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Films_Categories_categoryid",
-                        column: x => x.categoryid,
+                        name: "FK_Films_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -82,27 +82,27 @@ namespace StarCinema_Api.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", maxLength: 10, nullable: false)
+                    Id = table.Column<int>(type: "int", maxLength: 10, nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    phone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
-                    dob = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    isDelete = table.Column<bool>(type: "bit", nullable: true),
-                    roleId = table.Column<int>(type: "int", nullable: false),
-                    token = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    gender = table.Column<bool>(type: "bit", nullable: true),
-                    isEmailVerified = table.Column<bool>(type: "bit", nullable: false)
+                    Gender = table.Column<bool>(type: "bit", nullable: true),
+                    IsEmailVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Roles_roleId",
-                        column: x => x.roleId,
+                        name: "FK_User_Roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -112,20 +112,20 @@ namespace StarCinema_Api.Migrations
                 name: "Seats",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    roomId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    isDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RoomId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Seats", x => x.id);
+                    table.PrimaryKey("PK_Seats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Seats_Rooms_roomId",
-                        column: x => x.roomId,
+                        name: "FK_Seats_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -133,19 +133,19 @@ namespace StarCinema_Api.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    filmId = table.Column<int>(type: "int", nullable: false),
-                    path = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FilmId = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Images", x => x.id);
+                    table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Images_Films_filmId",
-                        column: x => x.filmId,
+                        name: "FK_Images_Films_FilmId",
+                        column: x => x.FilmId,
                         principalTable: "Films",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -153,27 +153,27 @@ namespace StarCinema_Api.Migrations
                 name: "Schedules",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    filmId = table.Column<int>(type: "int", nullable: false),
-                    roomId = table.Column<int>(type: "int", nullable: false),
-                    startTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    endTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    FilmId = table.Column<int>(type: "int", nullable: false),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Schedules", x => x.id);
+                    table.PrimaryKey("PK_Schedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Schedules_Films_filmId",
-                        column: x => x.filmId,
+                        name: "FK_Schedules_Films_FilmId",
+                        column: x => x.FilmId,
                         principalTable: "Films",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Schedules_Rooms_roomId",
-                        column: x => x.roomId,
+                        name: "FK_Schedules_Rooms_RoomId",
+                        column: x => x.RoomId,
                         principalTable: "Rooms",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -181,19 +181,19 @@ namespace StarCinema_Api.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    userId = table.Column<int>(type: "int", nullable: false),
-                    createAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookings", x => x.id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookings_User_userId",
-                        column: x => x.userId,
+                        name: "FK_Bookings_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -201,19 +201,19 @@ namespace StarCinema_Api.Migrations
                 name: "Tickets",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    price = table.Column<int>(type: "int", nullable: false),
-                    scheduleId = table.Column<int>(type: "int", nullable: false)
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    ScheduleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tickets", x => x.id);
+                    table.PrimaryKey("PK_Tickets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tickets_Schedules_scheduleId",
-                        column: x => x.scheduleId,
+                        name: "FK_Tickets_Schedules_ScheduleId",
+                        column: x => x.ScheduleId,
                         principalTable: "Schedules",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -221,90 +221,90 @@ namespace StarCinema_Api.Migrations
                 name: "BookingDetails",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    bookingId = table.Column<int>(type: "int", nullable: false),
-                    ticketId = table.Column<int>(type: "int", nullable: false),
-                    seatId = table.Column<int>(type: "int", nullable: false)
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: false),
+                    SeatId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookingDetails", x => x.id);
+                    table.PrimaryKey("PK_BookingDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookingDetails_Bookings_bookingId",
-                        column: x => x.bookingId,
+                        name: "FK_BookingDetails_Bookings_BookingId",
+                        column: x => x.BookingId,
                         principalTable: "Bookings",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookingDetails_Seats_seatId",
-                        column: x => x.seatId,
+                        name: "FK_BookingDetails_Seats_SeatId",
+                        column: x => x.SeatId,
                         principalTable: "Seats",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookingDetails_Tickets_ticketId",
-                        column: x => x.ticketId,
+                        name: "FK_BookingDetails_Tickets_TicketId",
+                        column: x => x.TicketId,
                         principalTable: "Tickets",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookingDetails_bookingId",
+                name: "IX_BookingDetails_BookingId",
                 table: "BookingDetails",
-                column: "bookingId");
+                column: "BookingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookingDetails_seatId",
+                name: "IX_BookingDetails_SeatId",
                 table: "BookingDetails",
-                column: "seatId");
+                column: "SeatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookingDetails_ticketId",
+                name: "IX_BookingDetails_TicketId",
                 table: "BookingDetails",
-                column: "ticketId");
+                column: "TicketId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_userId",
+                name: "IX_Bookings_UserId",
                 table: "Bookings",
-                column: "userId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Films_categoryid",
+                name: "IX_Films_CategoryId",
                 table: "Films",
-                column: "categoryid");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_filmId",
+                name: "IX_Images_FilmId",
                 table: "Images",
-                column: "filmId");
+                column: "FilmId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_filmId",
+                name: "IX_Schedules_FilmId",
                 table: "Schedules",
-                column: "filmId");
+                column: "FilmId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_roomId",
+                name: "IX_Schedules_RoomId",
                 table: "Schedules",
-                column: "roomId");
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Seats_roomId",
+                name: "IX_Seats_RoomId",
                 table: "Seats",
-                column: "roomId");
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_scheduleId",
+                name: "IX_Tickets_ScheduleId",
                 table: "Tickets",
-                column: "scheduleId",
+                column: "ScheduleId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_roleId",
+                name: "IX_User_RoleId",
                 table: "User",
-                column: "roleId");
+                column: "RoleId");
         }
 
         /// <inheritdoc />

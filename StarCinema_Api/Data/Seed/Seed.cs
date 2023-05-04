@@ -13,8 +13,8 @@ namespace StarCinema_Api.Data.Seed
             if (context.Roles.Any()) return;
             List<Role> roles = new List<Role>()
             {
-                new Role() {name="admin"},
-                new Role() {name="user"}
+                new Role() {Name="admin"},
+                new Role() {Name="user"}
             };
             context.Roles.AddRange(roles);
             context.SaveChanges();

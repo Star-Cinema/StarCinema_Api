@@ -8,6 +8,6 @@ namespace StarCinema_Api.Data.Entities
         public int id { get; set; }
         public int filmId { get; set; }
         public string path { get; set; }
-        public virtual Films film { get; set; }
+        public virtual Films Film { get; set; }
     }
 }

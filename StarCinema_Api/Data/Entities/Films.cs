@@ -33,8 +33,8 @@ namespace StarCinema_Api.Data.Entities
         public string isDelete { get; set; }
 
 
-        public virtual Categories category { get; set; }
-        public virtual List<Images> images { get; set; }
+        public virtual Categories Category { get; set; }
+        public virtual List<Images> Images { get; set; }
         public virtual List<Schedules> Schedules { get; set; }
     }
 }

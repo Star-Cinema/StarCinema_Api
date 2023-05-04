@@ -13,7 +13,7 @@ namespace StarCinema_Api.Data.Entities
 
         public int scheduleId { get; set; }
 
-        public virtual Schedules schedule { get; set; }
+        public virtual Schedules Schedule { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }
     }
 }

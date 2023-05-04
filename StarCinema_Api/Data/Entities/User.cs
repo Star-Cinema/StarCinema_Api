@@ -39,7 +39,7 @@ namespace StarCinema_Api.Data.Entities
         public bool? gender { get; set; }
         public bool isEmailVerified { get; set; }
 
-        public virtual Role role { get; set; }
+        public virtual Role Role { get; set; }
 
     }
 }

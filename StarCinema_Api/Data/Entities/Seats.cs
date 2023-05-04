@@ -19,7 +19,7 @@ namespace StarCinema_Api.Data.Entities
         [DefaultValue(false)]
         public string isDelete { get; set; }
 
-        public virtual Rooms room { get; set; }
-        public virtual List<BookingDetail> bookingDetails { get; set; }
+        public virtual Rooms Room { get; set; }
+        public virtual List<BookingDetail> BookingDetails { get; set; }
     }
 }

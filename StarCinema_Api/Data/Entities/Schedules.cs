@@ -19,11 +19,11 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         public DateTime endTime { get; set; }
 
-        public virtual Films film { get; set; }
+        public virtual Films Film { get; set; }
 
-        public virtual Rooms room { get; set; }
+        public virtual Rooms Room { get; set; }
 
-        public virtual Tickets ticket { get; set; }
+        public virtual Tickets Ticket { get; set; }
 
 
     }

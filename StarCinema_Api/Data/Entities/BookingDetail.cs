@@ -10,8 +10,8 @@ namespace StarCinema_Api.Data.Entities
         public int ticketId { get; set; }
         public int seatId { get; set; }
 
-        public virtual Bookings booking { get; set; }
-        public virtual Tickets ticket { get; set; }
-        public virtual Seats seat { get; set; }
+        public virtual Bookings Booking { get; set; }
+        public virtual Tickets Ticket { get; set; }
+        public virtual Seats Seat { get; set; }
     }
 }

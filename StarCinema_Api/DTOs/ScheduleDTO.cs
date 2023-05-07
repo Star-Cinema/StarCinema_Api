@@ -5,22 +5,23 @@ namespace StarCinema_Api.Data.Entities
     public class ScheduleDTO
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public int filmId { get; set; }
+        public int FilmId { get; set; }
 
         [Required]
-        public int roomId { get; set; }
+        public int RoomId { get; set; }
 
         [Required]
-        public DateTime startTime { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than or equal to 0")]
+        public double Price { get; set; }
 
-        public DateTime endTime { get; set; }
+        [Required]
+        public DateTime StartTime { get; set; }
 
-        //public virtual Films film { get; set; }
-
-        //public virtual Rooms room { get; set; }
+        //[Required]
+        //public DateTime EndTime { get; set; }
 
     }
 }

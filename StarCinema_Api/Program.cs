@@ -1,7 +1,4 @@
 using StarCinema_Api.Data;
-//using StarCinema_Api.Profiles;
-//using StarCinema_Api.Repositories;
-//using StarCinema_Api.Services;
 using StarCinema_Api.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +9,7 @@ using StarCinema_Api.Services;
 using StarCinema_Api.Repositories;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using StarCinema_Api.Profiles;
+using StarCinema_Api.Repositories.TicketsRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +38,7 @@ services.AddDbContext<MyDbContext>
 
 // Add scoped repository
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+services.AddScoped<ITicketsRepository, TicketsRespository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 
 // Add scoped services

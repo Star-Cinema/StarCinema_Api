@@ -13,6 +13,6 @@ namespace StarCinema_Api.Data.Entities
         [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than or equal to 0")]
         public double Price { get; set; }
 
-        public virtual List<BookingService> BookingServices { get; set; }
+        public virtual List<Bookings> Bookings { get; set; }
     }
 }

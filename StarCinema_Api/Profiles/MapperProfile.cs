@@ -17,7 +17,8 @@ namespace booking_my_doctor.Profiles
             //CreateMap<UserCreateDto, User>();
             //CreateMap<User, UserDTO>().ForMember(dest => dest.roleName, opt => opt.MapFrom(src => src.role.Name)); ;
             //CreateMap<UserUpdateDTO, User>();
-            //CreateMap<User, UserUpdateDTO>();
+            CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
         }
     }
 }

@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using StarCinema_Api.Repositories.UserRepository;
+using StarCinema_Api.Services.UserService;
+using StarCinema_Api.Services.AuthService;
+using StarCinema_Api.Services.TokenService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,9 +39,11 @@ services.AddDbContext<MyDbContext>
 
 
 // Add scoped repository
-
+services.AddScoped<IUserRepository, UserRepository>();
 // Add scoped services
-
+services.AddScoped<IUserService, UserService>();
+services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<IAuthService, AuthService>();
 
 //services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

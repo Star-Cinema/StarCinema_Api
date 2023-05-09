@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarCinema_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,6 +49,20 @@ namespace StarCinema_Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rooms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,7 +217,7 @@ namespace StarCinema_Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Price = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -213,6 +227,30 @@ namespace StarCinema_Api.Migrations
                         name: "FK_Tickets_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookingsServices",
+                columns: table => new
+                {
+                    BookingsId = table.Column<int>(type: "int", nullable: false),
+                    ServicesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingsServices", x => new { x.BookingsId, x.ServicesId });
+                    table.ForeignKey(
+                        name: "FK_BookingsServices_Bookings_BookingsId",
+                        column: x => x.BookingsId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookingsServices_Services_ServicesId",
+                        column: x => x.ServicesId,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -271,6 +309,11 @@ namespace StarCinema_Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookingsServices_ServicesId",
+                table: "BookingsServices",
+                column: "ServicesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Films_CategoryId",
                 table: "Films",
                 column: "CategoryId");
@@ -314,10 +357,10 @@ namespace StarCinema_Api.Migrations
                 name: "BookingDetails");
 
             migrationBuilder.DropTable(
-                name: "Images");
+                name: "BookingsServices");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Seats");
@@ -326,19 +369,25 @@ namespace StarCinema_Api.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "Schedules");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Films");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Categories");

@@ -1,4 +1,4 @@
-﻿namespace booking_my_doctor.DTOs
+﻿namespace StarCinema_Api.DTOs
 {
     public class PaginationDTO<T>
     {

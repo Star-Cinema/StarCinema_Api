@@ -22,6 +22,21 @@ namespace StarCinema_Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BookingsServices", b =>
+                {
+                    b.Property<int>("BookingsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServicesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookingsId", "ServicesId");
+
+                    b.HasIndex("ServicesId");
+
+                    b.ToTable("BookingsServices");
+                });
+
             modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingDetail", b =>
                 {
                     b.Property<int>("Id")
@@ -261,6 +276,26 @@ namespace StarCinema_Api.Migrations
                     b.ToTable("Seats");
                 });
 
+            modelBuilder.Entity("StarCinema_Api.Data.Entities.Services", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Tickets", b =>
                 {
                     b.Property<int>("Id")
@@ -269,8 +304,8 @@ namespace StarCinema_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<int>("ScheduleId")
                         .HasColumnType("int");
@@ -341,6 +376,21 @@ namespace StarCinema_Api.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("BookingsServices", b =>
+                {
+                    b.HasOne("StarCinema_Api.Data.Entities.Bookings", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarCinema_Api.Data.Entities.Services", null)
+                        .WithMany()
+                        .HasForeignKey("ServicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingDetail", b =>

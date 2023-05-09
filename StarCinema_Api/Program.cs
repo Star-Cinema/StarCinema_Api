@@ -1,7 +1,4 @@
 using StarCinema_Api.Data;
-//using StarCinema_Api.Profiles;
-//using StarCinema_Api.Repositories;
-//using StarCinema_Api.Services;
 using StarCinema_Api.Data.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +9,11 @@ using StarCinema_Api.Repositories.UserRepository;
 using StarCinema_Api.Services.UserService;
 using StarCinema_Api.Services.AuthService;
 using StarCinema_Api.Services.TokenService;
+using StarCinema_Api.Services;
+using StarCinema_Api.Repositories;
+using StarCinema_Api.Repositories.ScheduleRepository;
+using StarCinema_Api.Profiles;
+using StarCinema_Api.Repositories.TicketsRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,17 +37,24 @@ services.AddDbContext<MyDbContext>
 (option =>
 {
     option.UseSqlServer(connectionString);
-}, ServiceLifetime.Transient);
+});
 
 
 // Add scoped repository
 services.AddScoped<IUserRepository, UserRepository>();
+services.AddScoped<ISchedulesRepository, SchedulesRepository>();
+services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+services.AddScoped<ITicketsRepository, TicketsRespository>();
+
 // Add scoped services
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();
+services.AddScoped<ISchedulesService, SchedulesService>();
 
 //services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
+
+services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

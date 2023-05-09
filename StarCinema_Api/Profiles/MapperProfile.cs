@@ -2,7 +2,7 @@
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 
-namespace booking_my_doctor.Profiles
+namespace StarCinema_Api.Profiles
 {
     public class MapperProfile : Profile
     {
@@ -19,6 +19,8 @@ namespace booking_my_doctor.Profiles
             //CreateMap<UserUpdateDTO, User>();
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+            CreateMap<ScheduleDTO, Schedules>();
+            CreateMap<Schedules, ScheduleDTO>();
         }
     }
 }

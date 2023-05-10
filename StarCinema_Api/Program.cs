@@ -13,6 +13,9 @@ using StarCinema_Api.Services;
 using StarCinema_Api.Repositories;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using StarCinema_Api.Profiles;
+using StarCinema_Api.Repositories.BookingRepository;
+using StarCinema_Api.Services.BookingService;
+using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.TicketsRepository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +47,10 @@ services.AddDbContext<MyDbContext>
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+services.AddScoped<ISchedulesRepository, SchedulesRepository>();
+services.AddScoped<IBookingRepository, BookingRepository>();
+services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
+
 services.AddScoped<ITicketsRepository, TicketsRespository>();
 
 // Add scoped services
@@ -51,6 +58,8 @@ services.AddScoped<IUserService, UserService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<ISchedulesService, SchedulesService>();
+services.AddScoped<IBookingService, BookingService>();
+
 
 //services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
 

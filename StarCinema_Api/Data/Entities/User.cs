@@ -24,7 +24,8 @@ namespace StarCinema_Api.Data.Entities
         public string? Phone { get; set; }
         public DateTime? Dob { get; set; }
         [DefaultValue(false)]
-        public bool? IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
+
         [Required]
         [Range(0, 100)]
         public int RoleId { get; set; }

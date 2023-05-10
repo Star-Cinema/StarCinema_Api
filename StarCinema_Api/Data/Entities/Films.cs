@@ -30,7 +30,7 @@ namespace StarCinema_Api.Data.Entities
         public DateTime Release { get; set; }
 
         [DefaultValue(false)]
-        public string IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
 
 
         public virtual Categories Category { get; set; }

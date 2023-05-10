@@ -17,6 +17,8 @@ using StarCinema_Api.Repositories.BookingRepository;
 using StarCinema_Api.Services.BookingService;
 using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.TicketsRepository;
+using StarCinema_Api.Repositories.RoomRepository;
+using StarCinema_Api.Repositories.ServiceRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +61,8 @@ services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<ISchedulesService, SchedulesService>();
 services.AddScoped<IBookingService, BookingService>();
-
+services.AddScoped<IServiceRepository, ServiceRepository>();
+services.AddScoped<IRoomRepository, RoomRepository>();
 
 //services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
 
@@ -77,6 +80,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]))
         };
     });
+builder.Services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

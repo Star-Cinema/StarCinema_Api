@@ -420,7 +420,7 @@ namespace StarCinema_Api.Migrations
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -545,6 +545,11 @@ namespace StarCinema_Api.Migrations
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Tickets", b =>
                 {
                     b.Navigation("BookingDetails");
+                });
+
+            modelBuilder.Entity("StarCinema_Api.Data.Entities.User", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

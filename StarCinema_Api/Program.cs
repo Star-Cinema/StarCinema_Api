@@ -12,6 +12,9 @@ using StarCinema_Api.Services;
 using StarCinema_Api.Repositories;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using StarCinema_Api.Profiles;
+using StarCinema_Api.Repositories.BookingRepository;
+using StarCinema_Api.Services.BookingService;
+using StarCinema_Api.Repositories.BookingDetailRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,9 +44,14 @@ services.AddDbContext<MyDbContext>
 // Add scoped repository
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
+services.AddScoped<IBookingRepository, BookingRepository>();
+services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
+
 
 // Add scoped services
 services.AddScoped<ISchedulesService, SchedulesService>();
+services.AddScoped<IBookingService, BookingService>();
+
 
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

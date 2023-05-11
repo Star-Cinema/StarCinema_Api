@@ -52,6 +52,20 @@ namespace StarCinema_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Films",
                 columns: table => new
                 {
@@ -203,7 +217,7 @@ namespace StarCinema_Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Price = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     ScheduleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -213,6 +227,32 @@ namespace StarCinema_Api.Migrations
                         name: "FK_Tickets_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookingService",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingService", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookingService_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookingService_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -271,6 +311,16 @@ namespace StarCinema_Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookingService_BookingId",
+                table: "BookingService",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookingService_ServiceId",
+                table: "BookingService",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Films_CategoryId",
                 table: "Films",
                 column: "CategoryId");
@@ -314,10 +364,10 @@ namespace StarCinema_Api.Migrations
                 name: "BookingDetails");
 
             migrationBuilder.DropTable(
-                name: "Images");
+                name: "BookingService");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Seats");
@@ -326,19 +376,25 @@ namespace StarCinema_Api.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "Schedules");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Films");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Categories");

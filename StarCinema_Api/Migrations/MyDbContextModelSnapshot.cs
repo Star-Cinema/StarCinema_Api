@@ -141,9 +141,8 @@ namespace StarCinema_Api.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<string>("IsDelete")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -175,6 +174,10 @@ namespace StarCinema_Api.Migrations
 
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Path")
                         .IsRequired()

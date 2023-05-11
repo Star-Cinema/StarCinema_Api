@@ -12,8 +12,8 @@ using StarCinema_Api.Data;
 namespace StarCinema_Api.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230510152154_0510202301")]
-    partial class _0510202301
+    [Migration("20230511014109_initDatabase")]
+    partial class initDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace StarCinema_Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BookingsServices", b =>
+                {
+                    b.Property<int>("BookingsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServicesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookingsId", "ServicesId");
+
+                    b.HasIndex("ServicesId");
+
+                    b.ToTable("BookingsServices");
+                });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingDetail", b =>
                 {
@@ -51,29 +66,6 @@ namespace StarCinema_Api.Migrations
                     b.HasIndex("TicketId");
 
                     b.ToTable("BookingDetails");
-                });
-
-            modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("BookingService");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
@@ -219,9 +211,8 @@ namespace StarCinema_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IsDelete")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -270,9 +261,8 @@ namespace StarCinema_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IsDelete")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -355,7 +345,7 @@ namespace StarCinema_Api.Migrations
                     b.Property<bool?>("Gender")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("IsDelete")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailVerified")
@@ -392,6 +382,21 @@ namespace StarCinema_Api.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("BookingsServices", b =>
+                {
+                    b.HasOne("StarCinema_Api.Data.Entities.Bookings", null)
+                        .WithMany()
+                        .HasForeignKey("BookingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarCinema_Api.Data.Entities.Services", null)
+                        .WithMany()
+                        .HasForeignKey("ServicesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingDetail", b =>
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Bookings", "Booking")
@@ -419,29 +424,10 @@ namespace StarCinema_Api.Migrations
                     b.Navigation("Ticket");
                 });
 
-            modelBuilder.Entity("StarCinema_Api.Data.Entities.BookingService", b =>
-                {
-                    b.HasOne("StarCinema_Api.Data.Entities.Bookings", "Booking")
-                        .WithMany("BookingServices")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StarCinema_Api.Data.Entities.Services", "Service")
-                        .WithMany("BookingServices")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-
-                    b.Navigation("Service");
-                });
-
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -526,8 +512,6 @@ namespace StarCinema_Api.Migrations
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
                 {
                     b.Navigation("BookingDetails");
-
-                    b.Navigation("BookingServices");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Categories", b =>
@@ -565,14 +549,14 @@ namespace StarCinema_Api.Migrations
                     b.Navigation("BookingDetails");
                 });
 
-            modelBuilder.Entity("StarCinema_Api.Data.Entities.Services", b =>
-                {
-                    b.Navigation("BookingServices");
-                });
-
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Tickets", b =>
                 {
                     b.Navigation("BookingDetails");
+                });
+
+            modelBuilder.Entity("StarCinema_Api.Data.Entities.User", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

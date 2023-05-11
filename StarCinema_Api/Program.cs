@@ -5,15 +5,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using StarCinema_Api.Repositories.UserRepository;
+using StarCinema_Api.Services.UserService;
+using StarCinema_Api.Services.AuthService;
+using StarCinema_Api.Services.TokenService;
 using StarCinema_Api.Services;
 using StarCinema_Api.Repositories;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using StarCinema_Api.Profiles;
+using StarCinema_Api.Repositories.BookingRepository;
+using StarCinema_Api.Services.BookingService;
+using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.TicketsRepository;
 using StarCinema_Api.Repositories.FilmsRepository;
 using StarCinema_Api.Services.FilmsService;
 using StarCinema_Api.Repositories.CategoriesRepository;
 using StarCinema_Api.Services.CategoriesService;
+using StarCinema_Api.Repositories.RoomRepository;
+using StarCinema_Api.Repositories.ServiceRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,16 +50,28 @@ services.AddDbContext<MyDbContext>
 
 
 // Add scoped repository
-services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-services.AddScoped<ITicketsRepository, TicketsRespository>();
+services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
+services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+services.AddScoped<IBookingRepository, BookingRepository>();
+services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
+
+services.AddScoped<ITicketsRepository, TicketsRespository>();
 services.AddScoped<IFilmsRepository, FilmsRepository>();
 services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
 // Add scoped services
+services.AddScoped<IUserService, UserService>();
+services.AddScoped<ITokenService, TokenService>();
+services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<ISchedulesService, SchedulesService>();
 services.AddScoped<IFilmsService, FilmsService>();
 services.AddScoped<ICategoriesService, CategoriesService>();
+services.AddScoped<IBookingService, BookingService>();
+services.AddScoped<IServiceRepository, ServiceRepository>();
+services.AddScoped<IRoomRepository, RoomRepository>();
+
+//services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
 
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,6 +87,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]))
         };
     });
+builder.Services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

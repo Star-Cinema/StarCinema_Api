@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarCinema_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class initDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,7 +44,7 @@ namespace StarCinema_Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +78,7 @@ namespace StarCinema_Api.Migrations
                     Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Country = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Release = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -103,7 +103,7 @@ namespace StarCinema_Api.Migrations
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: true),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
@@ -130,7 +130,7 @@ namespace StarCinema_Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RoomId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
-                    IsDelete = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,6 +150,7 @@ namespace StarCinema_Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FilmId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Path = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -232,26 +233,24 @@ namespace StarCinema_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookingService",
+                name: "BookingsServices",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<int>(type: "int", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    BookingsId = table.Column<int>(type: "int", nullable: false),
+                    ServicesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookingService", x => x.Id);
+                    table.PrimaryKey("PK_BookingsServices", x => new { x.BookingsId, x.ServicesId });
                     table.ForeignKey(
-                        name: "FK_BookingService_Bookings_BookingId",
-                        column: x => x.BookingId,
+                        name: "FK_BookingsServices_Bookings_BookingsId",
+                        column: x => x.BookingsId,
                         principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BookingService_Services_ServiceId",
-                        column: x => x.ServiceId,
+                        name: "FK_BookingsServices_Services_ServicesId",
+                        column: x => x.ServicesId,
                         principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -311,14 +310,9 @@ namespace StarCinema_Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookingService_BookingId",
-                table: "BookingService",
-                column: "BookingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BookingService_ServiceId",
-                table: "BookingService",
-                column: "ServiceId");
+                name: "IX_BookingsServices_ServicesId",
+                table: "BookingsServices",
+                column: "ServicesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Films_CategoryId",
@@ -364,7 +358,7 @@ namespace StarCinema_Api.Migrations
                 name: "BookingDetails");
 
             migrationBuilder.DropTable(
-                name: "BookingService");
+                name: "BookingsServices");
 
             migrationBuilder.DropTable(
                 name: "Images");

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StarCinema_Api.Data.Entities
+namespace StarCinema_Api.DTOs
 {
-    public class Services
+    public class ServiceDTO
     {
         [Key]
         public int Id { get; set; }
@@ -12,7 +12,5 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be greater than or equal to 0")]
         public double Price { get; set; }
-
-        public virtual List<Bookings> Bookings { get; set; }
     }
 }

@@ -16,8 +16,9 @@ namespace StarCinema_Api.Data
         public DbSet<Films> Films { get; set; }
         public DbSet<Images> Images { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
-        public DbSet<Schedules> Schedules { get; set; }
+        public DbSet<Schedules> Schedules {get; set; }
         public DbSet<Seats> Seats { get; set; }
+        public DbSet<StarCinema_Api.Data.Entities.Services> Services { get; set; }
         public DbSet<Tickets> Tickets { get; set; }
         #endregion 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

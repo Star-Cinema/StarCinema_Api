@@ -17,6 +17,10 @@ using StarCinema_Api.Repositories.BookingRepository;
 using StarCinema_Api.Services.BookingService;
 using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.TicketsRepository;
+using StarCinema_Api.Repositories.FilmsRepository;
+using StarCinema_Api.Services.FilmsService;
+using StarCinema_Api.Repositories.CategoriesRepository;
+using StarCinema_Api.Services.CategoriesService;
 using StarCinema_Api.Repositories.RoomRepository;
 using StarCinema_Api.Repositories.ServiceRepository;
 
@@ -49,17 +53,20 @@ services.AddDbContext<MyDbContext>
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 services.AddScoped<IBookingRepository, BookingRepository>();
 services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
 
 services.AddScoped<ITicketsRepository, TicketsRespository>();
+services.AddScoped<IFilmsRepository, FilmsRepository>();
+services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
 // Add scoped services
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<ISchedulesService, SchedulesService>();
+services.AddScoped<IFilmsService, FilmsService>();
+services.AddScoped<ICategoriesService, CategoriesService>();
 services.AddScoped<IBookingService, BookingService>();
 services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IRoomRepository, RoomRepository>();

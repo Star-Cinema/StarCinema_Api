@@ -32,6 +32,7 @@ namespace StarCinema_Api.Data.Entities
         [DefaultValue(false)]
         public bool IsDelete { get; set; } = false;
 
+        public int CategoryId { get; set; }
 
         public virtual Categories Category { get; set; }
         public virtual List<Images> Images { get; set; }

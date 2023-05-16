@@ -13,7 +13,7 @@ namespace StarCinema_Api.Data.Entities
         public string Name { get; set; }
 
         [DefaultValue(false)]
-        public string IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         public virtual List<Seats> Seats { get; set; }
         public virtual List<Schedules> Schedules { get; set; }

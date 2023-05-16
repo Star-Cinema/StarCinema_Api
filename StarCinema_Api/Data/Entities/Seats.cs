@@ -17,7 +17,7 @@ namespace StarCinema_Api.Data.Entities
         public int RoomId { get; set; }
 
         [DefaultValue(false)]
-        public string IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         public virtual Rooms Room { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }

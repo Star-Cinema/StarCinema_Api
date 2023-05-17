@@ -13,6 +13,8 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         public DateTime CreateAt { get; set; }
 
+        public bool IsDelete { get; set; } = false;
+
         public virtual User User { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }
         public virtual List<Services> Services { get; set; }

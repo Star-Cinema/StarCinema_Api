@@ -7,6 +7,9 @@ namespace StarCinema_Api.Services.BookingService
     {
 
         Task<ResponseDTO> GetAllBookings();
+
+        Task<ResponseDTO> GetAllBookings(int page, int pageSize);
+
         Task<ResponseDTO> GetBookingById(int id);
 
         Task<ResponseDTO> CreateBooking(BookingDTO bookingDTO);

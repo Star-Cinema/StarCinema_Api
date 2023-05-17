@@ -38,6 +38,14 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
+        [HttpGet("GetAllByPage")]
+        public async Task<ActionResult> GetAllByPage(int page, int pageSize)
+        {
+            var resData = await _bookingService.GetAllBookings(page, pageSize);
+            return StatusCode(resData.code, resData);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Createbooking(BookingDTO bookingDTO)
         {

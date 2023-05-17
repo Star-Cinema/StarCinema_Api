@@ -4,6 +4,7 @@ using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.BookingRepository;
 using StarCinema_Api.Repositories.ScheduleRepository;
+using System.Collections.Generic;
 
 namespace StarCinema_Api.Services.BookingService
 {
@@ -13,6 +14,13 @@ namespace StarCinema_Api.Services.BookingService
         private readonly IBookingRepository _bookingsRepository;
         private readonly IBookingDetailRepository _bookingDetailRepository;
         private readonly IMapper _mapper;
+
+        public BookingService(IBookingRepository bookingsRepository, IBookingDetailRepository bookingDetailRepository, IMapper mapper)
+        {
+            _bookingsRepository = bookingsRepository;
+            _bookingDetailRepository = bookingDetailRepository;
+            _mapper = mapper;
+        }
 
         public async Task<ResponseDTO> CreateBooking(BookingDTO bookingDTO)
         {
@@ -62,12 +70,11 @@ namespace StarCinema_Api.Services.BookingService
                     message = $"Booking is not exists id {id} !"
                 };
             }
-            _bookingsRepository.DeleteAsync(currentBooking);
-            _bookingsRepository.Save();
+            _bookingsRepository.DeleteBooking(currentBooking);
             return new ResponseDTO
             {
                 data = 200,
-                message = "Success"
+                message = "Delete Booking Success!"
             };
         }
 
@@ -104,11 +111,33 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
+        public async Task<ResponseDTO> GetAllBookings(int page, int pageSize)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetAllBookings(page, pageSize);
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
         public async Task<ResponseDTO> GetBookingById(int id)
         {
             try
             {
-                var result = await _bookingsRepository.GetByIdAsync(id);
+                var result = await _bookingsRepository.GetDetailBookingById(id);
                 if (result == null) 
                 {
                     return new ResponseDTO

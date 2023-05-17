@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarCinema_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initDB : Migration
+    public partial class initDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -150,6 +150,7 @@ namespace StarCinema_Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FilmId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Path = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

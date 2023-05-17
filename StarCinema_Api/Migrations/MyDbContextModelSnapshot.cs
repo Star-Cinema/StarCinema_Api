@@ -170,6 +170,10 @@ namespace StarCinema_Api.Migrations
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

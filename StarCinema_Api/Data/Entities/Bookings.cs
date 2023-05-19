@@ -12,6 +12,8 @@ namespace StarCinema_Api.Data.Entities
 
         [Required]
         public DateTime CreateAt { get; set; }
+        public string Status { get; set; }
+        public virtual Payment Payment { get; set; }
 
         public virtual User User { get; set; }
         public virtual List<BookingDetail> BookingDetails { get; set; }

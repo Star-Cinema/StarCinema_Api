@@ -17,9 +17,9 @@ namespace StarCinema_Api.Controllers
         }
 
         [HttpPost]    
-        public async Task<IActionResult> CreateUrlPayment(int bookingId)
+        public async Task<IActionResult> CreateUrlPayment(int bookingId, double PriceTicket, double PirceService)
         {          
-            var resData = await _vnPayService.CreateUrlPayment(bookingId);
+            var resData = await _vnPayService.CreateUrlPayment(bookingId, PriceTicket, PirceService);
             return StatusCode(resData.code, resData);
         }
         [HttpGet()]

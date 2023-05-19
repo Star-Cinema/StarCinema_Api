@@ -12,8 +12,8 @@ using StarCinema_Api.Data;
 namespace StarCinema_Api.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230511014109_initDatabase")]
-    partial class initDatabase
+    [Migration("20230519043550_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,10 @@ namespace StarCinema_Api.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -96,6 +100,9 @@ namespace StarCinema_Api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -183,6 +190,38 @@ namespace StarCinema_Api.Migrations
                     b.HasIndex("FilmId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("StarCinema_Api.Data.Entities.Payment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModeOfPayment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PriceService")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PriceTicket")
+                        .HasColumnType("float");
+
+                    b.Property<int>("bookingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("bookingId")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Role", b =>
@@ -457,6 +496,17 @@ namespace StarCinema_Api.Migrations
                     b.Navigation("Film");
                 });
 
+            modelBuilder.Entity("StarCinema_Api.Data.Entities.Payment", b =>
+                {
+                    b.HasOne("StarCinema_Api.Data.Entities.Bookings", "Bookings")
+                        .WithOne("Payment")
+                        .HasForeignKey("StarCinema_Api.Data.Entities.Payment", "bookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bookings");
+                });
+
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Schedules", b =>
                 {
                     b.HasOne("StarCinema_Api.Data.Entities.Films", "Film")
@@ -512,6 +562,9 @@ namespace StarCinema_Api.Migrations
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Bookings", b =>
                 {
                     b.Navigation("BookingDetails");
+
+                    b.Navigation("Payment")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Categories", b =>

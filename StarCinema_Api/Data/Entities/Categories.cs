@@ -9,6 +9,7 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+        public bool IsDelete { get; set; } = false;
         public virtual List<Films> Films { get; set; }
     }
 }

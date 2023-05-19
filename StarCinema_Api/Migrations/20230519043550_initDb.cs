@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarCinema_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initDatabase : Migration
+    public partial class initDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace StarCinema_Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -199,7 +200,8 @@ namespace StarCinema_Api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -252,6 +254,29 @@ namespace StarCinema_Api.Migrations
                         name: "FK_BookingsServices_Services_ServicesId",
                         column: x => x.ServicesId,
                         principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    bookingId = table.Column<int>(type: "int", nullable: false),
+                    PriceTicket = table.Column<double>(type: "float", nullable: false),
+                    PriceService = table.Column<double>(type: "float", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModeOfPayment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payments_Bookings_bookingId",
+                        column: x => x.bookingId,
+                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -325,6 +350,12 @@ namespace StarCinema_Api.Migrations
                 column: "FilmId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Payments_bookingId",
+                table: "Payments",
+                column: "bookingId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Schedules_FilmId",
                 table: "Schedules",
                 column: "FilmId");
@@ -364,16 +395,19 @@ namespace StarCinema_Api.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "Payments");
+
+            migrationBuilder.DropTable(
                 name: "Seats");
 
             migrationBuilder.DropTable(
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "Bookings");
+                name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "Schedules");

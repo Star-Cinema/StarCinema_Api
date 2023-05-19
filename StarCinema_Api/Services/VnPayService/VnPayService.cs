@@ -3,24 +3,22 @@ using StarCinema_Api.Services.BookingService;
 using WebBanHangOnline.Models.Payments;
 using StarCinema_Api.Data.Entities;
 using Org.BouncyCastle.Asn1.X9;
+using StarCinema_Api.Repositories.PaymentRepository;
+using StarCinema_Api.Repositories.BookingRepository;
 
 namespace StarCinema_Api.Services.VnPayService
 {
     public class VnPayService : IVnPayService
     {
-        private readonly IBookingService _bookingService;
-        public VnPayService(IBookingService bookingService)
+        private readonly IPaymentRepository _paymentRepository;
+        private readonly IBookingRepository _bookingRepository;
+        public VnPayService(IPaymentRepository paymentRepository, IBookingRepository bookingRepository)
         {
-            _bookingService = bookingService;
+            _paymentRepository= paymentRepository;
+            _bookingRepository= bookingRepository;
         }
-        public async Task<ResponseDTO> CreateUrlPayment(int bookingID)
+        public async Task<ResponseDTO> CreateUrlPayment(int bookingID, double PriceTicket, double PriceService)
         {
-            //var resBooking = await _bookingService.GetBookingById(bookingID);
-            //if (resBooking.code != 200)
-            //{
-            //    return resBooking;
-            //}
-            //var bookingDto = resBooking.data as Bookings;
 
             var configBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -37,18 +35,12 @@ namespace StarCinema_Api.Services.VnPayService
 
             ////Build URL for VNPAY
 
-            //Get payment input
-            Payment payment = new Payment();
-            payment.Id = DateTime.Now.Ticks; // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
-            payment.Amount = 100000; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
-            payment.CreatedDate = DateTime.Now;
-
             VnPayLibrary vnpay = new VnPayLibrary();
 
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnpay.AddRequestData("vnp_Amount", (payment.Amount * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
+            vnpay.AddRequestData("vnp_Amount", ((PriceTicket + PriceService) * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
             vnpay.AddRequestData("vnp_BankCode", "VNBANK");
 
             //if (bankcode_Vnpayqr.Checked == true)
@@ -66,16 +58,19 @@ namespace StarCinema_Api.Services.VnPayService
             //vnpay.AddRequestData("vnp_BankCode", "VNBANK");
 
 
-            vnpay.AddRequestData("vnp_CreateDate", payment.CreatedDate.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
 
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + payment.Id);
+            vnpay.AddRequestData("vnp_OrderInfo", "BookingId=" + bookingID + " PriceTicket=" + PriceTicket + " PriceService=" + PriceService);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
 
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
-            vnpay.AddRequestData("vnp_TxnRef", payment.Id.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
+            vnpay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
             vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+
+
+
 
             //Add Params of 2.1.0 Version
             //Billing
@@ -118,11 +113,23 @@ namespace StarCinema_Api.Services.VnPayService
 
 
             long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
+
+
+            // Lay du lieu dataPayment
+
             long vnpayTranId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));
             string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             string vnp_TransactionStatus = vnpay.GetResponseData("vnp_TransactionStatus");
             String vnp_SecureHash = vnpayData.Where(kvp => kvp.Key == "vnp_SecureHash").FirstOrDefault().Value;
             String TerminalID = vnpayData.Where(kvp => kvp.Key == "vnp_TmnCode").FirstOrDefault().Value;
+            string paymentInfo = vnpayData.Where(kvp => kvp.Key == "vnp_OrderInfo").FirstOrDefault().Value;
+
+            int bookingId;
+            double priceTicket;
+            double priceService;
+
+            ParseBookingInfo(paymentInfo, out bookingId, out priceTicket, out priceService);
+
             long vnp_Amount = Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) / 100;
             String bankCode = vnpayData.Where(kvp => kvp.Key == "vnp_BankCode").FirstOrDefault().Value; 
 
@@ -132,7 +139,23 @@ namespace StarCinema_Api.Services.VnPayService
                 if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                 {
                     //Thanh toan thanh cong
-                    //displayMsg.InnerText = "Giao dịch được thực hiện thành công. Cảm ơn quý khách đã sử dụng dịch vụ";
+
+                    // Tao payment va cap nhat trang thai booking
+
+                    var payment = new Payment();
+                    payment.bookingId = bookingId;
+                    payment.PriceService = priceService;
+                    payment.PriceTicket = priceTicket;
+                    payment.CreatedDate = DateTime.Now;
+                    payment.ModeOfPayment = bankCode;
+
+                    // Neu payment chua ton tai thi tao payment moi
+                    if(!(await _paymentRepository.IsPaymentOfBookingAlreadyExists(bookingId)))
+                    {
+                        await _paymentRepository.CreatePaymentAsync(payment);
+                        await _paymentRepository.IsSaveChange();
+                    }
+
                     return new ResponseDTO
                     {
                         code = 200,
@@ -161,6 +184,38 @@ namespace StarCinema_Api.Services.VnPayService
                     code = 500,
                     message = "Invalid signature",
                 };
+            }
+        }
+
+        public static void ParseBookingInfo(string input, out int bookingId, out double priceTicket, out double priceService)
+        {
+            string[] pairs = input.Split(' ');
+
+            bookingId = 0;
+            priceTicket = 0;
+            priceService = 0;
+
+            foreach (string pair in pairs)
+            {
+                string[] parts = pair.Split('=');
+                if (parts.Length == 2)
+                {
+                    string key = parts[0].Trim();
+                    string value = parts[1].Trim();
+
+                    if (key.Equals("BookingId"))
+                    {
+                        int.TryParse(value, out bookingId);
+                    }
+                    else if (key.Equals("PriceTicket"))
+                    {
+                        double.TryParse(value, out priceTicket);
+                    }
+                    else if (key.Equals("PriceService"))
+                    {
+                        double.TryParse(value, out priceService);
+                    }
+                }
             }
         }
 

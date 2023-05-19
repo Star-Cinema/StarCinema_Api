@@ -13,8 +13,14 @@ namespace StarCinema_Api.Data.Entities
         [ForeignKey("Bookings")]
         public int bookingId { get; set; }
         [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Price ticket must be greater than or equal to 0")]
+        public double PriceTicket { get; set; }
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Price Service must be greater than or equal to 0")]
+        public double PriceService { get; set; }
+        [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Amount must be greater than or equal to 0")]
-        public double Amount { get; set; }
+        public double Amount  => PriceTicket + PriceService;
 
         public DateTime CreatedDate { get; set; }
 

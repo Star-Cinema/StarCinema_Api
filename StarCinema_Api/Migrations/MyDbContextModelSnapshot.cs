@@ -197,15 +197,18 @@ namespace StarCinema_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModeOfPayment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PriceService")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PriceTicket")
+                        .HasColumnType("float");
 
                     b.Property<int>("bookingId")
                         .HasColumnType("int");
@@ -215,7 +218,7 @@ namespace StarCinema_Api.Migrations
                     b.HasIndex("bookingId")
                         .IsUnique();
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("StarCinema_Api.Data.Entities.Role", b =>

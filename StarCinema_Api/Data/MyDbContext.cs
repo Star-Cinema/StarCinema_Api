@@ -20,6 +20,7 @@ namespace StarCinema_Api.Data
         public DbSet<Seats> Seats { get; set; }
         public DbSet<StarCinema_Api.Data.Entities.Services> Services { get; set; }
         public DbSet<Tickets> Tickets { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         #endregion 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

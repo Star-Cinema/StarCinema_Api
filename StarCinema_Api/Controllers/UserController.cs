@@ -20,16 +20,28 @@ namespace StarCinema_Api.Controllers
             var res = _userService.GetUsers(page,pageSize,key,sortBy);
             return StatusCode(res.code, res);
         }
-        [HttpGet("{email}")]
-        public ActionResult GetUserByEmail(string email)
+        //[HttpGet("{email}")]
+        //public ActionResult GetUserByEmail(string email)
+        //{
+        //    var res = _userService.GetUserByEmail(email);
+        //    return StatusCode(res.code, res);
+        //}
+        [HttpGet("{id}")]
+        public ActionResult GetUserById(int id)
         {
-            var res = _userService.GetUserByEmail(email);
+            var res = _userService.GetUserById(id);
             return StatusCode(res.code, res);
         }
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
             var res = _userService.DeleteUser(id);
+            return StatusCode(res.code, res);
+        }
+        [HttpPost("create")]
+        public ActionResult CreateUser(CreateUserDTO createUserDTO)
+        {
+            var res = _userService.CreateUser(createUserDTO);
             return StatusCode(res.code, res);
         }
         [HttpPut("{id}")]

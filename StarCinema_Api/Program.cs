@@ -23,6 +23,9 @@ using StarCinema_Api.Repositories.CategoriesRepository;
 using StarCinema_Api.Services.CategoriesService;
 using StarCinema_Api.Repositories.RoomRepository;
 using StarCinema_Api.Repositories.ServiceRepository;
+using StarCinema_Api.Services.VnPayService;
+using StarCinema_Api.Repositories.PaymentRepository;
+using StarCinema_Api.Services.PaymentService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +52,7 @@ services.AddDbContext<MyDbContext>
 });
 
 
+
 // Add scoped repository
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
@@ -59,6 +63,7 @@ services.AddScoped<IBookingDetailRepository, BookingDetailRepository>();
 services.AddScoped<ITicketsRepository, TicketsRespository>();
 services.AddScoped<IFilmsRepository, FilmsRepository>();
 services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 // Add scoped services
 services.AddScoped<IUserService, UserService>();
@@ -70,9 +75,8 @@ services.AddScoped<ICategoriesService, CategoriesService>();
 services.AddScoped<IBookingService, BookingService>();
 services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IRoomRepository, RoomRepository>();
-
-//services.AddAutoMapper(typeof(UserMapperProfile).Assembly);
-
+services.AddScoped<IVnPayService, VnPayService>();
+services.AddScoped<IPaymentService, PaymentService>();
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

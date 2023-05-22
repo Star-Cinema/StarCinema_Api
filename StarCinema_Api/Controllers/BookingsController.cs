@@ -19,11 +19,28 @@ namespace StarCinema_Api.Controllers
             _bookingService = bookingService;
         }
 
+
+        // Api get Statistical in Dashboard screen
+        [HttpGet("GetStatistical")]
+        public async Task<ActionResult> GetStatistical()
+        {
+            var resData = await _bookingService.GetStatistical();
+            return StatusCode(resData.code, resData);
+        }
+
         // Api get all Seats not booked
         [HttpGet("GetSeatsNotBooked")]
         public async Task<ActionResult> GetSeatsNotBooked(int filmId, int scheduleId)
         {
             var resData = await _bookingService.GetSeatsNotBooked(filmId,scheduleId);
+            return StatusCode(resData.code, resData);
+        }
+
+        // Api get all Seatsof room
+        [HttpGet("GetSeats")]
+        public async Task<ActionResult> GetSeats(int filmId, int scheduleId)
+        {
+            var resData = await _bookingService.GetSeats(filmId, scheduleId);
             return StatusCode(resData.code, resData);
         }
 
@@ -67,12 +84,12 @@ namespace StarCinema_Api.Controllers
         }
 
         // Admin: Api Create booking
-        [HttpPost]
-        public async Task<IActionResult> Createbooking(BookingAddEditDTO bookingAddEditDTO)
+        [HttpPost("CreateBookingByAdmin")]
+        public async Task<IActionResult> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO)
         {
             // Get userId by token when request create
-            var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
-            //var userId = 3;
+            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            var userId = 2;
 
             if (bookingAddEditDTO == null)
             {
@@ -81,7 +98,26 @@ namespace StarCinema_Api.Controllers
                     message = "Required request not null!!"
                 });
             }
-            var resData = await _bookingService.CreateBooking(bookingAddEditDTO, userId);
+            var resData = await _bookingService.CreateBookingByAdmin(bookingAddEditDTO, userId);
+            return StatusCode(resData.code, resData);
+        }
+
+        // Admin: Api Create booking
+        [HttpPost("CreateBookingByUser")]
+        public async Task<IActionResult> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO)
+        {
+            // Get userId by token when request create
+            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            var userId = 2;
+
+            if (bookingAddEditDTO == null)
+            {
+                return BadRequest(new ResponseDTO
+                {
+                    message = "Required request not null!!"
+                });
+            }
+            var resData = await _bookingService.CreateBookingByUser(bookingAddEditDTO, userId);
             return StatusCode(resData.code, resData);
         }
 

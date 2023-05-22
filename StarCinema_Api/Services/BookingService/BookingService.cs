@@ -5,6 +5,8 @@ using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.BookingRepository;
 using StarCinema_Api.Repositories.FilmsRepository;
 using StarCinema_Api.Repositories.ScheduleRepository;
+using StarCinema_Api.Services.PaymentService;
+using StarCinema_Api.Services.VnPayService;
 using System.Collections.Generic;
 
 namespace StarCinema_Api.Services.BookingService
@@ -13,12 +15,37 @@ namespace StarCinema_Api.Services.BookingService
     {
 
         private readonly IBookingRepository _bookingsRepository;
+        private readonly IVnPayService _vnPayService;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingsRepository, IMapper mapper)
+        public BookingService(IBookingRepository bookingsRepository, IMapper mapper, IVnPayService vnPayService)
         {
             _bookingsRepository = bookingsRepository;
+            _vnPayService = vnPayService;
             _mapper = mapper;
+        }
+
+        // Get Statistical in dashboard screen
+        public async Task<ResponseDTO> GetStatistical()
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetStatistical();
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
         }
 
         // get all seats not booked
@@ -27,6 +54,28 @@ namespace StarCinema_Api.Services.BookingService
             try
             {
                 var result = await _bookingsRepository.GetSeatsNotBooked(filmId, scheduleId);
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public async Task<ResponseDTO> GetSeats(int filmId, int scheduleId)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetSeats(filmId, scheduleId);
                 return new ResponseDTO
                 {
                     code = 200,
@@ -68,16 +117,37 @@ namespace StarCinema_Api.Services.BookingService
         }
 
         // Create booking 
-        public async Task<ResponseDTO> CreateBooking(BookingAddEditDTO bookingAddEditDTO, int UserId)
+        public async Task<ResponseDTO> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int UserId)
         {
             try
             {
-                var result = await _bookingsRepository.CreateBooking(bookingAddEditDTO, UserId) ;
+                _bookingsRepository.UpdateBookingsToExpired();
+                var result = await _bookingsRepository.CreateBookingByAdmin(bookingAddEditDTO, UserId) ;
+               
                 return new ResponseDTO
                 {
                     code = 200,
                     message = "success!"
                 };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public async Task<ResponseDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId)
+        {
+            try
+            {
+                _bookingsRepository.UpdateBookingsToExpired();
+                var result = await _bookingsRepository.CreateBookingByUser(bookingAddEditDTO, userId);                
+                var vnPay = await _vnPayService.CreateUrlPayment(result.bookingId, result.PriceTicket, result.PriceService );
+                return vnPay;
             }
             catch (Exception ex)
             {

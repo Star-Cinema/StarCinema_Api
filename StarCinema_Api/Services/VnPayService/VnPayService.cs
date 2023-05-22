@@ -154,6 +154,8 @@ namespace StarCinema_Api.Services.VnPayService
                     {
                         await _paymentRepository.CreatePaymentAsync(payment);
                         await _paymentRepository.IsSaveChange();
+
+                        _bookingRepository.UpdateBookingToSuccess(bookingId);
                     }
 
                     return new ResponseDTO

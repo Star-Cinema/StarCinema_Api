@@ -3,7 +3,11 @@ using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.BookingDetailRepository;
 using StarCinema_Api.Repositories.BookingRepository;
+using StarCinema_Api.Repositories.FilmsRepository;
 using StarCinema_Api.Repositories.ScheduleRepository;
+using StarCinema_Api.Services.PaymentService;
+using StarCinema_Api.Services.VnPayService;
+using System.Collections.Generic;
 
 namespace StarCinema_Api.Services.BookingService
 {
@@ -11,30 +15,115 @@ namespace StarCinema_Api.Services.BookingService
     {
 
         private readonly IBookingRepository _bookingsRepository;
-        private readonly IBookingDetailRepository _bookingDetailRepository;
+        private readonly IVnPayService _vnPayService;
         private readonly IMapper _mapper;
 
-        public async Task<ResponseDTO> CreateBooking(BookingDTO bookingDTO)
+        public BookingService(IBookingRepository bookingsRepository, IMapper mapper, IVnPayService vnPayService)
+        {
+            _bookingsRepository = bookingsRepository;
+            _vnPayService = vnPayService;
+            _mapper = mapper;
+        }
+
+        // Get Statistical in dashboard screen
+        public async Task<ResponseDTO> GetStatistical()
         {
             try
             {
-                var newBooking = new Bookings();
-                newBooking.UserId = bookingDTO.UserId;  // get current user 
-                newBooking.CreateAt = DateTime.Now;
-                newBooking.Services.AddRange(bookingDTO.Services);
-                await _bookingsRepository.InsertAsync(newBooking);
-                _bookingsRepository.Save();
-
-                foreach (var item in bookingDTO.BookingDetails)
+                var result = await _bookingsRepository.GetStatistical();
+                return new ResponseDTO
                 {
-                    var newBookingDetail = new BookingDetail();
-                    newBookingDetail.BookingId = item.BookingId;
-                    newBookingDetail.TicketId = item.TicketId;
-                    newBookingDetail.SeatId = item.SeatId;
-                    await _bookingDetailRepository.InsertAsync(newBookingDetail);
-                }
-                _bookingDetailRepository.Save();
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
 
+        // get all seats not booked
+        public async Task<ResponseDTO> GetSeatsNotBooked(int filmId, int scheduleId)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetSeatsNotBooked(filmId, scheduleId);
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        public async Task<ResponseDTO> GetSeats(int filmId, int scheduleId)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetSeats(filmId, scheduleId);
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        // Admin: get all films to choose film when create booking
+        public async Task<ResponseDTO> GetAllFilms()
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetAllFilms();
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        // Create booking 
+        public async Task<ResponseDTO> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int UserId)
+        {
+            try
+            {
+                _bookingsRepository.UpdateBookingsToExpired();
+                var result = await _bookingsRepository.CreateBookingByAdmin(bookingAddEditDTO, UserId) ;
+               
                 return new ResponseDTO
                 {
                     code = 200,
@@ -51,6 +140,26 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
+        public async Task<ResponseDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId)
+        {
+            try
+            {
+                _bookingsRepository.UpdateBookingsToExpired();
+                var result = await _bookingsRepository.CreateBookingByUser(bookingAddEditDTO, userId);                
+                var vnPay = await _vnPayService.CreateUrlPayment(result.bookingId, result.PriceTicket, result.PriceService );
+                return vnPay;
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        // Delete booking
         public async Task<ResponseDTO> DeleteBooking(int id)
         {
             var currentBooking = await _bookingsRepository.GetByIdAsync(id);
@@ -62,12 +171,11 @@ namespace StarCinema_Api.Services.BookingService
                     message = $"Booking is not exists id {id} !"
                 };
             }
-            _bookingsRepository.DeleteAsync(currentBooking);
-            _bookingsRepository.Save();
+            _bookingsRepository.DeleteBooking(currentBooking);
             return new ResponseDTO
             {
                 data = 200,
-                message = "Success"
+                message = "Delete Booking Success!"
             };
         }
 
@@ -104,11 +212,35 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
+        // Get all booking by page, pageSize 
+        public async Task<ResponseDTO> GetAllBookings(int page, int pageSize)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetAllBookings(page, pageSize);
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        // Get Booking By id 
         public async Task<ResponseDTO> GetBookingById(int id)
         {
             try
             {
-                var result = await _bookingsRepository.GetByIdAsync(id);
+                var result = await _bookingsRepository.GetDetailBookingById(id);
                 if (result == null) 
                 {
                     return new ResponseDTO
@@ -168,5 +300,6 @@ namespace StarCinema_Api.Services.BookingService
                 };
             }
         }
+
     }
 }

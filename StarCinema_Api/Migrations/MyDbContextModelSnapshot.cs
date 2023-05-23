@@ -101,7 +101,7 @@ namespace StarCinema_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsDelete")
+                    b.Property<bool>("IsTrash")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -132,8 +132,7 @@ namespace StarCinema_Api.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -158,6 +157,10 @@ namespace StarCinema_Api.Migrations
 
                     b.Property<DateTime>("Release")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("VideoLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Services.CategoriesService;
 
@@ -36,6 +37,12 @@ namespace StarCinema_Api.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteCategories(int id, CategoriesDTO Categories)
+        //{
+        //    var resData = await _CategoriesService.DeleteCategoriesById(id, Categories);
+        //    return StatusCode(resData.code, resData);
+        //}
+
         public async Task<IActionResult> DeleteCategories(int id)
         {
             var resData = await _CategoriesService.DeleteCategoriesById(id);

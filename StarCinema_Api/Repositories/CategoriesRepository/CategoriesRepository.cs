@@ -14,9 +14,10 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
         }
 
         //METHOD: GET ALL Categories 
-        public async Task<PaginationDTO<Categories>> getAllCategories(string? name, int page = 0, int limit = 10)
+        public async Task<PaginationDTO<Categories>> getAllCategories(string? name, int page = 0, int limit = 1000)
         {
             var query = _context.Categories
+                .Where(s => s.IsTrash == false)
                 .Select(x => new Categories
                 {
                     Id = x.Id,
@@ -26,27 +27,14 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
                 .AsQueryable();
             if (name != null)
             {
-                //query = query.Where(s => s.Name == name);
+                
                 query = query.Where(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             }
-           
-
-            //switch (sortDate)
-            //{
-            //    case "asc":
-            //        query = query.OrderBy(s => s.StartTime); break;
-            //    case "desc":
-            //        query = query.OrderByDescending(s => s.StartTime); break;
-            //    default:
-            //        query = query.OrderByDescending(s => s.StartTime); break;
-            //}
-
             var Categories = await query.ToListAsync();
             var pagination = new PaginationDTO<Categories>();
 
             pagination.TotalCount = Categories.Count;
-
-            Categories = Categories.Skip(limit * page).Take(limit).ToList();
+            //Categories = Categories.Skip(limit * page).Take(limit).ToList();
             pagination.PageSize = limit;
             pagination.Page = page;
             pagination.ListItem = Categories;
@@ -59,7 +47,6 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
         {
 
             return await _context.Categories
-
                 .Select(x => new Categories
                 {
                     Id = x.Id,
@@ -72,11 +59,10 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
         // METHOD CREATE Categories
         public void CreateCategories(Categories Categories)
         {
-
             _context.Categories.Add(Categories);
         }
 
-       
+
         // METHOD DELETE Categories
         public void DeleteCategories(Categories Categories)
         {

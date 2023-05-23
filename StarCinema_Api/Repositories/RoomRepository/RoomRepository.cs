@@ -72,9 +72,9 @@ namespace StarCinema_Api.Repositories.RoomRepository
             return rooms;
         }
 
-        Task<RestDTO<Rooms?>> IRoomRepository.GetById(int id)
+        async Task<Rooms?> IRoomRepository.GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
     }
 }

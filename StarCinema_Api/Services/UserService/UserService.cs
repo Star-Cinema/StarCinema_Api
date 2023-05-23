@@ -10,9 +10,11 @@ namespace StarCinema_Api.Services.UserService
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id)
@@ -71,6 +73,37 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
+        public ResponseDTO CreateUser(CreateUserDTO createUserDTO)
+        {
+            var user = _mapper.Map<User>(createUserDTO);
+
+            using var hmac = new HMACSHA512();
+            var passwordBytes = Encoding.UTF8.GetBytes(createUserDTO.Password);
+
+            Random rnd = new Random();
+            string verifyCode = "";
+            for (int i = 0; i < 6; i++)
+            {
+                verifyCode += rnd.Next(0, 10).ToString();
+            }
+            user.PasswordSalt = hmac.Key;
+            user.PasswordHash = hmac.ComputeHash(passwordBytes);
+            user.Token = verifyCode;
+            _userRepository.CreateUser(user);
+            if (_userRepository.IsSaveChange()) return new ResponseDTO()
+            {
+                code = 200,
+                message = "Success",
+                data = null
+            };
+            else return new ResponseDTO()
+            {
+                code = 400,
+                message = "Faile",
+                data = null
+            };
+        }
+
         public ResponseDTO DeleteUser(int id)
         {
             var user = _userRepository.GetUserById(id);
@@ -81,7 +114,10 @@ namespace StarCinema_Api.Services.UserService
                 data = null
             };
 
-            _userRepository.DeleteUser(user);
+            user.IsDelete = true;
+
+            //_userRepository.DeleteUser(user);
+            _userRepository.UpdateUser(user);
             if (_userRepository.IsSaveChange()) return new ResponseDTO()
             {
                 code = 200,
@@ -101,6 +137,52 @@ namespace StarCinema_Api.Services.UserService
             try
             {
                 var user = _userRepository.GetUserByEmail(email);
+                if (user != null)
+                    return new ResponseDTO()
+                    {
+                        code = 200,
+                        message = "Success",
+                        data = new UserDTO()
+                        {
+                            Id = user.Id,
+                            Name = user.Name,
+                            Email = user.Email,
+                            Phone = user.Phone,
+                            Avatar = user.Avatar,
+                            Dob = user.Dob,
+                            Gender = user.Gender,
+                            IsDelete = user.IsDelete,
+                            IsEmailVerified = user.IsEmailVerified,
+                            RoleDTO = new RoleDTO()
+                            {
+                                Id = user.Role.Id,
+                                Name = user.Role.Name,
+                            }
+                        }
+                    };
+                else return new ResponseDTO()
+                {
+                    code = 200,
+                    message = "Email is not have account",
+                    data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = ex.Message,
+                    data = null
+                };
+            }
+        }
+
+        public ResponseDTO GetUserById(int id)
+        {
+            try
+            {
+                var user = _userRepository.GetUserById(id);
                 if (user != null)
                     return new ResponseDTO()
                     {

@@ -1,4 +1,4 @@
-﻿using booking_my_doctor.DTOs;
+﻿using StarCinema_Api.DTOs;
 using Microsoft.EntityFrameworkCore;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.Data;

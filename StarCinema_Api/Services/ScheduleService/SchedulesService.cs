@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
+using StarCinema_Api.Repositories.FilmsRepository;
+using StarCinema_Api.Repositories.RoomRepository;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using StarCinema_Api.Repositories.TicketsRepository;
 
@@ -11,28 +13,39 @@ namespace StarCinema_Api.Services
         private readonly ISchedulesRepository _schedulesRepository;
         private readonly IMapper _mapper;
         private readonly ITicketsRepository _ticketsRepository;
+        private readonly IRoomRepository _roomRepository;
+        private readonly IFilmsRepository _filmsRepository;
         public SchedulesService(ISchedulesRepository SchedulesRepository,
-            IMapper mapper, ITicketsRepository ticketsRepository)
+            IMapper mapper, ITicketsRepository ticketsRepository,
+            IRoomRepository roomRepository,
+            IFilmsRepository filmsRepository)
         {
             _schedulesRepository = SchedulesRepository;
             _mapper = mapper;
             _ticketsRepository = ticketsRepository;
+            _roomRepository = roomRepository;
+            _filmsRepository = filmsRepository;
         }
         public async Task<ResponseDTO> CreateSchedule(ScheduleDTO scheduleDTO)
         {
             try
             {
-                //if(scheduleDTO.StartTime > scheduleDTO.EndTime)
-                //{
-                //    return new ResponseDTO
-                //    {
-                //        code = 400,
-                //        message = "The start time must be less than the end time"
-                //    };
-                //}
-
+                // Kiem tra ton tai cua film, room
+                var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
+                var room = _roomRepository.GetById(scheduleDTO.RoomId);
+                Task.WaitAll(film);
+                if (film.Result == null) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"Does not exist film with id {scheduleDTO.FilmId}"
+                };
+                if (room.Result == null) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"Does not exist room with id {scheduleDTO.RoomId}"
+                };
                 var schedule = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
-                schedule.EndTime = schedule.StartTime.AddMinutes(120); // Giả sử cộng thời lượng phim
+                schedule.EndTime = schedule.StartTime.AddMinutes(film.Result.Duration);
                 var scheduleList = _schedulesRepository.getAllSchedules(null, schedule.RoomId, schedule.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
                 var IsInvalid = IsScheduleConflicting(schedule, scheduleList);
                 if (IsInvalid)
@@ -52,9 +65,9 @@ namespace StarCinema_Api.Services
                 await _ticketsRepository.InsertAsync(new Tickets
                 {
                     ScheduleId = scheduleId,
-                    Price = scheduleDTO.Price,
-                    
+                    Price = scheduleDTO.Price,              
                 });
+                _ticketsRepository.Save();
                 _schedulesRepository.SaveChange();
                 return new ResponseDTO
                 {
@@ -154,31 +167,40 @@ namespace StarCinema_Api.Services
         {
             try
             {
+                // Kiem tra ton tai cua film, room
+                var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
+                var room = _roomRepository.GetById(scheduleDTO.RoomId);
+                var scheduleCurrent = _schedulesRepository.getScheduleById(id);
 
-                //if (scheduleDTO.StartTime > scheduleDTO.EndTime)
-                //{
-                //    return new ResponseDTO
-                //    {
-                //        code = 400,
-                //        message = "The start time must be less than the end time"
-                //    };
-                //}
-
-                var scheduleCurrent = await _schedulesRepository.getScheduleById(id);
-                if (scheduleCurrent == null) return new ResponseDTO
+                Task.WaitAll(room, film, scheduleCurrent);
+                if (film.Result == null) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"Does not exist film with id {scheduleDTO.FilmId}"
+                };
+                if (room.Result == null) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"Does not exist room with id {scheduleDTO.RoomId}"
+                };
+                if (scheduleCurrent.Result == null) return new ResponseDTO
                 {
                     code = 400,
                     message = $"Does not exist schedule with id {id}"
                 };
+                var schedule = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
+                schedule.EndTime = schedule.StartTime.AddMinutes(film.Result.Duration);
+
+
 
 
                 var scheduleNew = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
                 scheduleNew.Id = id;
-                scheduleNew.EndTime = scheduleNew.StartTime.AddMinutes(120); // Giả sử cộng thời lượng phim
+                scheduleNew.EndTime = scheduleNew.StartTime.AddMinutes(film.Result.Duration); 
 
-                var scheduleList = _schedulesRepository.getAllSchedules(null, scheduleCurrent.RoomId, scheduleCurrent.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
+                var scheduleList = _schedulesRepository.getAllSchedules(null, scheduleNew.RoomId, scheduleNew.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
 
-                scheduleList = scheduleList.Where(s => s.Id != scheduleCurrent.Id).ToList();
+                scheduleList = scheduleList.Where(s => s.Id != scheduleCurrent.Result.Id).ToList();
                 var IsInvalid = IsScheduleConflicting(scheduleNew, scheduleList);
                 if(IsInvalid)
                 {
@@ -188,10 +210,11 @@ namespace StarCinema_Api.Services
                         message = $"The time is the same as the show time of another film"
                     };
                 }
-                scheduleCurrent.Ticket.Price = scheduleDTO.Price;
+                scheduleCurrent.Result.Ticket.Price = scheduleDTO.Price;
                 _schedulesRepository.UpdateSchedule(scheduleNew);
 
                 _ticketsRepository.Save();
+                _schedulesRepository.SaveChange();
                 return new ResponseDTO { code = 200, message = "Success" };
             }
             catch (Exception ex)

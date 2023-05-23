@@ -11,7 +11,7 @@ namespace StarCinema_Api.Repositories.RoomRepository
             string? sortOrder,
             string? filterQuery);
 
-        public Task<RestDTO<Rooms?>> GetById(int id);
+        public Task<Rooms?> GetById(int id);
         public Task<Rooms?> Add(RoomDTO model);
         public Task<bool?> Edit(RoomDTO model);
         public Task<bool?> Delete(int id);

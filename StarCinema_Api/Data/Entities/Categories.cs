@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace StarCinema_Api.Data.Entities
 {
@@ -9,6 +10,9 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+
+        [DefaultValue(false)]
+        public bool IsTrash { get; set; } = false; // for delete Category
         public virtual List<Films> Films { get; set; }
     }
 }

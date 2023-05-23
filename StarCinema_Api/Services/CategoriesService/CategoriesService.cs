@@ -17,6 +17,7 @@ namespace StarCinema_Api.Services.CategoriesService
             _mapper = mapper;
         }
 
+        //METHOD CREATE CATEGORY
         public async Task<ResponseDTO> CreateCategories([FromForm] CategoriesDTO CategoriesDTO)
         {
             try
@@ -30,7 +31,7 @@ namespace StarCinema_Api.Services.CategoriesService
                     return new ResponseDTO
                     {
                         code = 400,
-                        message = $"The Category is existed!"
+                        message = $"{Categories.Name} is existed in system! Please re enter!"
                     };
                 }
 
@@ -55,12 +56,14 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
+        //METHOD CHECK CATEGORY IS EXISTED
         public bool IsCategoriesExist(Categories newCategories, List<Categories> CategoriesList)
         {
             if (CategoriesList.Count == 0) return false;
             foreach (var Categories in CategoriesList)
             {
-                if (newCategories.Name == Categories.Name)
+                //if (newCategories.Name == Categories.Name)
+                if (newCategories.Name.Equals(Categories.Name, StringComparison.OrdinalIgnoreCase) && Categories.IsTrash == false)
                 {
                     return true;
                 }
@@ -113,20 +116,42 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        // METHOD DELETE
         public async Task<ResponseDTO> DeleteCategoriesById(int id)
         {
             try
             {
                 var Categories = await _CategoriesRepository.getCategoriesById(id);
+                //var CategoriesNew = _mapper.Map<CategoriesDTO, Categories>(CategoriesDTO);
+                //Categories.Id = id;
                 if (Categories == null) return new ResponseDTO
                 {
                     code = 404,
                     message = $"Does not exist Category with id {id}",
                 };
 
-                _CategoriesRepository.DeleteCategories(Categories);
-                _CategoriesRepository.SaveChange();
+                else
+                {
+
+                    var countFilm = Categories.Films.Count;
+                    if (countFilm > 0)
+                        
+                    {
+                        Categories.IsTrash = true;
+                        _CategoriesRepository.UpdateCategories(Categories);
+                        _CategoriesRepository.SaveChange();
+                        
+                    }
+                    else
+
+                    {
+                        _CategoriesRepository.DeleteCategories(Categories);
+                        _CategoriesRepository.SaveChange();
+                        
+                    }
+
+                }
+
+
                 return new ResponseDTO
                 {
                     code = 200,

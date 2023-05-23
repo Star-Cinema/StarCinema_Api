@@ -23,8 +23,6 @@ namespace StarCinema_Api.Profiles
             CreateMap<Schedules, ScheduleDTO>();
 
             CreateMap<FilmDTO, Films>();
-            CreateMap<Films, FilmDTO>();
-
             CreateMap<CategoriesDTO, Categories>();
             CreateMap<Categories, CategoriesDTO>();
         }

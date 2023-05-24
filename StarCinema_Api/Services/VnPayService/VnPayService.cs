@@ -20,6 +20,18 @@ namespace StarCinema_Api.Services.VnPayService
         public async Task<ResponseDTO> CreateUrlPayment(int bookingID, double PriceTicket, double PriceService)
         {
 
+            var booking = await _bookingRepository.GetByIdAsync(bookingID);
+            if (booking == null) return new ResponseDTO
+            {
+                code = 404,
+                message = $"Does not exist booking with id {bookingID}"
+            };
+            if (booking.Status != "Pending") return new ResponseDTO
+            {
+                code = 400,
+                message = "Booking has been paid or overdue"
+            };
+
             var configBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json");
@@ -154,7 +166,6 @@ namespace StarCinema_Api.Services.VnPayService
                     {
                         await _paymentRepository.CreatePaymentAsync(payment);
                         await _paymentRepository.IsSaveChange();
-
                         _bookingRepository.UpdateBookingToSuccess(bookingId);
                     }
 
@@ -166,7 +177,11 @@ namespace StarCinema_Api.Services.VnPayService
                         {
                             VnpayTranId = vnpayTranId,
                             bankPayment = bankCode,
-                            Amount = vnp_Amount
+                            Amount = vnp_Amount,
+                            bookingId= bookingId,
+                            priceTicket= priceTicket,
+                            priceService= priceService,
+                            Total = priceTicket + priceService
                         }
                     };
                 }

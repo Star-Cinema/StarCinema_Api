@@ -20,18 +20,15 @@ namespace StarCinema_Api.Data.Entities
         [Required]
         [Range(1, 1000, ErrorMessage = "Duration must be greater than 0")]
         public int Duration { get; set; }
-
-        [MaxLength(255)]
         public string Description { get; set; }
 
         [MaxLength(255)]
         public string Country { get; set; }
-
         public DateTime Release { get; set; }
+        public string VideoLink { get; set; }
 
         [DefaultValue(false)]
         public bool IsDelete { get; set; } = false;
-
         public int CategoryId { get; set; }
 
         public virtual Categories Category { get; set; }

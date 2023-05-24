@@ -50,7 +50,7 @@ services.AddDbContext<MyDbContext>
 (option =>
 {
     option.UseSqlServer(connectionString);
-});
+}, ServiceLifetime.Transient);
 
 
 

@@ -27,7 +27,7 @@ namespace StarCinema_Api.Services.PaymentService
             var payment = await _paymentRepository.PaymentGetPaymentById(id);
             if (payment == null) return new ResponseDTO()
             {
-                code = 200,
+                code = 404,
                 message = "Payment with this id does not exist"
             };
             _paymentRepository.DeletePayment(payment);
@@ -55,7 +55,7 @@ namespace StarCinema_Api.Services.PaymentService
             var payment = await _paymentRepository.PaymentGetPaymentById(id);
             if (payment == null) return new ResponseDTO()
             {
-                code = 200,
+                code = 404,
                 message = "Payment with this id does not exist"
             };
             return new ResponseDTO()

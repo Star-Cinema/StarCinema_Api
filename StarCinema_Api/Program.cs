@@ -26,8 +26,8 @@ using StarCinema_Api.Repositories.ServiceRepository;
 using StarCinema_Api.Services.VnPayService;
 using StarCinema_Api.Repositories.PaymentRepository;
 using StarCinema_Api.Services.PaymentService;
+using StarCinema_Api.Services.EmailService;
 using StarCinema_Api.Services.ServiceService;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -41,6 +41,7 @@ var services = builder.Services;
 services.AddCors(o =>
     o.AddPolicy("CorsPolicy", builder =>
         builder.WithOrigins("http://localhost:3000")
+            .WithOrigins("http://localhost:3001")
             .AllowAnyHeader()
             .AllowAnyMethod()));
 
@@ -79,6 +80,7 @@ services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IRoomRepository, RoomRepository>();
 services.AddScoped<IVnPayService, VnPayService>();
 services.AddScoped<IPaymentService, PaymentService>();
+services.AddScoped<IEmailService , EmailService>();
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

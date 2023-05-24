@@ -11,18 +11,23 @@ using StarCinema_Api.Services;
 
 namespace StarCinema_Api.Controllers
 {
+    /*
+        Account : AnhNT282
+        Description : Class controller for entity Schedule
+        Date created : 2023/05/18
+    */
     [Route("api/[controller]")]
     [ApiController]
     public class SchedulesController : ControllerBase
     {
         private readonly ISchedulesService _schedulesService;
-
+        // Constructor AnhNT282
         public SchedulesController(ISchedulesService SchedulesService)
         {
             _schedulesService = SchedulesService;
         }
 
-        // GET: api/Schedules
+        // Get all schedules AnhNT282
         [HttpGet]
         public async Task<ActionResult> GetSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
         {
@@ -30,7 +35,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Schedules/5
+        // Get schedule by id AnhNT282
         [HttpGet("{id}")]
         public async Task<ActionResult> GetScheduleById(int id)
         {
@@ -38,8 +43,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // PUT: api/Schedules/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Update schedule AnhNT282
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSchedules(int id, ScheduleDTO schedules)
         {
@@ -47,8 +51,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // POST: api/Schedules
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Create schedule AnhNT282
         [HttpPost]
         public async Task<IActionResult> CreateSchedules(ScheduleDTO schedules)
         {
@@ -56,7 +59,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // DELETE: api/Schedules/5
+        // Delete schedule AnhNT282
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSchedules(int id)
         {

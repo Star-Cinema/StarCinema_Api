@@ -6,25 +6,34 @@ using StarCinema_Api.Repositories.ScheduleRepository;
 using System.Xml.Schema;
 
 namespace StarCinema_Api.Repositories.ScheduleRepository
-
 {
+    /*
+        Account : AnhNT282
+        Description : Class repository for entity schedule
+        Date created : 2023/05/19
+    */
     public class SchedulesRepository : ISchedulesRepository
     {
         private readonly MyDbContext _context;
+
+        // Constructor AnhNT282
         public SchedulesRepository(MyDbContext context)
         {
             _context = context;
         }
+        // Create schedule AnhNT282
         public void CreateSchedule(Schedules schedule)
         {
             _context.Schedules.Add(schedule);
         }
 
+        // Delete schedule AnhNT282
         public void DeleteSchedule(Schedules schedule)
         {
             _context.Schedules.Remove(schedule);
         }
 
+        // Get all schedules AnhNT282
         public async Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
         {
             var query =  _context.Schedules.Select(x => new Schedules
@@ -72,11 +81,13 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
             return pagination;
         }
 
+        // Get id of last schedule AnhNT282
         public async Task<int> GetLastIDSchedule()
         {
             return _context.Schedules.OrderBy(s => s.Id).LastOrDefaultAsync().Result.Id;
         }
 
+        // Get schedule by id AnhNT282
         public async Task<Schedules> getScheduleById(int scheduleId)
         {
             return await _context.Schedules.Select(x => new Schedules
@@ -92,11 +103,13 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
             }).Where(s => s.Id == scheduleId).FirstOrDefaultAsync();
         }
 
+        // Save change DbContext AnhNT282
         public bool SaveChange()
         {
             return _context.SaveChanges() > 0;
         }
 
+        // Update schedule AnhNT282
         public void UpdateSchedule(Schedules schedule)
         {
             _context.Entry(schedule).State = EntityState.Modified;

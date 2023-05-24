@@ -8,6 +8,11 @@ using StarCinema_Api.Repositories.TicketsRepository;
 
 namespace StarCinema_Api.Services
 {
+    /*
+        Account : AnhNT282
+        Description : Class service for entity schedule
+        Date created : 2023/05/19
+    */
     public class SchedulesService : ISchedulesService
     {
         private readonly ISchedulesRepository _schedulesRepository;
@@ -15,6 +20,8 @@ namespace StarCinema_Api.Services
         private readonly ITicketsRepository _ticketsRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IFilmsRepository _filmsRepository;
+
+        // Constructor AnhNT282
         public SchedulesService(ISchedulesRepository SchedulesRepository,
             IMapper mapper, ITicketsRepository ticketsRepository,
             IRoomRepository roomRepository,
@@ -26,11 +33,13 @@ namespace StarCinema_Api.Services
             _roomRepository = roomRepository;
             _filmsRepository = filmsRepository;
         }
+        
+        // Create schedule AnhNT282
         public async Task<ResponseDTO> CreateSchedule(ScheduleDTO scheduleDTO)
         {
             try
             {
-                // Kiem tra ton tai cua film, room
+                // Check filmID, roomId
                 var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
                 var room = _roomRepository.GetById(scheduleDTO.RoomId);
                 Task.WaitAll(film);
@@ -85,6 +94,7 @@ namespace StarCinema_Api.Services
             }
         }
 
+        // Delete schedule AnhNT282
         public async Task<ResponseDTO> DeleteSchedule(int id)
         {
             try
@@ -114,6 +124,7 @@ namespace StarCinema_Api.Services
             }
         }
 
+        // Get all schedules AnhNT282
         public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
         {
             try
@@ -136,6 +147,7 @@ namespace StarCinema_Api.Services
             }
         }
 
+        // Get schedule by id AnhNT282
         public async Task<ResponseDTO> GetScheduleById(int id)
         {
             try
@@ -143,7 +155,7 @@ namespace StarCinema_Api.Services
                 var result = await _schedulesRepository.getScheduleById(id);
                 if (result == null) return new ResponseDTO
                 {
-                    code = 400,
+                    code = 404,
                     message = $"Does not exist schedule with id {id}"
                 };
                 return new ResponseDTO
@@ -163,11 +175,12 @@ namespace StarCinema_Api.Services
             }
         }
 
+        // Update schedule AnhNT282
         public async Task<ResponseDTO> UpdateSchedule(int id, ScheduleDTO scheduleDTO)
         {
             try
             {
-                // Kiem tra ton tai cua film, room
+                // Check filmId, roomId
                 var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
                 var room = _roomRepository.GetById(scheduleDTO.RoomId);
                 var scheduleCurrent = _schedulesRepository.getScheduleById(id);
@@ -185,7 +198,7 @@ namespace StarCinema_Api.Services
                 };
                 if (scheduleCurrent.Result == null) return new ResponseDTO
                 {
-                    code = 400,
+                    code = 404,
                     message = $"Does not exist schedule with id {id}"
                 };
                 var schedule = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
@@ -226,6 +239,7 @@ namespace StarCinema_Api.Services
                 };
             }
         }
+        // Check for overlap with previous schedules AnhNT282
         public bool IsScheduleConflicting(Schedules newSchedule, List<Schedules> scheduleList)
         {
             if(scheduleList.Count ==0) return false;

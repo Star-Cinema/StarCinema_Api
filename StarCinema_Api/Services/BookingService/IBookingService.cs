@@ -3,8 +3,15 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Services.BookingService
 {
+    // TuNT37 interface booking service
     public interface IBookingService
     {
+        // Get Transaction History of User
+        Task<ResponseDTO> GetTransactionHistory(int id, int page, int pageSize);
+
+        // Get Revenue12Month in chart of dashboard screen
+        Task<ResponseDTO> GetRevenue12Month();
+
         // Get Statistical in dashboard screen
         Task<ResponseDTO> GetStatistical();
 

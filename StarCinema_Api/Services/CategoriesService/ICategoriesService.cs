@@ -8,6 +8,7 @@ namespace StarCinema_Api.Services.CategoriesService
         Task<ResponseDTO> GetCategoriesById(int id);
         Task<ResponseDTO> CreateCategories(CategoriesDTO CategoriesDTO);
         Task<ResponseDTO> UpdateCategories(int id, CategoriesDTO CategoriesDTO);
+        //Task<ResponseDTO> DeleteCategoriesById(int id, CategoriesDTO CategoriesDTO);
         Task<ResponseDTO> DeleteCategoriesById(int id);
     }
 }

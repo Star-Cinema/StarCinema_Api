@@ -19,6 +19,24 @@ namespace StarCinema_Api.Controllers
             _bookingService = bookingService;
         }
 
+        // Api Get transaction history booking of user 
+        [HttpGet("GetTransactionHistory")]
+        public async Task<ActionResult> GetTransactionHistory(int page, int pageSize)
+        {
+            // Get userId by token when request create
+            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            var userId = 2;
+            var resData = await _bookingService.GetTransactionHistory(userId ,page, pageSize);
+            return StatusCode(resData.code, resData);
+        }
+
+        // Get Revenue12Month in chart of dashboard screen
+        [HttpGet("GetRevenue12Month")]
+        public async Task<ActionResult> GetRevenue12Month()
+        {
+            var resData = await _bookingService.GetRevenue12Month();
+            return StatusCode(resData.code, resData);
+        }
 
         // Api get Statistical in Dashboard screen
         [HttpGet("GetStatistical")]

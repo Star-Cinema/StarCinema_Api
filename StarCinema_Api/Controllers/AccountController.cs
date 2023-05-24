@@ -6,6 +6,11 @@ using StarCinema_Api.Services.UserService;
 
 namespace StarCinema_Api.Controllers
 {
+    /*
+        Account : HungTD34
+        Description : This class to handle user navigation to AccountService
+        Create : 2023/05/04
+     */
     [Route("api/my")]
     [ApiController]
     [Authorize]
@@ -18,14 +23,18 @@ namespace StarCinema_Api.Controllers
             _userService = userService;
             //_emailService = emailService;
         }
+
+        //Get profile by user HungTD34
         [HttpGet]
         public ActionResult<UserDTO> My()
         {
             var userClaimsList = HttpContext.User.Claims.ToList();
-            var email = userClaimsList[3].Value.ToString();
+            //var email = userClaimsList[3].Value.ToString();
             var res = _userService.GetUserById(Int32.Parse( userClaimsList[3].Value));
             return StatusCode(res.code, res);
         }
+
+        //Update information by user HungTD34
         [HttpPut("update")]
         public ActionResult<UserDTO> Update(UpdateUserDTO updateUserDTO)
         {
@@ -34,6 +43,8 @@ namespace StarCinema_Api.Controllers
             var res = _userService.UpdateUser(updateUserDTO, Int32.Parse(id));
             return StatusCode(res.code, res);
         }
+
+        //Change new password by user HungTD34
         [HttpPut("changepass")]
         public ActionResult<UserDTO> ChangePassword(ChangepassDTO changepassDTO)
         {
@@ -42,6 +53,8 @@ namespace StarCinema_Api.Controllers
             var res = _userService.ChangePassUser(changepassDTO, Int32.Parse(id));
             return StatusCode(res.code, res);
         }
+
+        //Request to verify email by user HungTD34
         [HttpGet("verify")]
         public ActionResult Verify()
         {

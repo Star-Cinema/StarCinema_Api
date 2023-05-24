@@ -3,30 +3,38 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using StarCinema_Api.Data;
 using StarCinema_Api.DTOs;
+using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Repositories.ServiceRepository
 {
-    public class ServiceRepository : IServiceRepository
+    public class ServiceRepository : BaseRepository<Data.Entities.Services>, IServiceRepository
     {
-        private readonly ILogger<ServiceRepository> _logger;
-        private readonly MyDbContext _context;
-
-        public ServiceRepository(ILogger<ServiceRepository> logger,
-            MyDbContext context)
+        public ServiceRepository(MyDbContext context) : base(context)
         {
-            this._logger = logger;
-            this._context = context;
         }
-        
+
+        // Get All service with page, pageSize 
+        public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize)
+        {
+            return null;
+        }
+
+        // Get Service by Id
+        public async Task<Data.Entities.Services> GetServiceById(int id)
+        {
+            var query = context.Services.Where(e=>e.Id == id).FirstOrDefault() ;
+            return query;
+        }
+
         async Task<bool?> IServiceRepository.Delete(int id)
         {
-            var service = await _context.Services
+            var service = await context.Services
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
             if (service != null)
             {
-                _context.Services.Remove(service);
-                await _context.SaveChangesAsync();
+                context.Services.Remove(service);
+                await context.SaveChangesAsync();
                 return true;
             };
 
@@ -44,7 +52,7 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             string? sortOrder,
             string? filterQuery)
         {
-            var query = _context.Services.AsQueryable();
+            var query = context.Services.AsQueryable();
             if (!string.IsNullOrEmpty(filterQuery))
                 query = query.Where(b => b.Name.Contains(filterQuery));
             var recordCount = await query.CountAsync();
@@ -76,9 +84,9 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             throw new NotImplementedException();
         }
 
-        async Task<Data.Entities.Services?> IServiceRepository.Post(ServiceDTO model)
+        public async Task<Data.Entities.Services> Post(ServiceDTO model)
         {
-            var service = await _context.Services
+            var service = await context.Services
                 .Where(b => b.Id == model.Id)
                 .FirstOrDefaultAsync();
             
@@ -86,7 +94,8 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             {
                 service.Name = model.Name;
                 service.Price = model.Price;
-                _context.Services.Update(service);
+                context.Services.Update(service);
+                context.SaveChanges();
             }
             else
             {
@@ -95,9 +104,9 @@ namespace StarCinema_Api.Repositories.ServiceRepository
                     Name = model.Name!,
                     Price = model.Price,
                 };
-                _context.Services.Add(service);
+                context.Services.Add(service);
+                context.SaveChanges();
             }
-            await _context.SaveChangesAsync();
             return service;
         }
 
@@ -110,5 +119,6 @@ namespace StarCinema_Api.Repositories.ServiceRepository
         {
             throw new NotImplementedException();
         }
+
     }
 }

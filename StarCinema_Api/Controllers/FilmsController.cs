@@ -43,15 +43,33 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Schedules
+        // GET: api/Films
         [HttpGet]
-        public async Task<ActionResult> GetFilms(string? name, string? director, string? country, string? category, int page = 0, int limit = 10)
+        public async Task<ActionResult> GetFilms(string? search, int page = 0, int limit = 10)
         {
-            var resData = await _filmsService.GetAllFilms(null, null, null, null);
+            var resData = await _filmsService.GetAllFilms(search);
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Schedules/5
+        // GET: api/Films
+        // GET NOW SHOWING FILM
+        [HttpGet("nowShowing")]
+        public async Task<ActionResult> GetNowShowingFilms()
+        {
+            var resData = await _filmsService.getNowShowingFilms();
+            return StatusCode(resData.code, resData);
+        }
+
+        // GET: api/Films
+        // GET UPCOMING FILM
+        [HttpGet("Upcoming")]
+        public async Task<ActionResult> GetUpComingFilms()
+        {
+            var resData = await _filmsService.getUpComingFilms();
+            return StatusCode(resData.code, resData);
+        }
+
+        // GET: api/Films/5
         [HttpGet("{id}")]
         public async Task<ActionResult> GetFilmById(int id)
         {

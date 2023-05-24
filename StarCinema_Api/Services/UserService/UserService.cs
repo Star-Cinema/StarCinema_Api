@@ -8,6 +8,11 @@ using System.Text;
 
 namespace StarCinema_Api.Services.UserService
 {
+    /*
+        Account : HungTD34
+        Description : This class is for manipulating the database. Handle create, update, disable, get, get list, verify email of users
+        Create : 2023/05/04
+     */
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -20,8 +25,10 @@ namespace StarCinema_Api.Services.UserService
             _emailService = emailService;
         }
 
+        //Change new password user HungTD34
         public ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id)
         {
+            //Check user exists HungTD34
             var user = _userRepository.GetUserById(id);
             if (user == null) return new ResponseDTO()
             {
@@ -29,6 +36,8 @@ namespace StarCinema_Api.Services.UserService
                 message = id + " dont have account",
                 data = null
             };
+
+            //Decrypt the password in the database and check if it matches the entered current password HungTD34
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var passwordBytes = hmac.ComputeHash(
                 Encoding.UTF8.GetBytes(changepassDTO.CurrentPass)
@@ -47,6 +56,7 @@ namespace StarCinema_Api.Services.UserService
                 }
             }
 
+            //Check if the new password entered is the same or not HungTD34
             if (changepassDTO.NewPass != changepassDTO.ReNewPass) 
             return new ResponseDTO()
             {
@@ -55,12 +65,14 @@ namespace StarCinema_Api.Services.UserService
                 data = null
             };
 
+            //Encrypt new password HungTD34
             using var nhmac = new HMACSHA512();
             var newPass = Encoding.UTF8.GetBytes(changepassDTO.NewPass);
 
             user.PasswordSalt = nhmac.Key;
             user.PasswordHash = nhmac.ComputeHash(newPass);
 
+            //Update user with new password HungTD34
             _userRepository.UpdateUser(user);
             if (_userRepository.IsSaveChange()) return new ResponseDTO()
             {
@@ -76,22 +88,29 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
+        //Create new user HungTD34
         public ResponseDTO CreateUser(CreateUserDTO createUserDTO)
         {
+            //Mapping User from CreateUserDTO HungTD34
             var user = _mapper.Map<User>(createUserDTO);
 
+            //Encrypt password HungTD34
             using var hmac = new HMACSHA512();
             var passwordBytes = Encoding.UTF8.GetBytes(createUserDTO.Password);
 
+            //Create random token verify HungTD34
             Random rnd = new Random();
             string verifyCode = "";
             for (int i = 0; i < 6; i++)
             {
                 verifyCode += rnd.Next(0, 10).ToString();
             }
+
             user.PasswordSalt = hmac.Key;
             user.PasswordHash = hmac.ComputeHash(passwordBytes);
             user.Token = verifyCode;
+
+            //Create new user in to database HungTD34
             _userRepository.CreateUser(user);
             if (_userRepository.IsSaveChange()) return new ResponseDTO()
             {
@@ -107,8 +126,10 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
+        //Disable user HungTD34
         public ResponseDTO DeleteUser(int id)
         {
+            //Check user exists HungTD34
             var user = _userRepository.GetUserById(id);
             if (user == null) return new ResponseDTO()
             {
@@ -117,9 +138,11 @@ namespace StarCinema_Api.Services.UserService
                 data = null
             };
 
+            //Disable user HungTD34
             user.IsDelete = true;
 
-            //_userRepository.DeleteUser(user);
+
+            //Update user with new IsDelete property HungTD34
             _userRepository.UpdateUser(user);
             if (_userRepository.IsSaveChange()) return new ResponseDTO()
             {
@@ -135,6 +158,7 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
+        //Get user by email HungTD34
         public ResponseDTO GetUserByEmail(string email)
         {
             try
@@ -181,6 +205,7 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
+        //Get user by id HungTD34
         public ResponseDTO GetUserById(int id)
         {
             try
@@ -227,6 +252,7 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
+        //Get list user with page, pageSize, key search, sortBy HungTD34
         public ResponseDTO GetUsers(int? page = 1, int? pageSize = 10, string? key = "", string? sortBy = "id")
         {
             try
@@ -271,6 +297,7 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
+        //Update user HungTD34
         public ResponseDTO UpdateUser(UpdateUserDTO updateUserDTO, int id)
         {
             var user = _userRepository.GetUserById(id);
@@ -308,6 +335,8 @@ namespace StarCinema_Api.Services.UserService
                 data = null
             };
         }
+
+        //Verify email of user account HungTD34
         public ResponseDTO VerifyEmail(int id)
         {
             var user = _userRepository.GetUserById(id);
@@ -315,6 +344,7 @@ namespace StarCinema_Api.Services.UserService
             if (user == null) return new ResponseDTO() { code = 400, message = "Username is not valid" };
             if (user.IsEmailVerified) return new ResponseDTO() { code = 400, message = "Your email is verify" };
 
+            //Send email to user verify HungTD34
             return _emailService.SendEmail(user.Email, "Verify your email", "Please click this link to verify: localhost:3000/verify?email=" + user.Email.Split("@")[0] + "%40" + "gmail.com" + "&token=" + user.Token);
         }
     }

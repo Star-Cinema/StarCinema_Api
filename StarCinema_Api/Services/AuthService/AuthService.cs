@@ -106,33 +106,44 @@ namespace StarCinema_Api.Services.AuthService
 
         public ResponseDTO VerifyEmail(string email, string token)
         {
-            //try
-            //{
-            //    var user = _userRepository.GetUserByEmail(email);
-            //    if (user != null && user.phone == token)
-            //        return new ResponseDTO()
-            //        {
-            //            code = 200,
-            //            message = "Success! Your email is verify!",
-            //            data = null
-            //        };
-            //    else
-            //        return new ResponseDTO()
-            //        {
-            //            code = 400,
-            //            message = "Faile",
-            //            data = null
-            //        };
-            //}
-            //catch (Exception e)
-            //{
-            return new ResponseDTO()
+            try
             {
-                code = 400,
-                message = "Faile. " /*+ e.Message*/,
-                data = null
-            };
-            //}
+                var user = _userRepository.GetUserByEmail(email);
+                if (user != null && user.Token == token)
+                {
+                    user.IsEmailVerified = true;
+                    _userRepository.UpdateUser(user);
+                    if (_userRepository.IsSaveChange())
+                        return new ResponseDTO()
+                        {
+                            code = 200,
+                            message = "Success! Your email is verify!",
+                            data = null
+                        };
+                    else return new ResponseDTO()
+                    {
+                        code = 400,
+                        message = "Faile! Your email is not verify!",
+                    };
+                }
+
+                else
+                    return new ResponseDTO()
+                    {
+                        code = 400,
+                        message = "Faile",
+                        data = null
+                    };
+            }
+            catch (Exception e)
+            {
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = "Faile. " + e.Message,
+                    data = null
+                };
+            }
         }
     }
 }

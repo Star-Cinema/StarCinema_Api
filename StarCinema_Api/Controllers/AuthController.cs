@@ -29,5 +29,18 @@ namespace StarCinema_Api.Controllers
             var res = _authService.Register(registerUserDTO);
             return StatusCode(res.code, res);
         }
+        [HttpPost("verify")]
+        public ActionResult VerifyEmail(string email, string token)
+        {
+            try
+            {
+                var res = _authService.VerifyEmail(email, token);
+                return StatusCode(res.code, res);
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+        }
     }
 }

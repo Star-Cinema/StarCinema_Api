@@ -12,5 +12,6 @@ namespace StarCinema_Api.Services.UserService
         ResponseDTO UpdateUser(UpdateUserDTO updateUserDTO, int id);
         ResponseDTO CreateUser(CreateUserDTO createUserDTO);
         ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id);
+        ResponseDTO VerifyEmail(int id);
     }
 }

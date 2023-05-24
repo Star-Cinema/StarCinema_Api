@@ -2,6 +2,7 @@
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.UserRepository;
+using StarCinema_Api.Services.EmailService;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,11 +11,13 @@ namespace StarCinema_Api.Services.UserService
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IEmailService emailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _emailService = emailService;
         }
 
         public ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id)
@@ -285,6 +288,12 @@ namespace StarCinema_Api.Services.UserService
             user.Phone = updateUserDTO.Phone;
             user.Gender = updateUserDTO.Gender;
 
+            if (!user.IsEmailVerified && user.Email != updateUserDTO.Email)
+            {
+                if(_userRepository.GetUserByEmail(updateUserDTO.Email) == null)
+                user.Email = updateUserDTO.Email;
+            }
+
             _userRepository.UpdateUser(user);
             if (_userRepository.IsSaveChange()) return new ResponseDTO()
             {
@@ -298,6 +307,15 @@ namespace StarCinema_Api.Services.UserService
                 message = "Faile",
                 data = null
             };
+        }
+        public ResponseDTO VerifyEmail(int id)
+        {
+            var user = _userRepository.GetUserById(id);
+
+            if (user == null) return new ResponseDTO() { code = 400, message = "Username is not valid" };
+            if (user.IsEmailVerified) return new ResponseDTO() { code = 400, message = "Your email is verify" };
+
+            return _emailService.SendEmail(user.Email, "Verify your email", "Please click this link to verify: localhost:3000/verify?email=" + user.Email.Split("@")[0] + "%40" + "gmail.com" + "&token=" + user.Token);
         }
     }
 }

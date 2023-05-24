@@ -22,8 +22,8 @@ namespace StarCinema_Api.Controllers
         public ActionResult<UserDTO> My()
         {
             var userClaimsList = HttpContext.User.Claims.ToList();
-            var email = userClaimsList[2].Value.ToString();
-            var res = _userService.GetUserByEmail(userClaimsList[2].Value.ToString());
+            var email = userClaimsList[3].Value.ToString();
+            var res = _userService.GetUserById(Int32.Parse( userClaimsList[3].Value));
             return StatusCode(res.code, res);
         }
         [HttpPut("update")]
@@ -40,6 +40,15 @@ namespace StarCinema_Api.Controllers
             var userClaimsList = HttpContext.User.Claims.ToList();
             var id = (userClaimsList[3].Value);
             var res = _userService.ChangePassUser(changepassDTO, Int32.Parse(id));
+            return StatusCode(res.code, res);
+        }
+        [HttpGet("verify")]
+        public ActionResult Verify()
+        {
+            var claims = HttpContext.User.Claims.ToList();
+            var id = claims[3].Value;
+            var res = _userService.VerifyEmail(Int32.Parse(id));
+
             return StatusCode(res.code, res);
         }
         //[HttpGet("verify")]

@@ -6,6 +6,7 @@ using StarCinema_Api.DTOs;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata.Ecma335;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StarCinema_Api.Repositories.BookingRepository
 {
@@ -15,6 +16,53 @@ namespace StarCinema_Api.Repositories.BookingRepository
         {
         }
 
+        // GEt transaction history booking of user
+        public async Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id, int page, int pageSize)
+        {
+            var query =  (from b in context.Bookings
+                                where b.IsDelete == false
+                                join bd in context.BookingDetails on b.Id equals bd.BookingId
+                                join u in context.Users on b.UserId equals u.Id
+                                join t in context.Tickets on bd.TicketId equals t.Id
+                                join s in context.Schedules on t.ScheduleId equals s.Id
+                                join f in context.Films on s.FilmId equals f.Id
+                                let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
+                                            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
+                                let totalPriceServices = b.Services.Sum(e => e.Price)
+                                select new BookingDTO
+                                {
+                                    Id = b.Id,
+                                    UserId = u.Id,
+                                    CreateAt = b.CreateAt,
+                                    TotalPriceTickets = totalPriceTickets,
+                                    TotalPriceServices = totalPriceServices,
+                                    TotalPrice = totalPriceTickets + totalPriceServices,
+                                    FilmName = f.Name,
+                                    UserName = u.Name,
+                                }).AsQueryable();
+
+            if(id != null)
+            {
+                query = query.Where(e => e.UserId == id);
+            }
+            var listBooking = query.Distinct().ToList();
+            listBooking = listBooking.Skip(10 * 0).Take(10).ToList();
+
+            var pagination = new PaginationDTO<BookingDTO>();
+
+            pagination.TotalCount = listBooking.Count;
+            pagination.PageSize = 10;
+            pagination.Page = 0;
+            pagination.ListItem = listBooking;
+
+            //query = query.Skip(pageSize * page).Take(pageSize).ToList();
+            //pagination.PageSize = pageSize;
+            //pagination.Page = page;
+
+            return pagination;
+        }
+
+        // Set Status booking to Expired 
         public void UpdateBookingsToExpired()
         {
             var fifteenMinutesAgo = DateTime.Now.AddMinutes(-15);
@@ -30,6 +78,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
+        // Set Status booking to success
         public void UpdateBookingToSuccess(int bookingId)
         {
             var booking = context.Bookings.Where(e => e.Id == bookingId).FirstOrDefault();
@@ -69,6 +118,27 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 PercentRevenueGrowthTicket = percentRevenueGrowthTickets == double.NegativeInfinity ? 0 : percentRevenueGrowthTickets,
                 PercentRevenueGrowthPrice = percentRevenueGrowthPrice == double.NegativeInfinity ? 0 : percentRevenueGrowthPrice
             };
+        }
+
+        // Get Revenue12Month in chart of dashboard screen
+        public async Task<RevenueChartDTO> GetRevenue12Month()
+        {
+            List<double> listtRevenueServices = new List<double>();
+            List<double> listtRevenueTicket = new List<double>();
+            for (int i = 0; i < 12 ; i++)
+            {
+                var totalRevenueServicesOfMonth = context.Payments
+                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-i).Month ).Sum(e => e.PriceService);
+                var totalRevenueTicketsOfMonth = context.Payments
+                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-i).Month).Sum(e => e.PriceTicket);
+                listtRevenueServices.Add(totalRevenueServicesOfMonth);
+                listtRevenueTicket.Add(totalRevenueTicketsOfMonth);
+            }
+            var revenueChart = new RevenueChartDTO();
+            revenueChart.ListRevenueServices = listtRevenueServices;
+            revenueChart.ListRevenueTickets = listtRevenueTicket;
+
+            return revenueChart;
         }
 
         // Get all seats not booked 
@@ -133,7 +203,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 var seat = new SeatsDTO();
                 seat.Id = item.Id;
                 seat.SeatName = item.Name;
-                seat.Status = "Available";
+                seat.Status = "Unavailable";
                 listSeatsDTO.Add(seat);
             }
             foreach (var item in listSeatsNotBooked)
@@ -141,7 +211,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 var seat = new SeatsDTO();
                 seat.Id = item.Id;
                 seat.SeatName = item.Name;
-                seat.Status = "UnAvailable";
+                seat.Status = "Available";
                 listSeatsDTO.Add(seat);
             }
             return listSeatsDTO;
@@ -188,7 +258,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 var ticket = (from t in context.Tickets join s in context.Schedules on t.ScheduleId equals s.Id
                              where s.Id == bookingAddEditDTO.ScheduleId select new Tickets { Id = t.Id }).FirstOrDefault();
                 newBookingDetail.TicketId = ticket.Id;
-                newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[0];
+                newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[i];
                 listBookingDetail.Add(newBookingDetail);
             }
             await context.BookingDetails.AddRangeAsync(listBookingDetail);
@@ -259,7 +329,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                   where s.Id == bookingAddEditDTO.ScheduleId
                                   select new Tickets { Id = t.Id }).FirstOrDefault();
                     newBookingDetail.TicketId = ticket.Id;
-                    newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[0];
+                    newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[i];
                     listBookingDetail.Add(newBookingDetail);
                 }
                 await context.BookingDetails.AddRangeAsync(listBookingDetail);
@@ -289,7 +359,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
 
         public async Task<PaginationDTO<BookingDTO>> GetAllBookings(int page, int pageSize)
         {
-            var query2 = await (from b in context.Bookings
+            var query = await (from b in context.Bookings
                                 where b.IsDelete == false
                                 join bd in context.BookingDetails on b.Id equals bd.BookingId
                                 join u in context.Users on b.UserId equals u.Id
@@ -313,18 +383,18 @@ namespace StarCinema_Api.Repositories.BookingRepository
             
 
             var pagination = new PaginationDTO<BookingDTO>();
-            pagination.TotalCount = query2.Count;
+            query = query.Skip(10 * 0).Take(10).ToList();
+
+            pagination.TotalCount = query.Count;
+            pagination.PageSize = 10;
+            pagination.Page = 0;
+            pagination.ListItem = query;
 
             //query = query.Skip(pageSize * page).Take(pageSize).ToList();
             //pagination.PageSize = pageSize;
             //pagination.Page = page;
-            query2 = query2.Skip(10 * 0).Take(10).ToList();
-            pagination.PageSize = 10;
-            pagination.Page = 0;
-            pagination.ListItem = query2;
 
             return pagination;
-
         }
 
         public async Task<BookingDTO> GetDetailBookingById(int id)

@@ -5,8 +5,14 @@ namespace StarCinema_Api.Repositories.BookingRepository
 {
     public interface IBookingRepository : IBaseRepository<Bookings>
     {
+        // Get Transaction History of User
+        Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id ,int page, int pageSize);
+
         void UpdateBookingsToExpired();
         void UpdateBookingToSuccess(int bookingId);
+
+        // Get Revenue12Month in chart of dashboard screen
+        Task<RevenueChartDTO> GetRevenue12Month();
 
         // Get Statistical in dashboard screen
         Task<StatisticalDTO> GetStatistical();

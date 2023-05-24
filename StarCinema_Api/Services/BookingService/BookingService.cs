@@ -25,6 +25,63 @@ namespace StarCinema_Api.Services.BookingService
             _mapper = mapper;
         }
 
+        // Get Transaction History of User
+        public async Task<ResponseDTO> GetTransactionHistory(int id, int page, int pageSize)
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetTransactionHistory(id, page, pageSize);
+                if (result == null)
+                {
+                    return new ResponseDTO
+                    {
+                        code = 400,
+                        message = "Does not get all transaction history"
+                    };
+                }
+                else
+                {
+                    return new ResponseDTO
+                    {
+                        code = 200,
+                        message = "Success",
+                        data = result
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
+        // Get Revenue12Month in chart of dashboard screen
+        public async Task<ResponseDTO> GetRevenue12Month()
+        {
+            try
+            {
+                var result = await _bookingsRepository.GetRevenue12Month();
+                return new ResponseDTO
+                {
+                    code = 200,
+                    message = "Success",
+                    data = result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+        }
+
         // Get Statistical in dashboard screen
         public async Task<ResponseDTO> GetStatistical()
         {

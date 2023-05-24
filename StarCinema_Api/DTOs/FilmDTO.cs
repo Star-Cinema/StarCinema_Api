@@ -1,4 +1,14 @@
-﻿using StarCinema_Api.Data.Entities;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: FilmDTO.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Film DTO
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+///
+using StarCinema_Api.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,14 +16,8 @@ using System.Collections;
 
 namespace StarCinema_Api.DTOs
 {
-    //*************************
-    // vy comment
-    //return the field of film you would like to display
-    //To accomplish this, we'll modify the controller methods to return a data transfer object (DTO) instead of the EF model
-    //*************************
     public class FilmDTO
     {
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string Producer { get; set; }

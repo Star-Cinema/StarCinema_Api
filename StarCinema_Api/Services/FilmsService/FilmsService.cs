@@ -1,4 +1,14 @@
-﻿using AutoMapper;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: FilmsService.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Film Service
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using AutoMapper;
 using Azure.Core;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +20,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace StarCinema_Api.Services.FilmsService
 {
+
+    // VYVNK1 Create class FilmService implement IFilmsService
     public class FilmsService : IFilmsService
     {
         private readonly IFilmsRepository _filmsRepository;
@@ -21,7 +33,7 @@ namespace StarCinema_Api.Services.FilmsService
             _mapper = mapper;
         }
 
-        // CREATE FILM
+        // VyVNK1 CREATE FILM
         public async Task<ResponseDTO> CreateFilm([FromForm] FilmDTO filmDTO)
         {
             try
@@ -89,6 +101,7 @@ namespace StarCinema_Api.Services.FilmsService
             }
         }
 
+        //VyVNK1 METHOD CHECK IF FILM ALREADY EXIST
         public bool IsFilmExist(Films newFilm, List<Films> filmList)
         {
 
@@ -108,7 +121,7 @@ namespace StarCinema_Api.Services.FilmsService
             return false;
         }
 
-        // METHOD UPDATE
+        // VyVNK1 METHOD UPDATE
         public async Task<ResponseDTO> UpdateFilm(int id, FilmDTO filmDTO)
         {
             try
@@ -144,6 +157,25 @@ namespace StarCinema_Api.Services.FilmsService
                 _filmsRepository.UpdateFilm(filmNew);
 
                 _filmsRepository.SaveChange();
+                // Code to get image link
+                //.....
+
+                foreach (var item in filmDTO.Image)
+                {
+
+                    if (item.Name != null && item.Name.Length > 0)
+                    {
+
+                        var image = new Images
+                        {
+                            FilmId = id,
+                            Name = item.Name,
+                            Path = item.Path
+                        };
+                        _filmsRepository.CreateImage(image);
+                        //_filmsRepository.SaveChange();
+                    }
+                }
                 return new ResponseDTO { code = 200, message = "Success" };
             }
             catch (Exception ex)
@@ -156,7 +188,7 @@ namespace StarCinema_Api.Services.FilmsService
             }
         }
 
-        // METHOD DELETE
+        // VyVNK1 METHOD DELETE
         public async Task<ResponseDTO> DeleteFilmById(int id)
         {
             try
@@ -193,7 +225,7 @@ namespace StarCinema_Api.Services.FilmsService
             }
         }
 
-        //METHOD GET ALL FILM
+        //VyVNK1 METHOD GET ALL FILM
         public async Task<ResponseDTO> GetAllFilms(string? search, int page = 0, int limit = 10)
         {
             try
@@ -216,7 +248,7 @@ namespace StarCinema_Api.Services.FilmsService
             }
         }
 
-        //METHOD GET ALL NOW SHOWING FILM
+        //VyVNK1 METHOD GET ALL NOW SHOWING FILM
         public async Task<ResponseDTO> getNowShowingFilms()
         {
             try
@@ -239,7 +271,7 @@ namespace StarCinema_Api.Services.FilmsService
             }
         }
 
-        //METHOD GET ALL UPCOMING FILM
+        //VyVNK1 METHOD GET ALL UPCOMING FILM
         public async Task<ResponseDTO> getUpComingFilms()
         {
             try
@@ -261,7 +293,7 @@ namespace StarCinema_Api.Services.FilmsService
                 };
             }
         }
-        //METHOD GET FILM BY ID
+        //VyVNK1 METHOD GET FILM BY ID
         public async Task<ResponseDTO> GetFilmById(int id)
         {
             try

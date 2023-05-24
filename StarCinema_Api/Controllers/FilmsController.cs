@@ -1,4 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: FilmsController.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : http method
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+///
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
@@ -17,7 +27,7 @@ namespace StarCinema_Api.Controllers
         {
             _filmsService = filmsService;
         }
-        // POST: api/Films
+        // VyVNK1 POST: api/Films
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<IActionResult> CreateFilms(FilmDTO filmDTO)
@@ -26,7 +36,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // PUT: api/Films/5
+        // VyVNK1  PUT: api/Films/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateFilms(int id, FilmDTO film)
@@ -35,7 +45,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // DELETE: api/Films/5
+        // VyVNK1  DELETE: api/Films/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFilms(int id)
         {
@@ -43,7 +53,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Films
+        // VyVNK1  GET: api/Films
         [HttpGet]
         public async Task<ActionResult> GetFilms(string? search, int page = 0, int limit = 10)
         {
@@ -51,7 +61,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Films
+        // VyVNK1  GET: api/Films
         // GET NOW SHOWING FILM
         [HttpGet("nowShowing")]
         public async Task<ActionResult> GetNowShowingFilms()

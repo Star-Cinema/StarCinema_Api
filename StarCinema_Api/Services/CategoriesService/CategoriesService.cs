@@ -1,4 +1,14 @@
-﻿using AutoMapper;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: CategoriesService.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Category Service
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
@@ -6,6 +16,7 @@ using StarCinema_Api.Repositories.CategoriesRepository;
 
 namespace StarCinema_Api.Services.CategoriesService
 {
+    // VYVNK1 Create class CategoriesService implement ICategoriesService
     public class CategoriesService : ICategoriesService
     {
         private readonly ICategoriesRepository _CategoriesRepository;
@@ -17,7 +28,7 @@ namespace StarCinema_Api.Services.CategoriesService
             _mapper = mapper;
         }
 
-        //METHOD CREATE CATEGORY
+        //VyVNK1 METHOD CREATE CATEGORY
         public async Task<ResponseDTO> CreateCategories([FromForm] CategoriesDTO CategoriesDTO)
         {
             try
@@ -56,7 +67,7 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        //METHOD CHECK CATEGORY IS EXISTED
+        //VyVNK1 METHOD CHECK CATEGORY IS EXISTED
         public bool IsCategoriesExist(Categories newCategories, List<Categories> CategoriesList)
         {
             if (CategoriesList.Count == 0) return false;
@@ -71,7 +82,7 @@ namespace StarCinema_Api.Services.CategoriesService
             return false;
         }
 
-        // METHOD UPDATE
+        // VyVNK1 METHOD UPDATE
         public async Task<ResponseDTO> UpdateCategories(int id, CategoriesDTO CategoriesDTO)
         {
             try
@@ -116,6 +127,7 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
+        // VyVNK1 METHOD DELETE
         public async Task<ResponseDTO> DeleteCategoriesById(int id)
         {
             try
@@ -168,7 +180,7 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        //METHOD GET ALL Categories
+        //VyVNK1 METHOD GET ALL Categories
         public async Task<ResponseDTO> GetAllCategories(string? name, int page = 0, int limit = 10)
         {
             try
@@ -191,7 +203,7 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        //METHOD GET BY ID
+        //VyVNK1 METHOD GET BY ID
         public async Task<ResponseDTO> GetCategoriesById(int id)
         {
             try

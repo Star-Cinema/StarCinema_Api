@@ -1,4 +1,14 @@
-﻿using StarCinema_Api.DTOs;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: FilmsRepository.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Film Repository
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+///
+using StarCinema_Api.DTOs;
 using Microsoft.EntityFrameworkCore;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.Data;
@@ -11,6 +21,7 @@ using System;
 
 namespace StarCinema_Api.Repositories.FilmsRepository
 {
+    // VYVNK1 Create class FilmsRepository implement interface IFilmsRepository
     public class FilmsRepository : IFilmsRepository
     {
         private readonly MyDbContext _context;
@@ -19,7 +30,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             _context = context;
         }
 
-        //METHOD: GET ALL FILM 
+        //VyVNK1 METHOD: GET ALL FILM 
         public async Task<PaginationDTO<Films>> getAllFilms(string? search,
             int page = 0, int limit = 10)
         {
@@ -64,7 +75,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         }
       
 
-        //METHOD: GET ALL NOW SHOWING FILM 
+        // VYVNK1 METHOD: GET ALL NOW SHOWING FILM 
         //from list schedule, if first start date <= today <= last start date
         public async Task<List<Films>> getNowShowingFilms()
         {
@@ -100,7 +111,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             return films;
         }
 
-        //METHOD: GET ALL UPCOMING FILM 
+        //VyVNK1 METHOD: GET ALL UPCOMING FILM 
         //from list schedule, if first start date > today
         public async Task<List<Films>> getUpComingFilms()
         {
@@ -134,7 +145,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         }
 
 
-        // METHOD: GET FILM BY ID 
+        // VyVNK1 METHOD: GET FILM BY ID 
         public async Task<Films> getFilmById(int filmId)
         {
             return await _context.Films
@@ -157,14 +168,14 @@ namespace StarCinema_Api.Repositories.FilmsRepository
                 .Where(s => s.Id == filmId).FirstOrDefaultAsync();
         }
 
-        // METHOD CREATE FILM
+        // VyVNK1 METHOD CREATE FILM
         public void CreateFilm(Films film)
         {
 
             _context.Films.Add(film);
         }
 
-        // METHOD CREATE IMAGE
+        // VyVNK1 METHOD CREATE IMAGE
         public async void CreateImage(Images image)
         {
 
@@ -172,14 +183,14 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             _context.SaveChanges();
         }
 
-        // METHOD DELETE FILM
+        // VyVNK1 METHOD DELETE FILM
         public void DeleteFilm(Films film)
         {
             _context.Films.Remove(film);
 
         }
 
-        // METHOD UPDATE FILM
+        // VyVNK1 METHOD UPDATE FILM
         public void UpdateFilm(Films film)
         {
             _context.Entry(film).State = EntityState.Modified;
@@ -190,7 +201,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             return _context.SaveChanges() > 0;
         }
 
-        // GET LAST FILM ID FOR INSERT INTO IMAGES TABLE
+        // VYVNK1 - METHOD GET LAST FILM ID FOR INSERT INTO IMAGES TABLE
         public async Task<int> GetLastIDFilm()
         {
             return _context.Films.OrderBy(s => s.Id).LastOrDefaultAsync().Result.Id;

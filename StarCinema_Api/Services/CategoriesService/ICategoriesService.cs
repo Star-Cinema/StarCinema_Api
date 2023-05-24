@@ -1,7 +1,18 @@
-﻿using StarCinema_Api.DTOs;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: ICategoriesService.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Category Service Interface
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Services.CategoriesService
 {
+    // VYVNK1 Create interface ICategoriesService
     public interface ICategoriesService
     {
         Task<ResponseDTO> GetAllCategories(string? name, int page = 0, int limit = 10);

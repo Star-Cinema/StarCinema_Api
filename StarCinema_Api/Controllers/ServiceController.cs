@@ -6,6 +6,7 @@ using StarCinema_Api.Attributes;
 using StarCinema_Api.Data;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.ServiceRepository;
+using StarCinema_Api.Services.ServiceService;
 using System.ComponentModel.DataAnnotations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -16,10 +17,27 @@ namespace StarCinema_Api.Controllers
     public class ServiceController : ControllerBase
     {
         private readonly IServiceRepository repository;
+        private readonly IServiceService _serviceService;
 
-        public ServiceController(IServiceRepository repository)
+        public ServiceController(IServiceRepository repository, IServiceService serviceService)
         {
             this.repository = repository;
+            _serviceService = serviceService;
+        }
+
+        // Api Get Service by Id
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetServiceById(int id)
+        {
+            if (id == null)
+            {
+                return BadRequest(new ResponseDTO
+                {
+                    message = "Required request not null!!"
+                });
+            }
+            var resData = await _serviceService.GetServiceById(id);
+            return StatusCode(resData.code, resData);
         }
 
         [HttpGet(Name = "GetServices")]
@@ -46,7 +64,7 @@ namespace StarCinema_Api.Controllers
         }
 
         [HttpPost]
-        [ResponseCache(NoStore = true)]
+        //[ResponseCache(NoStore = true)]
         public async Task<ResponseDTO> Post(ServiceDTO model)
         {
             if (ModelState.IsValid)
@@ -71,7 +89,7 @@ namespace StarCinema_Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteService")]
-        [ResponseCache(NoStore = true)]
+        //[ResponseCache(NoStore = true)]
         public async Task<ResponseDTO> Delete(int id)
         {
             var service = await repository.Delete(id);

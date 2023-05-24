@@ -26,6 +26,7 @@ using StarCinema_Api.Repositories.ServiceRepository;
 using StarCinema_Api.Services.VnPayService;
 using StarCinema_Api.Repositories.PaymentRepository;
 using StarCinema_Api.Services.PaymentService;
+using StarCinema_Api.Services.ServiceService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,7 @@ services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 // Add scoped services
+services.AddScoped<IServiceService, ServiceService>();
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();

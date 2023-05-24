@@ -10,13 +10,14 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StarCinema_Api.Repositories.BookingRepository
 {
+    // TuNT37 booking repository 
     public class BookingRepository : BaseRepository<Bookings>, IBookingRepository
     {
         public BookingRepository(MyDbContext context) : base(context)
         {
         }
 
-        // GEt transaction history booking of user
+        // TuNT37 GEt transaction history booking of user
         public async Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id, int page, int pageSize)
         {
             var query =  (from b in context.Bookings
@@ -62,7 +63,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return pagination;
         }
 
-        // Set Status booking to Expired 
+        // TuNT37 Set Status booking to Expired 
         public void UpdateBookingsToExpired()
         {
             var fifteenMinutesAgo = DateTime.Now.AddMinutes(-15);
@@ -78,7 +79,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
-        // Set Status booking to success
+        // TuNT37 Set Status booking to success
         public void UpdateBookingToSuccess(int bookingId)
         {
             var booking = context.Bookings.Where(e => e.Id == bookingId).FirstOrDefault();
@@ -87,7 +88,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
-        // Get Statistical in dashboard screen
+        // TuNT37 Get Statistical in dashboard screen
         public async Task<StatisticalDTO> GetStatistical()
         {
             var totalRevenueServicesByMonth = context.Payments
@@ -120,7 +121,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             };
         }
 
-        // Get Revenue12Month in chart of dashboard screen
+        // TuNT37 Get Revenue12Month in chart of dashboard screen
         public async Task<RevenueChartDTO> GetRevenue12Month()
         {
             List<double> listtRevenueServices = new List<double>();
@@ -141,7 +142,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return revenueChart;
         }
 
-        // Get all seats not booked 
+        // TuNT37 Get all seats not booked 
         public async Task<List<Seats>> GetSeatsNotBooked(int filmId, int scheduleId)
         {
             var listSeat = await (from s in context.Seats
@@ -171,7 +172,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
         }
 
 
-        // Get all Seats of Room 
+        // TuNT37 Get all Seats of Room 
         public async Task<List<SeatsDTO>> GetSeats(int filmId, int scheduleId)
         {
             var listSeat = await (from s in context.Seats
@@ -217,13 +218,14 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return listSeatsDTO;
         }
 
-        // get all films to choose film when create booking
+        // TuNT37 get all films to choose film when create booking
         public async Task<List<Films>> GetAllFilms()
         {
             var result = await context.Films.ToListAsync();
             return result;
         }
 
+        // TuNT37 create booking by admin 
         public async Task<bool> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
             List<Data.Entities.Services> listServices = new List<Data.Entities.Services>(); 
@@ -291,6 +293,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return true;
         }
 
+        // TuNT37 create booking by user 
         public async Task<BookingUserDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
             try
@@ -350,6 +353,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             };
         }
 
+        // TuNT37 delete booking 
         public void DeleteBooking(Bookings bookings)
         {
             bookings.IsDelete = true;
@@ -357,26 +361,29 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
+        // TuNT37 GEt all booking with page / pageSize
         public async Task<PaginationDTO<BookingDTO>> GetAllBookings(int page, int pageSize)
         {
             var query = await (from b in context.Bookings
-                                where b.IsDelete == false
+                                join p in context.Payments on b.Id equals p.bookingId
                                 join bd in context.BookingDetails on b.Id equals bd.BookingId
                                 join u in context.Users on b.UserId equals u.Id
                                 join t in context.Tickets on bd.TicketId equals t.Id
                                 join s in context.Schedules on t.ScheduleId equals s.Id
                                 join f in context.Films on s.FilmId equals f.Id
-                                let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
-                                            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
-                                let totalPriceServices = b.Services.Sum(e => e.Price)
-                                select new BookingDTO
+                                where b.IsDelete == false 
+                               //let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
+                               //            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
+                               //let totalPriceServices = b.Services.Sum(e => e.Price)
+                               select new BookingDTO
                                 {
                                     Id = b.Id,
                                     UserId = u.Id,
                                     CreateAt = b.CreateAt,
-                                    TotalPriceTickets = totalPriceTickets,
-                                    TotalPriceServices = totalPriceServices,
-                                    TotalPrice = totalPriceTickets + totalPriceServices,
+                                    Status = b.Status,
+                                    TotalPriceTickets = p.PriceTicket == null ? 0 : p.PriceTicket,
+                                    TotalPriceServices = p.PriceService == null ? 0 : p.PriceService,
+                                    TotalPrice = p.PriceTicket + p.PriceService,
                                     FilmName = f.Name,
                                     UserName = u.Name,
                                 }).Distinct().ToListAsync();
@@ -397,25 +404,29 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return pagination;
         }
 
+        // TuNT37 get detail booking by id
         public async Task<BookingDTO> GetDetailBookingById(int id)
         {
-            var query = await(from b in context.Bookings
-                               where b.IsDelete == false && b.Id == id
+            var query = await (from b in context.Bookings
+                               join p in context.Payments on b.Id equals p.bookingId
                                join bd in context.BookingDetails on b.Id equals bd.BookingId
                                join u in context.Users on b.UserId equals u.Id
                                join t in context.Tickets on bd.TicketId equals t.Id
                                join s in context.Schedules on t.ScheduleId equals s.Id
                                join f in context.Films on s.FilmId equals f.Id
-                               let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket).Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
-                               let totalPriceServices = b.Services.Sum(e => e.Price)
+                               where b.IsDelete == false
+                               //let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
+                               //            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
+                               //let totalPriceServices = b.Services.Sum(e => e.Price)
                                select new BookingDTO
                                {
                                    Id = b.Id,
                                    UserId = u.Id,
                                    CreateAt = b.CreateAt,
-                                   TotalPriceTickets = totalPriceTickets,
-                                   TotalPriceServices = totalPriceServices,
-                                   TotalPrice = totalPriceTickets + totalPriceServices,
+                                   Status = b.Status,
+                                   TotalPriceTickets = p.PriceTicket == null ? 0 : p.PriceTicket,
+                                   TotalPriceServices = p.PriceService == null ? 0 : p.PriceService,
+                                   TotalPrice = p.PriceTicket + p.PriceService,
                                    FilmName = f.Name,
                                    UserName = u.Name,
                                }).FirstOrDefaultAsync();

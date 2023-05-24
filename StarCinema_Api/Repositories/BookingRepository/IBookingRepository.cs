@@ -3,12 +3,16 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Repositories.BookingRepository
 {
+    // TuNT37 interface booking repository 
     public interface IBookingRepository : IBaseRepository<Bookings>
     {
         // Get Transaction History of User
         Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id ,int page, int pageSize);
 
+        // change status booking to expired 
         void UpdateBookingsToExpired();
+
+        // change status booking to success 
         void UpdateBookingToSuccess(int bookingId);
 
         // Get Revenue12Month in chart of dashboard screen

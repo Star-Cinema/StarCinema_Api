@@ -8,25 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StarCinema_Api.Repositories.ServiceRepository
 {
+    // TuNT37 interface service repository
     public interface IServiceRepository : IBaseRepository<Data.Entities.Services>
     {
+        // TuNT37 Delete Service
+        Task<bool> DeleteService(int id);
 
-        // Get all Service with page, pageSize 
+        // TuNT37 Create Service
+        Task<Data.Entities.Services> UpdateService(ServiceDTO service);
+
+        // TuNT37 Create Service
+        Task<ServiceDTO> CreateService(ServiceDTO service);
+
+        // TuNT37 Get all Services by page, pageSize 
         Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize);
 
-        // Get Service by ID
+        // TuNT37 Get Service by ID
         public Task<Data.Entities.Services> GetServiceById(int id);
 
 
-        public Task<Data.Entities.Services[]> GetAll(
-            int pageIndex,
-            string? sortColumn,
-            string? sortOrder,
-            string? filterQuery);
-
-        public Task<RestDTO<Data.Entities.Services?>> GetById(int id);
-        public Task<Data.Entities.Services> Post(ServiceDTO model);
-
-        public Task<bool?> Delete(int id);
     }
 }

@@ -56,6 +56,7 @@ services.AddDbContext<MyDbContext>
 
 
 // Add scoped repository
+services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -76,7 +77,6 @@ services.AddScoped<ISchedulesService, SchedulesService>();
 services.AddScoped<IFilmsService, FilmsService>();
 services.AddScoped<ICategoriesService, CategoriesService>();
 services.AddScoped<IBookingService, BookingService>();
-services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IRoomRepository, RoomRepository>();
 services.AddScoped<IVnPayService, VnPayService>();
 services.AddScoped<IPaymentService, PaymentService>();

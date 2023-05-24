@@ -7,118 +7,90 @@ using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Repositories.ServiceRepository
 {
+    // TuNT37 service repository 
     public class ServiceRepository : BaseRepository<Data.Entities.Services>, IServiceRepository
     {
+        // constructor
         public ServiceRepository(MyDbContext context) : base(context)
         {
         }
 
-        // Get All service with page, pageSize 
-        public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize)
+        // TuNT37 Delete Service
+        public async Task<bool> DeleteService(int id)
         {
-            return null;
+            var service = await context.Services.Where(b => b.Id == id).FirstOrDefaultAsync();
+            if (service != null)
+            {
+                context.Services.Remove(service);
+                context.SaveChanges();
+                return true;
+            };
+            return false;
         }
 
-        // Get Service by Id
+        // TuNT37 Update Service
+        public async Task<Data.Entities.Services> UpdateService(ServiceDTO service)
+        {
+            var serviceUpdate = await context.Services.Where(e => e.Id == service.Id).FirstOrDefaultAsync();
+            if (serviceUpdate != null)
+            {
+                serviceUpdate.Name = service.Name;
+                serviceUpdate.Price = service.Price;
+                context.Services.Update(serviceUpdate);
+                context.SaveChanges();
+                return await context.Services.Where(e => e.Id == service.Id).FirstOrDefaultAsync();
+            } 
+            else
+            {
+                return null;
+            }
+            
+        }
+
+        // TuNT37 Create service
+        public async Task<ServiceDTO> CreateService(ServiceDTO service)
+        {
+            var result = new Data.Entities.Services();
+            result.Name = service.Name;
+            result.Price = service.Price;
+            context.Services.Add(result);
+            context.SaveChanges();
+            return service;
+        }
+
+        // TuNT37 Get all Services
+        public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize)
+        {
+            var query = await (from s in context.Services
+                               select new Data.Entities.Services
+                               {
+                                   Id = s.Id,
+                                   Name = s.Name,
+                                   Price = s.Price
+                               }).Distinct().ToListAsync();
+
+            var pagination = new PaginationDTO<Data.Entities.Services>();
+            query = query.Skip(10 * 0).Take(10).ToList();
+
+            pagination.TotalCount = query.Count;
+            pagination.PageSize = 10;
+            pagination.Page = 0;
+            pagination.ListItem = query;
+
+            //query = query.Skip(pageSize * page).Take(pageSize).ToList();
+            //pagination.PageSize = pageSize;
+            //pagination.Page = page;
+
+            return pagination;
+        }
+
+        // TuNT37 Get Service by Id
         public async Task<Data.Entities.Services> GetServiceById(int id)
         {
             var query = context.Services.Where(e=>e.Id == id).FirstOrDefault() ;
             return query;
         }
 
-        async Task<bool?> IServiceRepository.Delete(int id)
-        {
-            var service = await context.Services
-                .Where(b => b.Id == id)
-                .FirstOrDefaultAsync();
-            if (service != null)
-            {
-                context.Services.Remove(service);
-                await context.SaveChangesAsync();
-                return true;
-            };
-
-            return false;
-        }
-
-        void IBaseRepository<Data.Entities.Services>.DeleteAsync(Data.Entities.Services entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        async Task<Data.Entities.Services[]> IServiceRepository.GetAll(
-            int pageIndex,
-            string? sortColumn,
-            string? sortOrder,
-            string? filterQuery)
-        {
-            var query = context.Services.AsQueryable();
-            if (!string.IsNullOrEmpty(filterQuery))
-                query = query.Where(b => b.Name.Contains(filterQuery));
-            var recordCount = await query.CountAsync();
-            query = query.OrderBy($"{sortColumn} {sortOrder}")
-                .Skip(pageIndex * 10)
-                .Take(10);
-            var services = await query.ToArrayAsync();
-            return services;
-        }
-
-
-        Task<IEnumerable<Data.Entities.Services>> IBaseRepository<Data.Entities.Services>.GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<RestDTO<Data.Entities.Services?>> IServiceRepository.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Data.Entities.Services> IBaseRepository<Data.Entities.Services>.GetByIdAsync(int Id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Data.Entities.Services> IBaseRepository<Data.Entities.Services>.InsertAsync(Data.Entities.Services entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Data.Entities.Services> Post(ServiceDTO model)
-        {
-            var service = await context.Services
-                .Where(b => b.Id == model.Id)
-                .FirstOrDefaultAsync();
-            
-            if (service != null)
-            {
-                service.Name = model.Name;
-                service.Price = model.Price;
-                context.Services.Update(service);
-                context.SaveChanges();
-            }
-            else
-            {
-                service = new Data.Entities.Services()
-                {
-                    Name = model.Name!,
-                    Price = model.Price,
-                };
-                context.Services.Add(service);
-                context.SaveChanges();
-            }
-            return service;
-        }
-
-        void IBaseRepository<Data.Entities.Services>.Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IBaseRepository<Data.Entities.Services>.Update(Data.Entities.Services entity)
-        {
-            throw new NotImplementedException();
-        }
 
     }
 }

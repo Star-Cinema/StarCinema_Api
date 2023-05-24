@@ -5,6 +5,7 @@ using StarCinema_Api.DTOs;
 using StarCinema_Api.Services.BookingService;
 using StarCinema_Api.Services.FilmsService;
 
+// TuNT37 Booking controller 
 namespace StarCinema_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -19,18 +20,18 @@ namespace StarCinema_Api.Controllers
             _bookingService = bookingService;
         }
 
-        // Api Get transaction history booking of user 
+        // TuNT37 Api Get transaction history booking of user 
         [HttpGet("GetTransactionHistory")]
         public async Task<ActionResult> GetTransactionHistory(int page, int pageSize)
         {
             // Get userId by token when request create
-            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
-            var userId = 2;
+            var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            //var userId = 2;  // hard code to test
             var resData = await _bookingService.GetTransactionHistory(userId ,page, pageSize);
             return StatusCode(resData.code, resData);
         }
 
-        // Get Revenue12Month in chart of dashboard screen
+        // TuNT37 Get Revenue12Month in chart of dashboard screen
         [HttpGet("GetRevenue12Month")]
         public async Task<ActionResult> GetRevenue12Month()
         {
@@ -38,7 +39,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api get Statistical in Dashboard screen
+        // TuNT37 Api get Statistical in Dashboard screen
         [HttpGet("GetStatistical")]
         public async Task<ActionResult> GetStatistical()
         {
@@ -46,7 +47,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api get all Seats not booked
+        // TuNT37 Api get all Seats not booked
         [HttpGet("GetSeatsNotBooked")]
         public async Task<ActionResult> GetSeatsNotBooked(int filmId, int scheduleId)
         {
@@ -54,7 +55,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api get all Seatsof room
+        // TuNT37 Api get all Seatsof room
         [HttpGet("GetSeats")]
         public async Task<ActionResult> GetSeats(int filmId, int scheduleId)
         {
@@ -62,7 +63,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Admin: Api get all films to select films when booking
+        // TuNT37 Admin: Api get all films to select films when booking
         [HttpGet("GetAllFilms")]
         public async Task<ActionResult> GetAllFilms()
         {
@@ -70,7 +71,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api Get booking by Id
+        // TuNT37 Api Get booking by Id
         [HttpGet("{id}")]
         public async Task<ActionResult> GetBookingById(int id)
         {
@@ -85,7 +86,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api Get all booking 
+        // TuNT37 Api Get all booking 
         [HttpGet("")]
         public async Task<ActionResult> GetAllBookings()
         {
@@ -93,7 +94,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Api Get all booking by page, pagesize
+        // TuNT37 Api Get all booking by page, pagesize
         [HttpGet("GetAllByPage")]
         public async Task<ActionResult> GetAllByPage(int page, int pageSize)
         {
@@ -101,13 +102,13 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Admin: Api Create booking
+        // TuNT37 Admin: Api Create booking
         [HttpPost("CreateBookingByAdmin")]
         public async Task<IActionResult> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO)
         {
             // Get userId by token when request create
-            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
-            var userId = 2;
+            var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            //var userId = 2;  // hard code to test
 
             if (bookingAddEditDTO == null)
             {
@@ -120,7 +121,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Admin: Api Create booking
+        // TuNT37 Admin: Api Create booking
         [HttpPost("CreateBookingByUser")]
         public async Task<IActionResult> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO)
         {
@@ -139,7 +140,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Admin: update booking
+        // TuNT37 Admin: update booking
         [HttpPut]
         public async Task<IActionResult> UpdateBooking(BookingDTO bookingDTO)
         {
@@ -154,7 +155,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // Admin: Api delete booking
+        // TuNT37 Admin: Api delete booking
         [HttpDelete]
         public async Task<IActionResult> DeteleBooking(int id)
         {

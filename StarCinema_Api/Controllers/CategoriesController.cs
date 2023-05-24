@@ -1,4 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: CategoriesController.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
@@ -17,7 +27,8 @@ namespace StarCinema_Api.Controllers
         {
             _CategoriesService = CategoriesService;
         }
-        // POST: api/Categories
+
+        // VYVNK1 POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<IActionResult> CreateCategories(CategoriesDTO CategoriesDTO)
@@ -26,7 +37,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // PUT: api/Categories/5
+        // VYVNK1 PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategories(int id, CategoriesDTO Categories)
@@ -35,7 +46,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // DELETE: api/Categories/5
+        // VYVNK1 DELETE: api/Categories/5
         [HttpDelete("{id}")]
         //public async Task<IActionResult> DeleteCategories(int id, CategoriesDTO Categories)
         //{
@@ -49,7 +60,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Categories
+        // VYVNK1 GET: api/Categories
         [HttpGet]
         public async Task<ActionResult> GetCategories(string? name, int page = 0, int limit = 10)
         {
@@ -57,7 +68,7 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // GET: api/Schedules/5
+        // VYVNK1 GET: api/Schedules/5
         [HttpGet("{id}")]
         public async Task<ActionResult> GetCategoriesById(int id)
         {

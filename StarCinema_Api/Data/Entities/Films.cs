@@ -1,4 +1,14 @@
-﻿using System.ComponentModel;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: Films.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Films Entity
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace StarCinema_Api.Data.Entities

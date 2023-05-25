@@ -15,7 +15,7 @@ namespace StarCinema_Api.Controllers
             this.repository = repository;
         }
         [HttpGet(Name = "GetRooms")]
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
+        //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
         public async Task<ResponseDTO> GetAll(
             [FromQuery] RequestDTO input)
         {
@@ -37,7 +37,6 @@ namespace StarCinema_Api.Controllers
             };
         }
         [HttpPost]
-        [ResponseCache(NoStore = true)]
         public async Task<ResponseDTO> AddRoom(RoomDTO model)
         {
             if (ModelState.IsValid)

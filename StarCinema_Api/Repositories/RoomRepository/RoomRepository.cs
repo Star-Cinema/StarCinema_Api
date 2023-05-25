@@ -19,14 +19,30 @@ namespace StarCinema_Api.Repositories.RoomRepository
         }
         async Task<Rooms?> IRoomRepository.Add(RoomDTO model)
         {
-            var rooms = new Rooms()
+            if (!_context.Rooms.Any(room => !room.IsDelete && room.Name.Equals(model.Name)))
             {
-                Name = model.Name!
-            };
-            _context.Rooms.Add(rooms);
-
-            await _context.SaveChangesAsync();
-            return rooms;
+                var rooms = new Rooms()
+                {
+                    Name = model.Name!
+                };
+                _context.Rooms.Add(rooms); 
+                await _context.SaveChangesAsync();
+                Rooms? r = _context.Rooms.FirstOrDefault(room => !room.IsDelete && room.Name.Equals(model.Name));
+                if(r != null)
+                {
+                    char[] arr = new char[] { 'A', 'B', 'E', 'F' };
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        for (int j = 1; j < 10; j++)
+                        {
+                            _context.Seats.Add(new Seats { Name = arr[i] + "" + j, RoomId = r.Id });
+                        }
+                     }
+                    await _context.SaveChangesAsync();
+                }
+                return rooms;
+            }
+            return null;
         }
 
         async Task<bool?> IRoomRepository.Delete(int id)
@@ -74,7 +90,7 @@ namespace StarCinema_Api.Repositories.RoomRepository
 
         async Task<Rooms?> IRoomRepository.GetById(int id)
         {
-            return await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
+            return await _context.Rooms.Include(room => room.Seats).FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }

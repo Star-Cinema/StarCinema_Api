@@ -185,7 +185,7 @@ namespace StarCinema_Api.Services.CategoriesService
         {
             try
             {
-                var result = await _CategoriesRepository.getAllCategories(null);
+                var result = await _CategoriesRepository.getAllCategories(name);
                 return new ResponseDTO
                 {
                     code = 200,

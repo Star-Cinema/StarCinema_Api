@@ -38,8 +38,8 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
                 .AsQueryable();
             if (name != null)
             {
-                
-                query = query.Where(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                //query = query.Where(s => s.Name == name);
+                query = query.Where(s => s.Name.Contains(name));
             }
             var Categories = await query.ToListAsync();
             var pagination = new PaginationDTO<Categories>();

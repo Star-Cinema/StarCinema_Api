@@ -64,7 +64,7 @@ namespace StarCinema_Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCategories(string? name, int page = 0, int limit = 10)
         {
-            var resData = await _CategoriesService.GetAllCategories(null);
+            var resData = await _CategoriesService.GetAllCategories(name);
             return StatusCode(resData.code, resData);
         }
 

@@ -1,4 +1,14 @@
-﻿using AutoMapper;
+﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FileName: CategoriesService.cs
+//FileType: Visual C# Source file
+//Author : VyVNK1
+//Created On : 20/05/2023
+//Last Modified On : 24/05/2023
+//Copy Rights : FA Academy
+//Description : Category Service
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
@@ -6,6 +16,7 @@ using StarCinema_Api.Repositories.CategoriesRepository;
 
 namespace StarCinema_Api.Services.CategoriesService
 {
+    // VYVNK1 Create class CategoriesService implement ICategoriesService
     public class CategoriesService : ICategoriesService
     {
         private readonly ICategoriesRepository _CategoriesRepository;
@@ -17,6 +28,7 @@ namespace StarCinema_Api.Services.CategoriesService
             _mapper = mapper;
         }
 
+        //VyVNK1 METHOD CREATE CATEGORY
         public async Task<ResponseDTO> CreateCategories([FromForm] CategoriesDTO CategoriesDTO)
         {
             try
@@ -30,7 +42,7 @@ namespace StarCinema_Api.Services.CategoriesService
                     return new ResponseDTO
                     {
                         code = 400,
-                        message = $"The Category is existed!"
+                        message = $"{Categories.Name} is existed in system! Please re enter!"
                     };
                 }
 
@@ -55,12 +67,14 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
+        //VyVNK1 METHOD CHECK CATEGORY IS EXISTED
         public bool IsCategoriesExist(Categories newCategories, List<Categories> CategoriesList)
         {
             if (CategoriesList.Count == 0) return false;
             foreach (var Categories in CategoriesList)
             {
-                if (newCategories.Name == Categories.Name)
+                //if (newCategories.Name == Categories.Name)
+                if (newCategories.Name.Equals(Categories.Name, StringComparison.OrdinalIgnoreCase) && Categories.IsTrash == false)
                 {
                     return true;
                 }
@@ -68,7 +82,7 @@ namespace StarCinema_Api.Services.CategoriesService
             return false;
         }
 
-        // METHOD UPDATE
+        // VyVNK1 METHOD UPDATE
         public async Task<ResponseDTO> UpdateCategories(int id, CategoriesDTO CategoriesDTO)
         {
             try
@@ -113,20 +127,43 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        // METHOD DELETE
+        // VyVNK1 METHOD DELETE
         public async Task<ResponseDTO> DeleteCategoriesById(int id)
         {
             try
             {
                 var Categories = await _CategoriesRepository.getCategoriesById(id);
+                //var CategoriesNew = _mapper.Map<CategoriesDTO, Categories>(CategoriesDTO);
+                //Categories.Id = id;
                 if (Categories == null) return new ResponseDTO
                 {
                     code = 404,
                     message = $"Does not exist Category with id {id}",
                 };
 
-                _CategoriesRepository.DeleteCategories(Categories);
-                _CategoriesRepository.SaveChange();
+                else
+                {
+
+                    var countFilm = Categories.Films.Count;
+                    if (countFilm > 0)
+                        
+                    {
+                        Categories.IsTrash = true;
+                        _CategoriesRepository.UpdateCategories(Categories);
+                        _CategoriesRepository.SaveChange();
+                        
+                    }
+                    else
+
+                    {
+                        _CategoriesRepository.DeleteCategories(Categories);
+                        _CategoriesRepository.SaveChange();
+                        
+                    }
+
+                }
+
+
                 return new ResponseDTO
                 {
                     code = 200,
@@ -143,12 +180,12 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        //METHOD GET ALL Categories
+        //VyVNK1 METHOD GET ALL Categories
         public async Task<ResponseDTO> GetAllCategories(string? name, int page = 0, int limit = 10)
         {
             try
             {
-                var result = await _CategoriesRepository.getAllCategories(null);
+                var result = await _CategoriesRepository.getAllCategories(name);
                 return new ResponseDTO
                 {
                     code = 200,
@@ -166,7 +203,7 @@ namespace StarCinema_Api.Services.CategoriesService
             }
         }
 
-        //METHOD GET BY ID
+        //VyVNK1 METHOD GET BY ID
         public async Task<ResponseDTO> GetCategoriesById(int id)
         {
             try

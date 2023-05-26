@@ -1,24 +1,20 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FileName: Images.cs
+//FileName: ImageDTO.cs
 //FileType: Visual C# Source file
 //Author : VyVNK1
 //Created On : 20/05/2023
 //Last Modified On : 24/05/2023
 //Copy Rights : FA Academy
-//Description : Images Entity
+//Description : Image DTO
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
+using StarCinema_Api.Data.Entities;
 
-namespace StarCinema_Api.Data.Entities
+namespace StarCinema_Api.DTOs
 {
-    public class Images
-    {
-        [Key]
-        public int Id { get; set; }
-        public int FilmId { get; set; }
+    public class ImageDTO
+    {      
         public string Name { get; set; }
         public string Path { get; set; }
-        public virtual Films Film { get; set; }
     }
 }

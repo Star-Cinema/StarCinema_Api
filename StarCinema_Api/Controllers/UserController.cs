@@ -5,6 +5,11 @@ using StarCinema_Api.Services.UserService;
 
 namespace StarCinema_Api.Controllers
 {
+    /*
+        Account : HungTD34
+        Description : This class to handle user navigation to UserService
+        Create : 2023/05/04
+     */
     [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
@@ -14,42 +19,48 @@ namespace StarCinema_Api.Controllers
         {
             _userService = userService;
         }
+
+        //Get list user with page, pageSize, key search, sortBy HungTD34
         [HttpGet]
         public ActionResult GetUsers(int? page = 1, int? pageSize = 10, string? key = "", string? sortBy = "id")
         {
             var res = _userService.GetUsers(page,pageSize,key,sortBy);
             return StatusCode(res.code, res);
         }
-        //[HttpGet("{email}")]
-        //public ActionResult GetUserByEmail(string email)
-        //{
-        //    var res = _userService.GetUserByEmail(email);
-        //    return StatusCode(res.code, res);
-        //}
+
+        //Get user by id HungTD34
         [HttpGet("{id}")]
         public ActionResult GetUserById(int id)
         {
             var res = _userService.GetUserById(id);
             return StatusCode(res.code, res);
         }
+
+        //Disable user HungTD34
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
             var res = _userService.DeleteUser(id);
             return StatusCode(res.code, res);
         }
+
+        //Create new user HungTD34
         [HttpPost("create")]
         public ActionResult CreateUser(CreateUserDTO createUserDTO)
         {
             var res = _userService.CreateUser(createUserDTO);
             return StatusCode(res.code, res);
         }
+
+        //Update user HungTD34
         [HttpPut("{id}")]
         public ActionResult UpdateUser(UpdateUserDTO updateUserDTO, int id)
         {
             var res = _userService.UpdateUser(updateUserDTO,id);
             return StatusCode(res.code, res);
         }
+
+        //Change new password user HungTD34
         [HttpPut("changepass/{id}")]
         public ActionResult ChangePassword(ChangepassDTO changepassDTO, int id)
         {

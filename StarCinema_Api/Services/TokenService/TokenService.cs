@@ -6,6 +6,11 @@ using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Services.TokenService
 {
+    /*
+        Account : HungTD34
+        Description : This class generates authentication token for user
+        Create : 2023/05/04
+     */
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
@@ -13,8 +18,10 @@ namespace StarCinema_Api.Services.TokenService
         {
             _configuration = configuration;
         }
+        //Create new token HungTD34
         public string CreateToken(User user)
         {
+            //Add claims in to token HungTD34
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Name, user.Name),
@@ -29,9 +36,12 @@ namespace StarCinema_Api.Services.TokenService
             else
                 claims.Add(new Claim(ClaimTypes.Role, "user"));
 
+
+            //Config SymmetricSecurityKey HungTD34
             var symmetricKey = new SymmetricSecurityKey
                 (Encoding.UTF8.GetBytes(_configuration["TokenKey"]));
 
+            //Config SecurityTokenDescriptor HungTD34
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -42,6 +52,7 @@ namespace StarCinema_Api.Services.TokenService
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
+            //Create token HungTD34
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);

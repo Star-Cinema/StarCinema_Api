@@ -10,6 +10,8 @@ namespace StarCinema_Api.DTOs
 
         public DateTime? CreateAt { get; set; }
 
+        public string? Status { get; set; }
+
         public double? TotalPriceTickets { get; set; }
 
         public double? TotalPriceServices { get; set; }

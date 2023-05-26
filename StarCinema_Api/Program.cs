@@ -26,7 +26,8 @@ using StarCinema_Api.Repositories.ServiceRepository;
 using StarCinema_Api.Services.VnPayService;
 using StarCinema_Api.Repositories.PaymentRepository;
 using StarCinema_Api.Services.PaymentService;
-
+using StarCinema_Api.Services.EmailService;
+using StarCinema_Api.Services.ServiceService;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -40,6 +41,7 @@ var services = builder.Services;
 services.AddCors(o =>
     o.AddPolicy("CorsPolicy", builder =>
         builder.WithOrigins("http://localhost:3000")
+            .WithOrigins("http://localhost:3001")
             .AllowAnyHeader()
             .AllowAnyMethod()));
 
@@ -54,6 +56,7 @@ services.AddDbContext<MyDbContext>
 
 
 // Add scoped repository
+services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IUserRepository, UserRepository>();
 services.AddScoped<ISchedulesRepository, SchedulesRepository>();
 services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -66,6 +69,7 @@ services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 // Add scoped services
+services.AddScoped<IServiceService, ServiceService>();
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<ITokenService, TokenService>();
 services.AddScoped<IAuthService, AuthService>();
@@ -73,10 +77,10 @@ services.AddScoped<ISchedulesService, SchedulesService>();
 services.AddScoped<IFilmsService, FilmsService>();
 services.AddScoped<ICategoriesService, CategoriesService>();
 services.AddScoped<IBookingService, BookingService>();
-services.AddScoped<IServiceRepository, ServiceRepository>();
 services.AddScoped<IRoomRepository, RoomRepository>();
 services.AddScoped<IVnPayService, VnPayService>();
 services.AddScoped<IPaymentService, PaymentService>();
+services.AddScoped<IEmailService , EmailService>();
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -34,7 +34,7 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
         }
 
         // Get all schedules AnhNT282
-        public async Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
+        public async Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             var query =  _context.Schedules.Select(x => new Schedules
             {
@@ -74,9 +74,16 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
 
             pagination.TotalCount = schedules.Count;
 
-            schedules = schedules.Skip(limit*page).Take(limit).ToList();
-            pagination.PageSize = limit;
-            pagination.Page= page;
+            if (page != null || limit != null) {
+                schedules = schedules.Skip(limit.Value * page.Value).Take(limit.Value).ToList();
+                pagination.PageSize = limit.Value;
+                pagination.Page = page.Value;
+            } else
+            {
+                pagination.PageSize = int.MaxValue;
+                pagination.Page = 0;
+            }
+
             pagination.ListItem = schedules;
             return pagination;
         }

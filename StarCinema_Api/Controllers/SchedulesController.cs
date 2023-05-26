@@ -29,7 +29,7 @@ namespace StarCinema_Api.Controllers
 
         // Get all schedules AnhNT282
         [HttpGet]
-        public async Task<ActionResult> GetSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
+        public async Task<ActionResult> GetSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             var resData = await _schedulesService.GetAllSchedules(filmId, roomId, date, sortDate, page, limit);
             return StatusCode(resData.code, resData);

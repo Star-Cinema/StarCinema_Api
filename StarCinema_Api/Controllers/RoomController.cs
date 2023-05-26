@@ -46,7 +46,7 @@ namespace StarCinema_Api.Controllers
                 {
                     return new ResponseDTO()
                     {
-                        data = room,
+                        data = true,
                         message = "Success!",
                         code = 200
                     };

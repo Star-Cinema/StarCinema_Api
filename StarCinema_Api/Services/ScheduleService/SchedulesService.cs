@@ -125,7 +125,7 @@ namespace StarCinema_Api.Services
         }
 
         // Get all schedules AnhNT282
-        public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
+        public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             try
             {

@@ -48,6 +48,11 @@ namespace StarCinema_Api.Services
                     code = 404,
                     message = $"Does not exist film with id {scheduleDTO.FilmId}"
                 };
+                if (film.Result.IsDelete == true) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"The film has been deleted"
+                };
                 if (room.Result == null) return new ResponseDTO
                 {
                     code = 404,

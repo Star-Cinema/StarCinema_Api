@@ -228,22 +228,25 @@ namespace StarCinema_Api.Repositories.BookingRepository
         // TuNT37 create booking by admin 
         public async Task<bool> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
-            List<Data.Entities.Services> listServices = new List<Data.Entities.Services>(); 
-            for (int i = 0; i < bookingAddEditDTO.ListServiceId.Count(); i++)
-            {
-                var service = context.Services.Where(e => e.Id == bookingAddEditDTO.ListServiceId[i]).FirstOrDefault();
-                listServices.Add(service);
-            }
-
-            var newBooking = new Bookings();
-            newBooking.UserId = (int)userId;  // get current user 
-            newBooking.CreateAt = DateTime.Now;     // wait discus
-            newBooking.Status = "Success";
-            newBooking.Services = new List<Data.Entities.Services>();
-            newBooking.Services.AddRange(listServices);
-            await context.Bookings.AddAsync(newBooking);
             try
             {
+                List<Data.Entities.Services> listServices = new List<Data.Entities.Services>();
+                if (bookingAddEditDTO.ListServiceId != null)
+                {
+                    for (int i = 0; i < bookingAddEditDTO.ListServiceId.Count(); i++)
+                    {
+                        var service = context.Services.Where(e => e.Id == bookingAddEditDTO.ListServiceId[i]).FirstOrDefault();
+                        listServices.Add(service);
+                    }
+                }
+
+                var newBooking = new Bookings();
+                newBooking.UserId = (int)userId;  // get current user 
+                newBooking.CreateAt = DateTime.Now;     // wait discus
+                newBooking.Status = "Success";
+                newBooking.Services = new List<Data.Entities.Services>();
+                newBooking.Services.AddRange(listServices);
+                await context.Bookings.AddAsync(newBooking);
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -251,21 +254,23 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 throw;
             }
 
-            List<BookingDetail> listBookingDetail = new List<BookingDetail>();
             var lastBooking = await context.Bookings.OrderBy(e => e.Id).LastOrDefaultAsync();
-            for (int i = 0; i < bookingAddEditDTO.ListSeatId.Count(); i++)
-            {
-                var newBookingDetail = new BookingDetail();
-                newBookingDetail.BookingId = lastBooking.Id;
-                var ticket = (from t in context.Tickets join s in context.Schedules on t.ScheduleId equals s.Id
-                             where s.Id == bookingAddEditDTO.ScheduleId select new Tickets { Id = t.Id }).FirstOrDefault();
-                newBookingDetail.TicketId = ticket.Id;
-                newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[i];
-                listBookingDetail.Add(newBookingDetail);
-            }
-            await context.BookingDetails.AddRangeAsync(listBookingDetail);
             try
             {
+                List<BookingDetail> listBookingDetail = new List<BookingDetail>();
+                for (int i = 0; i < bookingAddEditDTO.ListSeatId.Count(); i++)
+                {
+                    var newBookingDetail = new BookingDetail();
+                    newBookingDetail.BookingId = lastBooking.Id;
+                    var ticket = (from t in context.Tickets
+                                  join s in context.Schedules on t.ScheduleId equals s.Id
+                                  where s.Id == bookingAddEditDTO.ScheduleId
+                                  select new Tickets { Id = t.Id }).FirstOrDefault();
+                    newBookingDetail.TicketId = ticket.Id;
+                    newBookingDetail.SeatId = bookingAddEditDTO.ListSeatId[i];
+                    listBookingDetail.Add(newBookingDetail);
+                }
+                await context.BookingDetails.AddRangeAsync(listBookingDetail);
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -299,10 +304,13 @@ namespace StarCinema_Api.Repositories.BookingRepository
             try
             {
                 List<Data.Entities.Services> listServices = new List<Data.Entities.Services>();
-                for (int i = 0; i < bookingAddEditDTO.ListServiceId.Count(); i++)
+                if (bookingAddEditDTO.ListServiceId != null)
                 {
-                    var service = context.Services.Where(e => e.Id == bookingAddEditDTO.ListServiceId[i]).FirstOrDefault();
-                    listServices.Add(service);
+                    for (int i = 0; i < bookingAddEditDTO.ListServiceId.Count(); i++)
+                    {
+                        var service = context.Services.Where(e => e.Id == bookingAddEditDTO.ListServiceId[i]).FirstOrDefault();
+                        listServices.Add(service);
+                    }
                 }
 
                 var newBooking = new Bookings();
@@ -362,9 +370,9 @@ namespace StarCinema_Api.Repositories.BookingRepository
         }
 
         // TuNT37 GEt all booking with page / pageSize
-        public async Task<PaginationDTO<BookingDTO>> GetAllBookings(int page, int pageSize)
+        public async Task<PaginationDTO<BookingDTO>> GetAllByPage(string? keySearch, int page, int pageSize)
         {
-            var query = await (from b in context.Bookings
+            var query =  (from b in context.Bookings
                                 join p in context.Payments on b.Id equals p.bookingId
                                 join bd in context.BookingDetails on b.Id equals bd.BookingId
                                 join u in context.Users on b.UserId equals u.Id
@@ -372,9 +380,6 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                 join s in context.Schedules on t.ScheduleId equals s.Id
                                 join f in context.Films on s.FilmId equals f.Id
                                 where b.IsDelete == false 
-                               //let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
-                               //            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
-                               //let totalPriceServices = b.Services.Sum(e => e.Price)
                                select new BookingDTO
                                 {
                                     Id = b.Id,
@@ -386,20 +391,22 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                     TotalPrice = p.PriceTicket + p.PriceService,
                                     FilmName = f.Name,
                                     UserName = u.Name,
-                                }).Distinct().ToListAsync();
+                                }).AsQueryable();
             
+            if(keySearch != null)
+            {
+                query = query.Where(e => e.FilmName.Contains(keySearch) || e.UserName.Contains(keySearch)
+                            || e.Id.Equals(keySearch));
+            }
 
+            var listBooking = query.Distinct().ToList();
             var pagination = new PaginationDTO<BookingDTO>();
-            query = query.Skip(10 * 0).Take(10).ToList();
 
-            pagination.TotalCount = query.Count;
-            pagination.PageSize = 10;
-            pagination.Page = 0;
-            pagination.ListItem = query;
-
-            //query = query.Skip(pageSize * page).Take(pageSize).ToList();
-            //pagination.PageSize = pageSize;
-            //pagination.Page = page;
+            pagination.TotalCount = listBooking.Count;
+            listBooking = listBooking.Skip(pageSize * page).Take(pageSize).ToList();
+            pagination.PageSize = pageSize;
+            pagination.Page = page;
+            pagination.ListItem = listBooking;
 
             return pagination;
         }

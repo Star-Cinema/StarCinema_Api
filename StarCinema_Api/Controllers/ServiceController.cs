@@ -65,9 +65,9 @@ namespace StarCinema_Api.Controllers
 
         // TuNT37 Api Get all Service 
         [HttpGet("GetAllServices")]
-        public async Task<ActionResult> GetAllServices(int page, int pageSize)
+        public async Task<ActionResult> GetAllServices(string? keySearch, int page, int pageSize)
         {
-            var resData = await _serviceService.GetAllServices(page, pageSize);
+            var resData = await _serviceService.GetAllServices(keySearch, page, pageSize);
             return StatusCode(resData.code, resData);
         }
 

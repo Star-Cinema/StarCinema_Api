@@ -11,7 +11,7 @@ namespace StarCinema_Api.Services
     public interface ISchedulesService
     {
         // Get all schedules AnhNT282
-        Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10);
+        Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit);
         // Get schedule by id AnhNT282
         Task<ResponseDTO> GetScheduleById(int id);
         // Create schedule AnhNT282

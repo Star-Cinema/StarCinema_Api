@@ -79,12 +79,15 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         //from list schedule, if first start date <= today <= last start date
         public async Task<List<Films>> getNowShowingFilms()
         {
+           
             var query = _context.Films
                 .Where(s => s.IsDelete == false &&
-                s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day &&
-                s.Schedules.OrderBy(e => e.StartTime).Last().EndTime.Day >= DateTime.Today.Day
-                //s.Schedules.Any(s => s.StartTime.Day == DateTime.Today.Day) ||
-                // s.Schedules.Any(s => s.StartTime.Day >= DateTime.Today.Day)
+                s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day 
+                && s.Schedules.Any(s => s.StartTime.Day >= DateTime.Today.Day)
+                
+                //s.Schedules.OrderBy(e => e.StartTime).Last().StartTime.Day >= DateTime.Today.Day
+                //s.Schedules.Any(s => s.StartTime.Day == DateTime.Today.Day) 
+                 //s.Schedules.Any(s => s.StartTime.Day < DateTime.Today.Day)
                 )
 
                 .Select(x => new Films

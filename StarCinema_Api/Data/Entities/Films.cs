@@ -35,7 +35,7 @@ namespace StarCinema_Api.Data.Entities
         [MaxLength(255)]
         public string Country { get; set; }
         public DateTime Release { get; set; }
-        public string VideoLink { get; set; }
+        public string? VideoLink { get; set; }
 
         [DefaultValue(false)]
         public bool IsDelete { get; set; } = false;

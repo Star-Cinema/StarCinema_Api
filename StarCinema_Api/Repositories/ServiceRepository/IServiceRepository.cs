@@ -21,7 +21,7 @@ namespace StarCinema_Api.Repositories.ServiceRepository
         Task<ServiceDTO> CreateService(ServiceDTO service);
 
         // TuNT37 Get all Services by page, pageSize 
-        Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize);
+        Task<PaginationDTO<Data.Entities.Services>> GetAllServices(string? keySearch, int page, int pageSize);
 
         // TuNT37 Get Service by ID
         public Task<Data.Entities.Services> GetServiceById(int id);

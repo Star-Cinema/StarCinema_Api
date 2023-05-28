@@ -23,6 +23,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         Task<Films> getFilmById(int filmId);
         void CreateFilm(Films film);
         void CreateImage(Images image);
+        void UpdateImage(int filmId, string path);
         void UpdateFilm(Films film);
         void DeleteFilm(Films film);
         bool SaveChange();

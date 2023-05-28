@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.FilmsRepository;
+using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace StarCinema_Api.Services.FilmsService
@@ -166,14 +167,14 @@ namespace StarCinema_Api.Services.FilmsService
                     if (item.Name != null && item.Name.Length > 0)
                     {
 
-                        var image = new Images
-                        {
-                            FilmId = id,
-                            Name = item.Name,
-                            Path = item.Path
-                        };
-                        _filmsRepository.CreateImage(image);
-                        //_filmsRepository.SaveChange();
+                        //var image = new Images
+                        //{
+                        //    FilmId = id,
+                        //    Name = item.Name,
+                        //    Path = item.Path
+                        //};
+                        _filmsRepository.UpdateImage(id, item.Path);
+                        _filmsRepository.SaveChange();
                     }
                 }
                 return new ResponseDTO { code = 200, message = "Success" };

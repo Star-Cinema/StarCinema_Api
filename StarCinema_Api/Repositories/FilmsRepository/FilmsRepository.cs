@@ -186,6 +186,18 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             _context.SaveChanges();
         }
 
+        // VyVNK1 METHOD UPDATE IMAGE
+        public async void UpdateImage(int filmId, string path)
+        {
+
+            var result = _context.Images.FirstOrDefault(b => b.FilmId == filmId);
+            if (result != null)
+            {
+                result.Path = path ;
+                _context.SaveChanges();
+            }
+        }
+
         // VyVNK1 METHOD DELETE FILM
         public void DeleteFilm(Films film)
         {

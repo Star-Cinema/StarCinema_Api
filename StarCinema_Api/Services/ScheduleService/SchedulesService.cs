@@ -48,6 +48,11 @@ namespace StarCinema_Api.Services
                     code = 404,
                     message = $"Does not exist film with id {scheduleDTO.FilmId}"
                 };
+                if (film.Result.IsDelete == true) return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"The film has been deleted"
+                };
                 if (room.Result == null) return new ResponseDTO
                 {
                     code = 404,
@@ -125,7 +130,7 @@ namespace StarCinema_Api.Services
         }
 
         // Get all schedules AnhNT282
-        public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10)
+        public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             try
             {

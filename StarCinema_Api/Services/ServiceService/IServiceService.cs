@@ -15,7 +15,7 @@ namespace StarCinema_Api.Services.ServiceService
         Task<ResponseDTO> CreateService(ServiceDTO services);
 
         // Get all Services
-        Task<ResponseDTO> GetAllServices(int page, int pageSize);
+        Task<ResponseDTO> GetAllServices(string? keySearch, int page, int pageSize);
 
         // Get Service By Id 
         Task<ResponseDTO> GetServiceById(int id);

@@ -60,7 +60,6 @@ namespace StarCinema_Api.Controllers
             };
         }
         [HttpPut]
-        [ResponseCache(NoStore = true)]
         public async Task<ResponseDTO> EditRoom(RoomDTO model)
         {
             if (ModelState.IsValid)
@@ -85,7 +84,6 @@ namespace StarCinema_Api.Controllers
         }
 
         [HttpDelete(Name = "DeleteRoom")]
-        [ResponseCache(NoStore = true)]
         public async Task<ResponseDTO> Delete(int id)
         {
             var room = await repository.Delete(id);

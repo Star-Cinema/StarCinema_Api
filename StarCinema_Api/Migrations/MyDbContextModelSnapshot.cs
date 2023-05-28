@@ -159,7 +159,6 @@ namespace StarCinema_Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VideoLink")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

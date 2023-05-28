@@ -31,7 +31,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
         Task<List<SeatsDTO>> GetSeats(int filmId, int scheduleId);
 
         // Get all booking by page, pageSize 
-        Task<PaginationDTO<BookingDTO>> GetAllBookings(int page, int pageSize);
+        Task<PaginationDTO<BookingDTO>> GetAllByPage(string? keySearch, int page, int pageSize);
 
         Task<BookingDTO> GetDetailBookingById(int id);
 

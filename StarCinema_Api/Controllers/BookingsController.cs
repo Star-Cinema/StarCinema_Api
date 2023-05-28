@@ -96,9 +96,9 @@ namespace StarCinema_Api.Controllers
 
         // TuNT37 Api Get all booking by page, pagesize
         [HttpGet("GetAllByPage")]
-        public async Task<ActionResult> GetAllByPage(int page, int pageSize)
+        public async Task<ActionResult> GetAllByPage(string? keySearch, int page, int pageSize)
         {
-            var resData = await _bookingService.GetAllBookings(page, pageSize);
+            var resData = await _bookingService.GetAllByPage(keySearch, page, pageSize);
             return StatusCode(resData.code, resData);
         }
 
@@ -126,8 +126,8 @@ namespace StarCinema_Api.Controllers
         public async Task<IActionResult> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO)
         {
             // Get userId by token when request create
-            //var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
-            var userId = 2;
+            var userId = int.Parse(HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("id"))?.Value ?? "0");
+            //var userId = 2;
 
             if (bookingAddEditDTO == null)
             {

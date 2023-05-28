@@ -11,7 +11,7 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
     public interface ISchedulesRepository
     {
         // Get all schedules AnhNT282
-        Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int page = 0, int limit = 10);
+        Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit);
         // Get schedule by id AnhNT282
         Task<Schedules> getScheduleById(int scheduleId);
         // Create schedule AnhNT282

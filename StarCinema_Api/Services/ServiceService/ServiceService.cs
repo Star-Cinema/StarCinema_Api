@@ -117,11 +117,11 @@ namespace StarCinema_Api.Services.ServiceService
         }
 
         // TuNT37 Get All Services with page, pageSize
-        public async Task<ResponseDTO> GetAllServices(int page, int pageSize)
+        public async Task<ResponseDTO> GetAllServices(string? keySearch, int page, int pageSize)
         {
             try
             {
-                var result = await _serviceRepository.GetAllServices(page, pageSize);
+                var result = await _serviceRepository.GetAllServices(keySearch, page, pageSize);
                 return new ResponseDTO
                 {
                     code = 200,

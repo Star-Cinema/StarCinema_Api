@@ -275,11 +275,11 @@ namespace StarCinema_Api.Services.BookingService
         }
 
         // TuNT37 Get all booking by page, pageSize 
-        public async Task<ResponseDTO> GetAllBookings(int page, int pageSize)
+        public async Task<ResponseDTO> GetAllByPage(string? keySearch, int page, int pageSize)
         {
             try
             {
-                var result = await _bookingsRepository.GetAllBookings(page, pageSize);
+                var result = await _bookingsRepository.GetAllByPage(keySearch, page, pageSize);
                 return new ResponseDTO
                 {
                     code = 200,

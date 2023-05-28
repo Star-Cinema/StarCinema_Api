@@ -59,27 +59,28 @@ namespace StarCinema_Api.Repositories.ServiceRepository
         }
 
         // TuNT37 Get all Services
-        public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(int page, int pageSize)
+        public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(string? keySearch, int page, int pageSize)
         {
-            var query = await (from s in context.Services
+            var query = (from s in context.Services
                                select new Data.Entities.Services
                                {
                                    Id = s.Id,
                                    Name = s.Name,
                                    Price = s.Price
-                               }).Distinct().ToListAsync();
+                               }).AsQueryable();
 
+            if(keySearch != null)
+            {
+                query = query.Where(e => e.Id.ToString().Contains(keySearch) || e.Name.Contains(keySearch) || e.Price.ToString().Contains(keySearch)); 
+            }
+            var listService = query.Distinct().ToList();
             var pagination = new PaginationDTO<Data.Entities.Services>();
-            query = query.Skip(10 * 0).Take(10).ToList();
 
-            pagination.TotalCount = query.Count;
-            pagination.PageSize = 10;
-            pagination.Page = 0;
-            pagination.ListItem = query;
-
-            //query = query.Skip(pageSize * page).Take(pageSize).ToList();
-            //pagination.PageSize = pageSize;
-            //pagination.Page = page;
+            pagination.TotalCount = listService.Count;
+            listService = listService.Skip(pageSize * page).Take(pageSize).ToList();
+            pagination.PageSize = pageSize;
+            pagination.Page = page;
+            pagination.ListItem = listService;
 
             return pagination;
         }

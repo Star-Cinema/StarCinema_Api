@@ -59,6 +59,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
                 query = query.Where(s => s.Name.Contains(search)
                                || s.Director.Contains(search)
                                || s.Country.Contains(search)
+                               || s.Producer.Contains(search)
                                || s.Category.Name.Contains(search));
             }
             

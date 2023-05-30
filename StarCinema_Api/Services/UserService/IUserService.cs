@@ -3,11 +3,11 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Services.UserService
 {
-    /*
-        Account : HungTD34
-        Description : Interface of UserService
-        Create : 2023/05/04
-     */
+    
+    ///    Account : HungTD34
+    ///    Description : Interface of UserService
+    ///    Create : 2023/05/04
+     
     public interface IUserService
     {
         //Get list user with page, pageSize, key search, sortBy HungTD34

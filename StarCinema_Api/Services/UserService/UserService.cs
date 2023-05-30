@@ -8,11 +8,11 @@ using System.Text;
 
 namespace StarCinema_Api.Services.UserService
 {
-    /*
-        Account : HungTD34
-        Description : This class is for manipulating the database. Handle create, update, disable, get, get list, verify email of users
-        Create : 2023/05/04
-     */
+
+    ///   Account : HungTD34
+    ///   Description : This class is for manipulating the database. Handle create, update, disable, get, get list, verify email of users
+    ///   Create : 2023/05/04
+
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -57,13 +57,13 @@ namespace StarCinema_Api.Services.UserService
             }
 
             //Check if the new password entered is the same or not HungTD34
-            if (changepassDTO.NewPass != changepassDTO.ReNewPass) 
-            return new ResponseDTO()
-            {
-                code = 400,
-                message = "Password must be equal Re Password!",
-                data = null
-            };
+            if (changepassDTO.NewPass != changepassDTO.ReNewPass)
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = "Password must be equal Re Password!",
+                    data = null
+                };
 
             //Encrypt new password HungTD34
             using var nhmac = new HMACSHA512();
@@ -317,8 +317,9 @@ namespace StarCinema_Api.Services.UserService
 
             if (!user.IsEmailVerified && user.Email != updateUserDTO.Email)
             {
-                if(_userRepository.GetUserByEmail(updateUserDTO.Email) == null)
-                user.Email = updateUserDTO.Email;
+                if (_userRepository.GetUserByEmail(updateUserDTO.Email) == null)
+                    user.Email = updateUserDTO.Email;
+                else user.Email = "";
             }
 
             _userRepository.UpdateUser(user);

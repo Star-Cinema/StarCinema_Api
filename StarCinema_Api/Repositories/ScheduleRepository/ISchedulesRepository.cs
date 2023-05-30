@@ -1,5 +1,6 @@
 ﻿using StarCinema_Api.DTOs;
 using StarCinema_Api.Data.Entities;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 
 namespace StarCinema_Api.Repositories.ScheduleRepository
 {
@@ -22,6 +23,8 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
         void DeleteSchedule(Schedules schedule);
         // Get id of last schedule AnhNT282
         Task<int> GetLastIDSchedule();
+        // Check the booked schedule AnhNT282
+        Task<bool> IsScheduleBooked(Schedules schedule);
         // Save change DbContext AnhNT282
         bool SaveChange();
     }

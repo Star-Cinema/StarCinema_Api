@@ -4,6 +4,7 @@ using StarCinema_Api.Data;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using System.Xml.Schema;
+using System.Linq.Dynamic.Core;
 
 namespace StarCinema_Api.Repositories.ScheduleRepository
 {
@@ -109,6 +110,19 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
                 Ticket = x.Ticket
             }).Where(s => s.Id == scheduleId).FirstOrDefaultAsync();
         }
+
+        // Check the booked schedule AnhNT282
+        public async Task<bool> IsScheduleBooked(Schedules schedule)
+        {
+
+            int totalBooking = (from bd in _context.BookingDetails
+                         join t in _context.Tickets on bd.TicketId equals t.Id
+                         join s in _context.Schedules on t.ScheduleId equals s.Id
+                         where s.Id == schedule.Id
+                         select new Schedules { Id = s.Id }).ToListAsync().Result.Count();
+
+            return totalBooking > 0;
+        }                
 
         // Save change DbContext AnhNT282
         public bool SaveChange()

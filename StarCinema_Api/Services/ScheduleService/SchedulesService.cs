@@ -50,13 +50,18 @@ namespace StarCinema_Api.Services
                 };
                 if (film.Result.IsDelete == true) return new ResponseDTO
                 {
-                    code = 404,
+                    code = 400,
                     message = $"The film has been deleted"
                 };
                 if (room.Result == null) return new ResponseDTO
                 {
                     code = 404,
                     message = $"Does not exist room with id {scheduleDTO.RoomId}"
+                };
+                if (film.Result.IsDelete == true) return new ResponseDTO
+                {
+                    code = 400,
+                    message = $"The room has been deleted"
                 };
                 var schedule = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
                 schedule.EndTime = schedule.StartTime.AddMinutes(film.Result.Duration);
@@ -110,7 +115,15 @@ namespace StarCinema_Api.Services
                     code = 404,
                     message = $"Does not exist schedule with id {id}",
                 };
-
+                // check if the schedule has been booked, it cannot be deleted AnhNT282 
+                if (await _schedulesRepository.IsScheduleBooked(schedule))
+                {
+                    return new ResponseDTO
+                    {
+                        code = 400,
+                        message = "The booked schedule cannot be deleted"
+                    };
+                };
                 _schedulesRepository.DeleteSchedule(schedule);
                 _schedulesRepository.SaveChange();
                 return new ResponseDTO

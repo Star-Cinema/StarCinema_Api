@@ -14,11 +14,9 @@ using StarCinema_Api.Services.EmailService;
 
 namespace StarCinema_Api.Services.AuthService
 {
-    /*
-        Account : HungTD34
-        Description : This class is for user authentication, new account registration, user email authentication
-        Create : 2023/05/04
-     */
+    ///    Account : HungTD34
+    ///    Description : This class is for user authentication, new account registration, user email authentication
+    ///    Create : 2023/05/04
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
@@ -82,9 +80,6 @@ namespace StarCinema_Api.Services.AuthService
                 message = "Faile",
                 data = null
             };
-
-
-            throw new NotImplementedException();
         }
 
         //Login website HungTD34
@@ -101,6 +96,14 @@ namespace StarCinema_Api.Services.AuthService
                     data = null
                 };
             }
+
+            if (currentUser.IsDelete)
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = "Username is delete!",
+                    data = null
+                };
 
             //Decrypt the password in the database and check if it matches the entered password HungTD34
             using var hmac = new HMACSHA512(currentUser.PasswordSalt);

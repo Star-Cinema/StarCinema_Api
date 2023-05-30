@@ -6,11 +6,11 @@ using StarCinema_Api.Services.UserService;
 
 namespace StarCinema_Api.Controllers
 {
-    /*
-        Account : HungTD34
-        Description : This class to handle user navigation to AuthService
-        Create : 2023/05/04
-     */
+
+    ///    Account : HungTD34
+    ///    Description : This class to handle user navigation to AuthService
+    ///    Create : 2023/05/04
+
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -43,15 +43,8 @@ namespace StarCinema_Api.Controllers
         [HttpPost("verify")]
         public ActionResult VerifyEmail(string email, string token)
         {
-            try
-            {
-                var res = _authService.VerifyEmail(email, token);
-                return StatusCode(res.code, res);
-            }
-            catch (Exception e)
-            {
-                return Ok(e.Message);
-            }
+            var res = _authService.VerifyEmail(email, token);
+            return StatusCode(res.code, res);
         }
 
         //Forgot password by user HungTD34

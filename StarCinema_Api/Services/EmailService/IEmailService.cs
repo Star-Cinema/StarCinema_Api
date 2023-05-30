@@ -2,11 +2,11 @@
 
 namespace StarCinema_Api.Services.EmailService
 {
-    /*
-        Account : HungTD34
-        Description : Interface of EmailService
-        Create : 2023/05/04
-     */
+    
+    ///    Account : HungTD34
+    ///    Description : Interface of EmailService
+    ///    Create : 2023/05/04
+     
     public interface IEmailService
     {
         //Send new email to user HungTD34

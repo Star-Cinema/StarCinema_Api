@@ -6,11 +6,10 @@ using StarCinema_Api.Services.UserService;
 
 namespace StarCinema_Api.Controllers
 {
-    /*
-        Account : HungTD34
-        Description : This class to handle user navigation to AccountService
-        Create : 2023/05/04
-     */
+    ///    Account : HungTD34
+    ///    Description : This class to handle user navigation to AccountService
+    ///    Create : 2023/05/04
+
     [Route("api/my")]
     [ApiController]
     [Authorize]
@@ -64,25 +63,5 @@ namespace StarCinema_Api.Controllers
 
             return StatusCode(res.code, res);
         }
-        //[HttpGet("verify")]
-        //public ActionResult Verify()
-        //{
-        //    var claims = HttpContext.User.Claims.ToList();
-        //    var username = claims[0].Value.ToString();
-        //    var user = _userService.GetUserByUsername(username);
-
-        //    try
-        //    {
-        //        var body = "Please click this link to verify: https://localhost:7125/api/verify?email=" + user.email.Split("@")[0] + "%40" + "gmail.com" + "&token=" + user.phone;
-        //        var res = _emailService.SendEmail(user.email, "Verify your account", body);
-        //        res.message = "Please check your email to verify this account!";
-        //        return StatusCode(res.code, res);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(ex.Message);
-        //    }
-        //    return Ok();
-        //}
     }
 }

@@ -8,11 +8,11 @@ using StarCinema_Api.Services.TokenService;
 
 namespace StarCinema_Api.Services.EmailService
 {
-    /*
-        Account : HungTD34
-        Description : This class to send email to user
-        Create : 2023/05/23
-     */
+    
+    ///    Account : HungTD34
+    ///    Description : This class to send email to user
+    ///    Create : 2023/05/23
+     
     public class EmailService : IEmailService
     {
         private readonly IUserRepository _userRepository;
@@ -63,36 +63,5 @@ namespace StarCinema_Api.Services.EmailService
                 };
             }
         }
-
-        //public ResponseDTO VerifyEmail(string email, string token)
-        //{
-        //    try
-        //    {
-        //        var user = _userRepository.GetUserByEmail(email);
-        //        if (user != null && user.Token == token)
-        //            return new ResponseDTO()
-        //            {
-        //                code = 200,
-        //                message = "Success! Your email is verify!",
-        //                data = null
-        //            };
-        //        else
-        //            return new ResponseDTO()
-        //            {
-        //                code = 400,
-        //                message = "Faile",
-        //                data = null
-        //            };
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new ResponseDTO()
-        //        {
-        //            code = 400,
-        //            message = "Faile. " + e.Message,
-        //            data = null
-        //        };
-        //    }
-        //}
     }
 }

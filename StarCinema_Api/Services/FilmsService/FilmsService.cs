@@ -115,7 +115,7 @@ namespace StarCinema_Api.Services.FilmsService
             foreach (var film in filmList)
             {
                 if (newFilm.Name.Equals(film.Name, StringComparison.OrdinalIgnoreCase)
-                    && newFilm.CategoryId == film.CategoryId
+                    && newFilm.CategoryId == film.Category.Id
                     && newFilm.Director.Equals(film.Director, StringComparison.OrdinalIgnoreCase)
                     && newFilm.Country.Equals(film.Country, StringComparison.OrdinalIgnoreCase)
                     && film.IsDelete == false

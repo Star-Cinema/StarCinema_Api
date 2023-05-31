@@ -8,11 +8,11 @@ using StarCinema_Api.Repositories.TicketsRepository;
 
 namespace StarCinema_Api.Services
 {
-    /*
-        Account : AnhNT282
-        Description : Class service for entity schedule
-        Date created : 2023/05/19
-    */
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Class service for entity schedule
+    /// Date created : 2023/05/19
+    /// </summary>
     public class SchedulesService : ISchedulesService
     {
         private readonly ISchedulesRepository _schedulesRepository;
@@ -21,7 +21,14 @@ namespace StarCinema_Api.Services
         private readonly IRoomRepository _roomRepository;
         private readonly IFilmsRepository _filmsRepository;
 
-        // Constructor AnhNT282
+        /// <summary>
+        /// Constructor AnhNT282
+        /// </summary>
+        /// <param name="SchedulesRepository"></param>
+        /// <param name="mapper"></param>
+        /// <param name="ticketsRepository"></param>
+        /// <param name="roomRepository"></param>
+        /// <param name="filmsRepository"></param>
         public SchedulesService(ISchedulesRepository SchedulesRepository,
             IMapper mapper, ITicketsRepository ticketsRepository,
             IRoomRepository roomRepository,
@@ -33,8 +40,12 @@ namespace StarCinema_Api.Services
             _roomRepository = roomRepository;
             _filmsRepository = filmsRepository;
         }
-        
-        // Create schedule AnhNT282
+
+        /// <summary>
+        /// Create schedule AnhNT282
+        /// </summary>
+        /// <param name="scheduleDTO"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> CreateSchedule(ScheduleDTO scheduleDTO)
         {
             try
@@ -50,7 +61,7 @@ namespace StarCinema_Api.Services
                 };
                 if (film.Result.IsDelete == true) return new ResponseDTO
                 {
-                    code = 404,
+                    code = 400,
                     message = $"The film has been deleted"
                 };
                 if (room.Result == null) return new ResponseDTO
@@ -58,9 +69,14 @@ namespace StarCinema_Api.Services
                     code = 404,
                     message = $"Does not exist room with id {scheduleDTO.RoomId}"
                 };
+                if (film.Result.IsDelete == true) return new ResponseDTO
+                {
+                    code = 400,
+                    message = $"The room has been deleted"
+                };
                 var schedule = _mapper.Map<ScheduleDTO, Schedules>(scheduleDTO);
                 schedule.EndTime = schedule.StartTime.AddMinutes(film.Result.Duration);
-                var scheduleList = _schedulesRepository.getAllSchedules(null, schedule.RoomId, schedule.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
+                var scheduleList = _schedulesRepository.GetAllSchedules(null, schedule.RoomId, schedule.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
                 var IsInvalid = IsScheduleConflicting(schedule, scheduleList);
                 if (IsInvalid)
                 {
@@ -75,7 +91,7 @@ namespace StarCinema_Api.Services
                 _schedulesRepository.SaveChange();
 
                 var scheduleId = await _schedulesRepository.GetLastIDSchedule();
-                //Create ticket
+                // Create ticket AnhNT282
                 await _ticketsRepository.InsertAsync(new Tickets
                 {
                     ScheduleId = scheduleId,
@@ -99,18 +115,29 @@ namespace StarCinema_Api.Services
             }
         }
 
-        // Delete schedule AnhNT282
+        /// <summary>
+        /// Delete schedule AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<ResponseDTO> DeleteSchedule(int id)
         {
             try
             {
-                var schedule = await _schedulesRepository.getScheduleById(id);
+                var schedule = await _schedulesRepository.GetScheduleById(id);
                 if (schedule == null) return new ResponseDTO
                 {
                     code = 404,
                     message = $"Does not exist schedule with id {id}",
                 };
-
+                // check if the schedule has been booked, it cannot be deleted AnhNT282 
+                if (await _schedulesRepository.IsScheduleBooked(schedule))
+                {
+                    return new ResponseDTO
+                    {
+                        code = 400,
+                        message = "The booked schedule cannot be deleted"
+                    };
+                };
                 _schedulesRepository.DeleteSchedule(schedule);
                 _schedulesRepository.SaveChange();
                 return new ResponseDTO
@@ -129,12 +156,20 @@ namespace StarCinema_Api.Services
             }
         }
 
-        // Get all schedules AnhNT282
+        /// <summary>
+        /// Get all schedules AnhNT282
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="roomId"></param>
+        /// <param name="date"></param>
+        /// <param name="sortDate"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         public async Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             try
             {
-                var result = await _schedulesRepository.getAllSchedules(filmId, roomId, date, sortDate, page, limit);
+                var result = await _schedulesRepository.GetAllSchedules(filmId, roomId, date, sortDate, page, limit);
                 return new ResponseDTO
                 {
                     code = 200,
@@ -152,12 +187,15 @@ namespace StarCinema_Api.Services
             }
         }
 
-        // Get schedule by id AnhNT282
+        /// <summary>
+        /// Get schedule by id AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<ResponseDTO> GetScheduleById(int id)
         {
             try
             {
-                var result = await _schedulesRepository.getScheduleById(id);
+                var result = await _schedulesRepository.GetScheduleById(id);
                 if (result == null) return new ResponseDTO
                 {
                     code = 404,
@@ -180,7 +218,11 @@ namespace StarCinema_Api.Services
             }
         }
 
-        // Update schedule AnhNT282
+        /// <summary>
+        /// Update schedule AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="scheduleDTO"></param>
         public async Task<ResponseDTO> UpdateSchedule(int id, ScheduleDTO scheduleDTO)
         {
             try
@@ -188,7 +230,7 @@ namespace StarCinema_Api.Services
                 // Check filmId, roomId
                 var film = _filmsRepository.GetFilmById(scheduleDTO.FilmId);
                 var room = _roomRepository.GetById(scheduleDTO.RoomId);
-                var scheduleCurrent = _schedulesRepository.getScheduleById(id);
+                var scheduleCurrent = _schedulesRepository.GetScheduleById(id);
 
                 Task.WaitAll(room, film, scheduleCurrent);
                 if (film.Result == null) return new ResponseDTO
@@ -216,11 +258,11 @@ namespace StarCinema_Api.Services
                 scheduleNew.Id = id;
                 scheduleNew.EndTime = scheduleNew.StartTime.AddMinutes(film.Result.Duration); 
 
-                var scheduleList = _schedulesRepository.getAllSchedules(null, scheduleNew.RoomId, scheduleNew.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
+                var scheduleList = _schedulesRepository.GetAllSchedules(null, scheduleNew.RoomId, scheduleNew.StartTime.Date, null, 0, int.MaxValue).Result.ListItem;
 
                 scheduleList = scheduleList.Where(s => s.Id != scheduleCurrent.Result.Id).ToList();
-                var IsInvalid = IsScheduleConflicting(scheduleNew, scheduleList);
-                if(IsInvalid)
+                var isInvalid = IsScheduleConflicting(scheduleNew, scheduleList);
+                if(isInvalid)
                 {
                     return new ResponseDTO
                     {
@@ -244,7 +286,11 @@ namespace StarCinema_Api.Services
                 };
             }
         }
-        // Check for overlap with previous schedules AnhNT282
+        /// <summary>
+        /// Check for overlap with previous schedules AnhNT282
+        /// </summary>
+        /// <param name="newSchedule"></param>
+        /// <param name="scheduleList"></param>
         public bool IsScheduleConflicting(Schedules newSchedule, List<Schedules> scheduleList)
         {
             if(scheduleList.Count ==0) return false;

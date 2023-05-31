@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace StarCinema_Api.Services.AuthService
 {
-    /*
-        Account : HungTD34
-        Description : Interface of AuthService
-        Create : 2023/05/04
-     */
+    
+    ///    Account : HungTD34
+    ///    Description : Interface of AuthService
+    ///    Create : 2023/05/04
+
     public interface IAuthService
     {
         //Register new account by user HungTD34

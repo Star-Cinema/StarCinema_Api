@@ -6,11 +6,11 @@ using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Services.TokenService
 {
-    /*
-        Account : HungTD34
-        Description : This class generates authentication token for user
-        Create : 2023/05/04
-     */
+    
+    ///    Account : HungTD34
+    ///    Description : This class generates authentication token for user
+    ///    Create : 2023/05/04
+     
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
@@ -30,8 +30,8 @@ namespace StarCinema_Api.Services.TokenService
                 new Claim("id", user.Id == null? "" : user.Id.ToString()),
             };
 
-
-            if (user.RoleId == 1)
+            const int roleAdmin = 1;
+            if (user.RoleId == roleAdmin)
                 claims.Add(new Claim(ClaimTypes.Role, "admin"));
             else
                 claims.Add(new Claim(ClaimTypes.Role, "user"));

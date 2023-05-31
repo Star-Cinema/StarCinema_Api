@@ -4,20 +4,26 @@ using StarCinema_Api.Repositories.PaymentRepository;
 
 namespace StarCinema_Api.Services.PaymentService
 {
-    /*
-        Account : AnhNT282
-        Description : Class service for entity payment
-        Date created : 2023/05/19
-    */
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Class service for entity payment
+    /// Date created : 2023/05/19
+    /// </summary>
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentRepository _paymentRepository;
-        // Constructor AnhNT282
+        /// <summary>
+        /// Constructor AnhNT282
+        /// </summary>
+        /// <param name="paymentRepository"></param>
         public PaymentService(IPaymentRepository paymentRepository)
         {
             _paymentRepository = paymentRepository;
         }
-        // Create payment AnhNT282
+        /// <summary>
+        /// Create payment AnhNT282
+        /// </summary>
+        /// <param name="payment"></param>
         public async Task<ResponseDTO> CreatePaymentAsync(Payment payment)
         {
             await _paymentRepository.CreatePaymentAsync(payment);
@@ -29,51 +35,93 @@ namespace StarCinema_Api.Services.PaymentService
             };
         }
 
-        // Delete payment AnhNT282
+        /// <summary>
+        /// Delete payment AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<ResponseDTO> DeletePayment(long id)
         {
-            var payment = await _paymentRepository.GetPaymentById(id);
-            if (payment == null) return new ResponseDTO()
+            try
             {
-                code = 404,
-                message = "Payment with this id does not exist"
-            };
-            _paymentRepository.DeletePayment(payment);
-            await _paymentRepository.IsSaveChange();
-            return new ResponseDTO()
+                var payment = await _paymentRepository.GetPaymentById(id);
+                if (payment == null) return new ResponseDTO()
+                {
+                    code = 404,
+                    message = "Payment with this id does not exist"
+                };
+                _paymentRepository.DeletePayment(payment);
+                await _paymentRepository.IsSaveChange();
+                return new ResponseDTO()
+                {
+                    code = 200,
+                    message = "Success"
+                };
+            }
+            catch (Exception ex)
             {
-                code = 200,
-                message = "Success"
-            };
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
         }
 
-        // Get all payment AnhNT282
+        /// <summary>
+        /// Get all payment AnhNT282
+        /// </summary>
         public async Task<ResponseDTO> GetPaymentListAsync()
         {
-            var listPayment = await _paymentRepository.GetPaymentListAsync();
-            return new ResponseDTO()
+            try
             {
-                code = 200,
-                message = "Success",
-                data = listPayment
-            };
+                var listPayment = await _paymentRepository.GetPaymentListAsync();
+                return new ResponseDTO()
+                {
+                    code = 200,
+                    message = "Success",
+                    data = listPayment
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
         }
 
-        // Get payment by id AnhNT282
+        /// <summary>
+        /// Get payment by id AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<ResponseDTO> GetPaymentById(long id)
         {
-            var payment = await _paymentRepository.GetPaymentById(id);
-            if (payment == null) return new ResponseDTO()
+            try
             {
-                code = 404,
-                message = "Payment with this id does not exist"
-            };
-            return new ResponseDTO()
+                var payment = await _paymentRepository.GetPaymentById(id);
+                if (payment == null) return new ResponseDTO()
+                {
+                    code = 404,
+                    message = "Payment with this id does not exist"
+                };
+                return new ResponseDTO()
+                {
+                    code = 200,
+                    message = "Success",
+                    data = payment
+                };
+            }
+            catch (Exception ex)
             {
-                code = 200,
-                message = "Success",
-                data = payment
-            };
+                return new ResponseDTO
+                {
+                    code = 500,
+                    message = ex.Message
+                };
+            }
+
         }
     }
 }

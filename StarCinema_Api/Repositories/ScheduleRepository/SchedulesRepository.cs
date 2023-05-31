@@ -4,37 +4,56 @@ using StarCinema_Api.Data;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.Repositories.ScheduleRepository;
 using System.Xml.Schema;
+using System.Linq.Dynamic.Core;
 
 namespace StarCinema_Api.Repositories.ScheduleRepository
 {
-    /*
-        Account : AnhNT282
-        Description : Class repository for entity schedule
-        Date created : 2023/05/19
-    */
+
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Class repository for entity schedule
+    /// Date created : 2023/05/19
+    /// </summary>
     public class SchedulesRepository : ISchedulesRepository
     {
         private readonly MyDbContext _context;
 
-        // Constructor AnhNT282
+        /// <summary>
+        /// Constructor AnhNT282
+        /// </summary>
+        /// <param name="context"></param>
         public SchedulesRepository(MyDbContext context)
         {
             _context = context;
         }
-        // Create schedule AnhNT282
+        /// <summary>
+        /// Create schedule AnhNT282
+        /// </summary>
+        /// <param name="schedule"></param>
         public void CreateSchedule(Schedules schedule)
         {
             _context.Schedules.Add(schedule);
         }
 
-        // Delete schedule AnhNT282
+        /// <summary>
+        /// Delete schedule AnhNT282
+        /// </summary>
+        /// <param name="schedule"></param>
         public void DeleteSchedule(Schedules schedule)
         {
             _context.Schedules.Remove(schedule);
         }
 
-        // Get all schedules AnhNT282
-        public async Task<PaginationDTO<Schedules>> getAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
+        /// <summary>
+        /// Get all schedules AnhNT282
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="roomId"></param>
+        /// <param name="date"></param>
+        /// <param name="sortDate"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        public async Task<PaginationDTO<Schedules>> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit)
         {
             var query =  _context.Schedules.Select(x => new Schedules
             {
@@ -88,14 +107,19 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
             return pagination;
         }
 
-        // Get id of last schedule AnhNT282
+        /// <summary>
+        /// Get id of last schedule AnhNT282
+        /// </summary>
         public async Task<int> GetLastIDSchedule()
         {
             return _context.Schedules.OrderBy(s => s.Id).LastOrDefaultAsync().Result.Id;
         }
 
-        // Get schedule by id AnhNT282
-        public async Task<Schedules> getScheduleById(int scheduleId)
+        /// <summary>
+        /// Get schedule by id AnhNT282
+        /// </summary>
+        /// <param name="scheduleId"></param>
+        public async Task<Schedules> GetScheduleById(int scheduleId)
         {
             return await _context.Schedules.Select(x => new Schedules
             {
@@ -110,13 +134,34 @@ namespace StarCinema_Api.Repositories.ScheduleRepository
             }).Where(s => s.Id == scheduleId).FirstOrDefaultAsync();
         }
 
-        // Save change DbContext AnhNT282
+        /// <summary>
+        /// Check the booked schedule AnhNT282
+        /// </summary>
+        /// <param name="schedule"></param>
+        public async Task<bool> IsScheduleBooked(Schedules schedule)
+        {
+
+            int totalBooking = (from bd in _context.BookingDetails
+                         join t in _context.Tickets on bd.TicketId equals t.Id
+                         join s in _context.Schedules on t.ScheduleId equals s.Id
+                         where s.Id == schedule.Id
+                         select new Schedules { Id = s.Id }).ToListAsync().Result.Count();
+
+            return totalBooking > 0;
+        }
+
+        /// <summary>
+        /// Save change DbContext AnhNT282
+        /// </summary>
         public bool SaveChange()
         {
             return _context.SaveChanges() > 0;
         }
 
-        // Update schedule AnhNT282
+        /// <summary>
+        /// Update schedule AnhNT282
+        /// </summary>
+        /// <param name="schedule"></param>
         public void UpdateSchedule(Schedules schedule)
         {
             _context.Entry(schedule).State = EntityState.Modified;

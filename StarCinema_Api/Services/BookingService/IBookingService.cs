@@ -3,35 +3,65 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Services.BookingService
 {
-    // TuNT37 interface booking service
+    /// <summary>
+    /// TuNT37 interface booking service
+    /// </summary>
     public interface IBookingService
     {
-        // Get Transaction History of User
+        /// <summary>
+        /// Get Transaction History of User
+        /// </summary>
         Task<ResponseDTO> GetTransactionHistory(int id, int page, int pageSize);
 
-        // Get Revenue12Month in chart of dashboard screen
+        /// <summary>
+        /// Get Revenue12Month in chart of dashboard screen
+        /// </summary>
         Task<ResponseDTO> GetRevenue12Month();
 
-        // Get Statistical in dashboard screen
+        /// <summary>
+        /// Get Statistical in dashboard screen
+        /// </summary>
         Task<ResponseDTO> GetStatistical();
 
-        // Get all seats not booked
+        /// <summary>
+        /// Get all seats not booked
+        /// </summary>
         Task<ResponseDTO> GetSeatsNotBooked(int filmId, int scheduleId);
 
-        // Get all Seats of room 
+        /// <summary>
+        /// Get all Seats of room 
+        /// </summary>
         Task<ResponseDTO> GetSeats(int filmId, int scheduleId);
 
-        // Admin: Get All films to choose film when create 
+        /// <summary>
+        /// Admin: Get All films to choose film when create 
+        /// </summary>
         Task<ResponseDTO> GetAllFilms();
         Task<ResponseDTO> GetAllBookings();
 
-        // Get All bookings by page, pageSize
+        /// <summary>
+        /// Get All bookings by page, pageSize
+        /// </summary>
         Task<ResponseDTO> GetAllByPage(string? keySearch, int page, int pageSize);
+        /// <summary>
+        /// Get Booking By Id
+        /// </summary>
         Task<ResponseDTO> GetBookingById(int id);
+        /// <summary>
+        /// Create Booking By Admin
+        /// </summary>
         Task<ResponseDTO> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int userId);
-
+        /// <summary>
+        /// Create Booking By User
+        /// </summary>
         Task<ResponseDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId);
+        /// <summary>
+        /// Update Booking
+        /// </summary>
         Task<ResponseDTO> UpdateBooking(BookingDTO bookingDTO);
+        /// <summary>
+        /// Delete Booking
+        /// </summary>
         Task<ResponseDTO> DeleteBooking(int id);
 
     }

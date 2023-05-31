@@ -7,7 +7,9 @@ using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Repositories.ServiceRepository
 {
-    // TuNT37 service repository 
+    /// <summary>
+    /// TuNT37 service repository 
+    /// </summary>
     public class ServiceRepository : BaseRepository<Data.Entities.Services>, IServiceRepository
     {
         // constructor
@@ -15,7 +17,11 @@ namespace StarCinema_Api.Repositories.ServiceRepository
         {
         }
 
-        // TuNT37 Delete Service
+        /// <summary>
+        /// TuNT37 Delete Service
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteService(int id)
         {
             var service = await context.Services.Where(b => b.Id == id).FirstOrDefaultAsync();
@@ -28,7 +34,11 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             return false;
         }
 
-        // TuNT37 Update Service
+        /// <summary>
+        /// TuNT37 Update Service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
         public async Task<Data.Entities.Services> UpdateService(ServiceDTO service)
         {
             var serviceUpdate = await context.Services.Where(e => e.Id == service.Id).FirstOrDefaultAsync();
@@ -47,7 +57,11 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             
         }
 
-        // TuNT37 Create service
+        /// <summary>
+        /// TuNT37 Create service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
         public async Task<ServiceDTO> CreateService(ServiceDTO service)
         {
             var result = new Data.Entities.Services();
@@ -58,7 +72,13 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             return service;
         }
 
-        // TuNT37 Get all Services
+        /// <summary>
+        /// TuNT37 Get all Services
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<PaginationDTO<Data.Entities.Services>> GetAllServices(string? keySearch, int page, int pageSize)
         {
             var query = (from s in context.Services
@@ -85,11 +105,14 @@ namespace StarCinema_Api.Repositories.ServiceRepository
             return pagination;
         }
 
-        // TuNT37 Get Service by Id
+        /// <summary>
+        /// TuNT37 Get Service by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Data.Entities.Services> GetServiceById(int id)
         {
-            var query = context.Services.Where(e=>e.Id == id).FirstOrDefault() ;
-            return query;
+            return context.Services.Where(e=>e.Id == id).FirstOrDefault();
         }
 
 

@@ -1,27 +1,25 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FileName: FilmsRepository.cs
-//FileType: Visual C# Source file
-//Author : VyVNK1
-//Created On : 20/05/2023
-//Last Modified On : 24/05/2023
-//Copy Rights : FA Academy
-//Description : Film Repository
+///FileName: FilmsRepository.cs
+///FileType: Visual C# Source file
+///Author : VyVNK1
+///Created On : 20/05/2023
+///Last Modified On : 24/05/2023
+///Copy Rights : FA Academy
+///Description : Film Repository
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 using StarCinema_Api.DTOs;
 using Microsoft.EntityFrameworkCore;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.Data;
-using StarCinema_Api.Repositories.FilmsRepository;
-using System.Linq.Expressions;
-using StarCinema_Api.DTOs;
-using System.Threading.Tasks;
-using System;
+
 
 
 namespace StarCinema_Api.Repositories.FilmsRepository
 {
-    // VYVNK1 Create class FilmsRepository implement interface IFilmsRepository
+    /// <summary>
+    /// VYVNK1 Create class FilmsRepository implement interface IFilmsRepository
+    /// </summary>
     public class FilmsRepository : IFilmsRepository
     {
         private readonly MyDbContext _context;
@@ -30,8 +28,14 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             _context = context;
         }
 
-        //VyVNK1 METHOD: GET ALL FILM 
-        public async Task<PaginationDTO<Films>> getAllFilms(string? search,
+        /// <summary>
+        /// VyVNK1 METHOD: GET ALL FILM 
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public async Task<PaginationDTO<Films>> GetAllFilms(string? search,
             int page = 0, int limit = 10)
         {
             var query = _context.Films
@@ -55,40 +59,38 @@ namespace StarCinema_Api.Repositories.FilmsRepository
                 .AsQueryable();
             if (search != null)
             {
-                //query = query.Where(s => s.Name == name);
                 query = query.Where(s => s.Name.Contains(search)
                                || s.Director.Contains(search)
                                || s.Country.Contains(search)
                                || s.Producer.Contains(search)
                                || s.Category.Name.Contains(search));
             }
-            
+
             var films = await query.ToListAsync();
             var pagination = new PaginationDTO<Films>();
 
             pagination.TotalCount = films.Count;
-
-            //films = films.Skip(limit * page).Take(limit).ToList();
             pagination.PageSize = limit;
             pagination.Page = page;
             pagination.ListItem = films;
             return pagination;
         }
-      
 
-        // VYVNK1 METHOD: GET ALL NOW SHOWING FILM 
-        //from list schedule, if first start date <= today <= last start date
-        public async Task<List<Films>> getNowShowingFilms()
+
+        /// <summary>
+        /// VYVNK1 METHOD: GET ALL NOW SHOWING FILM 
+        /// from list schedule, if first start date <= today <= last start date
+        /// </summary>
+        /// <returns></returns>
+
+        public async Task<List<Films>> GetNowShowingFilms()
         {
-           
+
             var query = _context.Films
                 .Where(s => s.IsDelete == false &&
-                s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day 
-                && s.Schedules.Any(s => s.StartTime.Day >= DateTime.Today.Day)
-                
-                //s.Schedules.OrderBy(e => e.StartTime).Last().StartTime.Day >= DateTime.Today.Day
-                //s.Schedules.Any(s => s.StartTime.Day == DateTime.Today.Day) 
-                 //s.Schedules.Any(s => s.StartTime.Day < DateTime.Today.Day)
+                //s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day
+                s.Schedules.Any(s => s.StartTime.Date <= DateTime.Today.Date)
+                && s.Schedules.Any(s => s.StartTime.Date >= DateTime.Today.Date)
                 )
 
                 .Select(x => new Films
@@ -115,14 +117,16 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             return films;
         }
 
-        //VyVNK1 METHOD: GET ALL UPCOMING FILM 
-        //from list schedule, if first start date > today
-        public async Task<List<Films>> getUpComingFilms()
+        /// <summary>
+        /// VyVNK1 METHOD: GET ALL UPCOMING FILM 
+        /// from list schedule, if first start date > today
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Films>> GetUpComingFilms()
         {
             var query = _context.Films
                  .Where(s => s.IsDelete == false &&
-                          //DateTime.Compare(s.Schedules.OrderBy(e => e.StartTime).First().StartTime, DateTime.Today) > 0
-                          s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day > DateTime.Today.Day
+                          s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Date > DateTime.Today.Date
                  )
                 .Select(x => new Films
                 {
@@ -149,8 +153,12 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         }
 
 
-        // VyVNK1 METHOD: GET FILM BY ID 
-        public async Task<Films> getFilmById(int filmId)
+        /// <summary>
+        /// VyVNK1 METHOD: GET FILM BY ID 
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <returns></returns>
+        public async Task<Films> GetFilmById(int filmId)
         {
             return await _context.Films
                 .Select(x => new Films
@@ -172,14 +180,20 @@ namespace StarCinema_Api.Repositories.FilmsRepository
                 .Where(s => s.Id == filmId).FirstOrDefaultAsync();
         }
 
-        // VyVNK1 METHOD CREATE FILM
+        /// <summary>
+        /// VyVNK1 METHOD CREATE FILM
+        /// </summary>
+        /// <param name="film"></param>
         public void CreateFilm(Films film)
         {
 
             _context.Films.Add(film);
         }
 
-        // VyVNK1 METHOD CREATE IMAGE
+        /// <summary>
+        /// VyVNK1 METHOD CREATE IMAGE
+        /// </summary>
+        /// <param name="image"></param>
         public async void CreateImage(Images image)
         {
 
@@ -187,26 +201,36 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             _context.SaveChanges();
         }
 
-        // VyVNK1 METHOD UPDATE IMAGE
+        /// <summary>
+        /// VyVNK1 METHOD UPDATE IMAGE
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="path"></param>
         public async void UpdateImage(int filmId, string path)
         {
 
             var result = _context.Images.FirstOrDefault(b => b.FilmId == filmId);
             if (result != null)
             {
-                result.Path = path ;
+                result.Path = path;
                 _context.SaveChanges();
             }
         }
 
-        // VyVNK1 METHOD DELETE FILM
+        /// <summary>
+        /// VyVNK1 METHOD DELETE FILM
+        /// </summary>
+        /// <param name="film"></param>
         public void DeleteFilm(Films film)
         {
             _context.Films.Remove(film);
 
         }
 
-        // VyVNK1 METHOD UPDATE FILM
+        /// <summary>
+        /// VyVNK1 METHOD UPDATE FILM
+        /// </summary>
+        /// <param name="film"></param>
         public void UpdateFilm(Films film)
         {
             _context.Entry(film).State = EntityState.Modified;
@@ -217,7 +241,10 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             return _context.SaveChanges() > 0;
         }
 
-        // VYVNK1 - METHOD GET LAST FILM ID FOR INSERT INTO IMAGES TABLE
+        /// <summary>
+        /// VYVNK1 - METHOD GET LAST FILM ID FOR INSERT INTO IMAGES TABLE
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetLastIDFilm()
         {
             return _context.Films.OrderBy(s => s.Id).LastOrDefaultAsync().Result.Id;

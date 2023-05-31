@@ -6,24 +6,33 @@ using StarCinema_Api.Repositories.BookingRepository;
 
 namespace StarCinema_Api.Services.VnPayService
 {
-    /*
-        Account : AnhNT282
-        Description : Class service using vnpay for function payment
-        Date created : 2023/05/19
-    */
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Class service using vnpay for function payment
+    /// Date created : 2023/05/19
+    /// </summary>
     public class VnPayService : IVnPayService
     {
         private readonly IPaymentRepository _paymentRepository;
         private readonly IBookingRepository _bookingRepository;
 
-        // Constructor AnhNT282
+        /// <summary>
+        /// Constructor AnhNT282
+        /// </summary>
+        /// <param name="paymentRepository"></param>
+        /// <param name="bookingRepository"></param>
         public VnPayService(IPaymentRepository paymentRepository, IBookingRepository bookingRepository)
         {
             _paymentRepository= paymentRepository;
             _bookingRepository= bookingRepository;
         }
-        // Create url payment AnhNT282
-        public async Task<ResponseDTO> CreateUrlPayment(int bookingID, double PriceTicket, double PriceService)
+        /// <summary>
+        /// Create url payment AnhNT282
+        /// </summary>
+        /// <param name="bookingID"></param>
+        /// <param name="priceTicket"></param>
+        /// <param name="priceService"></param>
+        public async Task<ResponseDTO> CreateUrlPayment(int bookingID, double priceTicket, double priceService)
         {
 
             var booking = await _bookingRepository.GetByIdAsync(bookingID);
@@ -45,20 +54,20 @@ namespace StarCinema_Api.Services.VnPayService
             var configuration = configBuilder.Build();
 
             var urlPayment = "";
-            ////Get Config Info
+            // Get Config Info
             string vnp_Returnurl = configuration.GetSection("VnPay:vnp_ReturnUrl").Value; //URL nhan ket qua tra ve 
             string vnp_Url = configuration.GetSection("VnPay:vnp_Url").Value; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = configuration.GetSection("VnPay:vnp_TmnCode").Value; //Ma định danh merchant kết nối (Terminal Id)
             string vnp_HashSecret = configuration.GetSection("VnPay:vnp_HashSecret").Value;//Secret Key
 
-            ////Build URL for VNPAY
+            // Build URL for VNPAY
 
             VnPayLibrary vnpay = new VnPayLibrary();
 
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnpay.AddRequestData("vnp_Amount", ((PriceTicket + PriceService) * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
+            vnpay.AddRequestData("vnp_Amount", ((priceTicket + priceService) * 100).ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
             vnpay.AddRequestData("vnp_BankCode", "VNBANK");
 
 
@@ -66,18 +75,18 @@ namespace StarCinema_Api.Services.VnPayService
             vnpay.AddRequestData("vnp_CurrCode", "VND");
 
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", "BookingId=" + bookingID + " PriceTicket=" + PriceTicket + " PriceService=" + PriceService);
+            vnpay.AddRequestData("vnp_OrderInfo", "BookingId=" + bookingID + " PriceTicket=" + priceTicket + " PriceService=" + priceService);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
 
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
             vnpay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
-            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(5).ToString("yyyyMMddHHmmss"));
 
 
 
 
-            //Add Params of 2.1.0 Version
-            //Billing
+            // Add Params of 2.1.0 Version
+            // Billing
 
             urlPayment = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
@@ -120,7 +129,7 @@ namespace StarCinema_Api.Services.VnPayService
             long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
 
 
-            // Get data from payment
+            // Get data from payment AnhNT282
 
             long vnpayTranId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));
             string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
@@ -143,7 +152,7 @@ namespace StarCinema_Api.Services.VnPayService
             {
                 if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                 {
-                    //Payment success
+                    // Payment success
                     // Create payment and update status of booking
 
                     var payment = new Payment();
@@ -170,9 +179,9 @@ namespace StarCinema_Api.Services.VnPayService
                             VnpayTranId = vnpayTranId,
                             bankPayment = bankCode,
                             Amount = vnp_Amount,
-                            bookingId= bookingId,
-                            priceTicket= priceTicket,
-                            priceService= priceService,
+                            bookingId = bookingId,
+                            priceTicket = priceTicket,
+                            priceService = priceService,
                             Total = priceTicket + priceService
                         }
                     };
@@ -196,8 +205,14 @@ namespace StarCinema_Api.Services.VnPayService
             }
         }
 
-        // Get booking info in vnp_OrderInfo AnhNT282
-        public static void ParseBookingInfo(string input, out int bookingId, out double priceTicket, out double priceService)
+        /// <summary>
+        /// Get booking info in vnp_OrderInfo AnhNT282
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="bookingId"></param>
+        /// <param name="priceTicket"></param>
+        /// <param name="priceService"></param>
+        public void ParseBookingInfo(string input, out int bookingId, out double priceTicket, out double priceService)
         {
             string[] pairs = input.Split(' ');
 

@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.ServiceRepository;
 using StarCinema_Api.Services.ServiceService;
 
-// TuNT37 Service Controller
 namespace StarCinema_Api.Controllers
 {
+    /// <summary>
+    /// TuNT37 Service Controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceController : ControllerBase
@@ -18,7 +21,12 @@ namespace StarCinema_Api.Controllers
             _serviceService = serviceService;
         }
 
-        // TuNT37 Api Delete Service
+        /// <summary>
+        /// TuNT37 Api Delete Service
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteService")]
         public async Task<IActionResult> DeleteService(int id)
         {
@@ -33,7 +41,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Update Service
+        /// <summary>
+        /// TuNT37 Api Update Service
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateService")]
         public async Task<IActionResult> UpdateService(ServiceDTO services)
         {
@@ -48,7 +61,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Create Service
+        /// <summary>
+        /// TuNT37 Api Create Service
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpPost("CreateService")]
         public async Task<IActionResult> CreateService(ServiceDTO services)
         {
@@ -63,7 +81,14 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Get all Service 
+        /// <summary>
+        /// TuNT37 Api Get all Service 
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet("GetAllServices")]
         public async Task<ActionResult> GetAllServices(string? keySearch, int page, int pageSize)
         {
@@ -71,11 +96,16 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Get Service by Id
+        /// <summary>
+        /// TuNT37 Api Get Service by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetServiceById(int id)
         {
-            if (id == null)
+            if (id < 0)
             {
                 return BadRequest(new ResponseDTO
                 {

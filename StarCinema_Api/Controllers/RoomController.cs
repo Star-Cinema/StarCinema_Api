@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Repositories.RoomRepository;
@@ -14,6 +15,7 @@ namespace StarCinema_Api.Controllers
         {
             this.repository = repository;
         }
+        [Authorize]
         [HttpGet(Name = "GetRooms")]
         //[ResponseCache(Location = ResponseCacheLocation.Any, Duration = 60)]
         public async Task<ResponseDTO> GetAll(
@@ -36,6 +38,7 @@ namespace StarCinema_Api.Controllers
                 code = 404
             };
         }
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ResponseDTO> AddRoom(RoomDTO model)
         {
@@ -59,6 +62,7 @@ namespace StarCinema_Api.Controllers
                 code = 404
             };
         }
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public async Task<ResponseDTO> EditRoom(RoomDTO model)
         {
@@ -83,6 +87,7 @@ namespace StarCinema_Api.Controllers
             };
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete(Name = "DeleteRoom")]
         public async Task<ResponseDTO> Delete(int id)
         {

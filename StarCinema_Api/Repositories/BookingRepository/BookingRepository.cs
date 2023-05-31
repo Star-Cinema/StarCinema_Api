@@ -10,18 +10,26 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StarCinema_Api.Repositories.BookingRepository
 {
-    // TuNT37 booking repository 
+    /// <summary>
+    /// TuNT37 booking repository 
+    /// </summary>
     public class BookingRepository : BaseRepository<Bookings>, IBookingRepository
     {
         public BookingRepository(MyDbContext context) : base(context)
         {
         }
 
-        // TuNT37 GEt transaction history booking of user
+        /// <summary>
+        /// TuNT37 GEt transaction history booking of user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id, int page, int pageSize)
         {
             var query =  (from b in context.Bookings
-                                where b.IsDelete == false
+                                where b.IsDelete == false && b.Status.Equals("Success")
                                 join bd in context.BookingDetails on b.Id equals bd.BookingId
                                 join u in context.Users on b.UserId equals u.Id
                                 join t in context.Tickets on bd.TicketId equals t.Id
@@ -42,10 +50,11 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                     UserName = u.Name,
                                 }).AsQueryable();
 
-            if(id != null)
+            if (id > 0)
             {
                 query = query.Where(e => e.UserId == id);
             }
+            
             var listBooking = query.Distinct().ToList();
             listBooking = listBooking.Skip(10 * 0).Take(10).ToList();
 
@@ -63,10 +72,12 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return pagination;
         }
 
-        // TuNT37 Set Status booking to Expired 
+        /// <summary>
+        /// TuNT37 Set Status booking to Expired 
+        /// </summary>
         public void UpdateBookingsToExpired()
         {
-            var fifteenMinutesAgo = DateTime.Now.AddMinutes(-15);
+            var fifteenMinutesAgo = DateTime.Now.AddMinutes(-5);
             var pendingBookings = context.Bookings
                 .Where(b => b.Status == "Pending" && b.CreateAt <= fifteenMinutesAgo)
                 .ToList();
@@ -79,7 +90,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
-        // TuNT37 Set Status booking to success
+        /// <summary>
+        /// TuNT37 Set Status booking to success
+        /// </summary>
+        /// <param name="bookingId"></param>
         public void UpdateBookingToSuccess(int bookingId)
         {
             var booking = context.Bookings.Where(e => e.Id == bookingId).FirstOrDefault();
@@ -88,7 +102,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
-        // TuNT37 Get Statistical in dashboard screen
+        /// <summary>
+        /// TuNT37 Get Statistical in dashboard screen
+        /// </summary>
+        /// <returns></returns>
         public async Task<StatisticalDTO> GetStatistical()
         {
             var totalRevenueServicesByMonth = context.Payments
@@ -121,7 +138,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
             };
         }
 
-        // TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// <summary>
+        /// TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// </summary>
+        /// <returns></returns>
         public async Task<RevenueChartDTO> GetRevenue12Month()
         {
             List<double> listtRevenueServices = new List<double>();
@@ -142,10 +162,18 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return revenueChart;
         }
 
-        // TuNT37 Get all seats not booked 
+        /// <summary>
+        /// TuNT37 Get all seats not booked 
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
         public async Task<List<Seats>> GetSeatsNotBooked(int filmId, int scheduleId)
         {
+            var roomId = context.Schedules.Where(e => e.Id == scheduleId).FirstOrDefault().RoomId;
+
             var listSeat = await (from s in context.Seats
+                                  where s.RoomId == roomId
                                  select new Seats
                                  {
                                      Id = s.Id,
@@ -157,7 +185,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
                          join t in context.Tickets on bd.TicketId equals t.Id
                          join se in context.Seats on bd.SeatId equals se.Id
                          join sc in context.Schedules on t.ScheduleId equals sc.Id
-                         where sc.FilmId == filmId && sc.Id == scheduleId && !b.Status.Equals("Exprired")
+                         join r in context.Rooms on sc.RoomId equals r.Id
+                         where sc.FilmId == filmId && sc.Id == scheduleId 
+                            && !b.Status.Equals("Exprired") 
+                            && r.Id == roomId
                          select new Seats
                          {
                              Id = bd.SeatId,
@@ -172,10 +203,18 @@ namespace StarCinema_Api.Repositories.BookingRepository
         }
 
 
-        // TuNT37 Get all Seats of Room 
+        /// <summary>
+        /// TuNT37 Get all Seats of Room 
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
         public async Task<List<SeatsDTO>> GetSeats(int filmId, int scheduleId)
         {
+            var roomId = context.Schedules.Where(e => e.Id == scheduleId).FirstOrDefault().RoomId;
+
             var listSeat = await (from s in context.Seats
+                                  where s.RoomId == roomId
                                   select new Seats
                                   {
                                       Id = s.Id,
@@ -187,7 +226,11 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                          join t in context.Tickets on bd.TicketId equals t.Id
                                          join se in context.Seats on bd.SeatId equals se.Id
                                          join sc in context.Schedules on t.ScheduleId equals sc.Id
-                                         where sc.FilmId == filmId && sc.Id == scheduleId && !b.Status.Equals("Exprired")
+                                         join r in context.Rooms on sc.RoomId equals r.Id
+                                         where sc.FilmId == filmId && sc.Id == scheduleId 
+                                            && !b.Status.Equals("Exprired")
+                                            && b.Status.Equals("Success")
+                                            && r.Id == roomId
                                          select new Seats
                                          {
                                              Id = bd.SeatId,
@@ -218,14 +261,22 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return listSeatsDTO;
         }
 
-        // TuNT37 get all films to choose film when create booking
+        /// <summary>
+        /// TuNT37 get all films to choose film when create booking
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Films>> GetAllFilms()
         {
-            var result = await context.Films.ToListAsync();
+            var result = await context.Films.Where(e=>e.IsDelete == false).ToListAsync();
             return result;
         }
 
-        // TuNT37 create booking by admin 
+        /// <summary>
+        /// TuNT37 create booking by admin 
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
             try
@@ -298,7 +349,12 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return true;
         }
 
-        // TuNT37 create booking by user 
+        /// <summary>
+        /// TuNT37 create booking by user 
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<BookingUserDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
             try
@@ -353,7 +409,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
 
             return new BookingUserDTO
             {
-                bookingId = lastBooking.Id,
+                BookingId = lastBooking.Id,
                 PriceTicket = context.BookingDetails.Include(e => e.Ticket)
                     .Where(e => e.BookingId == lastBooking.Id).Sum(x => x.Ticket.Price),
                 PriceService = context.Bookings.Where(e => e.Id == lastBooking.Id)
@@ -361,7 +417,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
             };
         }
 
-        // TuNT37 delete booking 
+        /// <summary>
+        /// TuNT37 delete booking 
+        /// </summary>
+        /// <param name="bookings"></param>
         public void DeleteBooking(Bookings bookings)
         {
             bookings.IsDelete = true;
@@ -369,7 +428,13 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.SaveChanges();
         }
 
-        // TuNT37 GEt all booking with page / pageSize
+        /// <summary>
+        /// TuNT37 GEt all booking with page / pageSize
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<PaginationDTO<BookingDTO>> GetAllByPage(string? keySearch, int page, int pageSize)
         {
             var query =  (from b in context.Bookings
@@ -411,7 +476,11 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return pagination;
         }
 
-        // TuNT37 get detail booking by id
+        /// <summary>
+        /// TuNT37 get detail booking by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<BookingDTO> GetDetailBookingById(int id)
         {
             var query = await (from b in context.Bookings
@@ -422,9 +491,6 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                join s in context.Schedules on t.ScheduleId equals s.Id
                                join f in context.Films on s.FilmId equals f.Id
                                where b.IsDelete == false
-                               //let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
-                               //            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
-                               //let totalPriceServices = b.Services.Sum(e => e.Price)
                                select new BookingDTO
                                {
                                    Id = b.Id,

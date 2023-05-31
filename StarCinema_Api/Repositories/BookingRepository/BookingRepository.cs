@@ -186,8 +186,9 @@ namespace StarCinema_Api.Repositories.BookingRepository
                          join se in context.Seats on bd.SeatId equals se.Id
                          join sc in context.Schedules on t.ScheduleId equals sc.Id
                          join r in context.Rooms on sc.RoomId equals r.Id
-                         where sc.FilmId == filmId && sc.Id == scheduleId 
-                            && !b.Status.Equals("Exprired") 
+                         where sc.FilmId == filmId && sc.Id == scheduleId
+                            //&& !b.Status.Equals("Exprired") 
+                            && b.Status.Equals("Success")
                             && r.Id == roomId
                          select new Seats
                          {
@@ -227,10 +228,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                          join se in context.Seats on bd.SeatId equals se.Id
                                          join sc in context.Schedules on t.ScheduleId equals sc.Id
                                          join r in context.Rooms on sc.RoomId equals r.Id
-                                         where sc.FilmId == filmId && sc.Id == scheduleId 
-                                            && !b.Status.Equals("Exprired")
-                                            && b.Status.Equals("Success")
-                                            && r.Id == roomId
+                                         where sc.FilmId == filmId && sc.Id == scheduleId
+                                         //&& !b.Status.Equals("Exprired") 
+                                         && b.Status.Equals("Success")
+                                         && r.Id == roomId
                                          select new Seats
                                          {
                                              Id = bd.SeatId,

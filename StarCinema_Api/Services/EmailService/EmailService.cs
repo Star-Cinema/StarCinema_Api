@@ -9,16 +9,20 @@ using StarCinema_Api.Services.TokenService;
 namespace StarCinema_Api.Services.EmailService
 {
     
+    /// <summary>
     ///    Account : HungTD34
     ///    Description : This class to send email to user
     ///    Create : 2023/05/23
+    /// </summary>
      
     public class EmailService : IEmailService
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-        //Get Email config in appsettings.json HungTD34
+        /// <summary>
+        /// Get Email config in appsettings.json HungTD34
+        /// </summary>
         private readonly IConfiguration _config;
         public EmailService(IUserRepository userRepository, ITokenService tokenService, IConfiguration config)
         {
@@ -26,7 +30,12 @@ namespace StarCinema_Api.Services.EmailService
             _tokenService = tokenService;
             _config = config;
         }
-        //Send new email to user HungTD34
+        /// <summary>
+        /// Send new email to user HungTD34
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
         public ResponseDTO SendEmail(string to, string subject, string body)
         {
             try

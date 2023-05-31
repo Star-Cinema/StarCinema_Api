@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 using MailKit.Security;
@@ -14,9 +14,13 @@ using StarCinema_Api.Services.EmailService;
 
 namespace StarCinema_Api.Services.AuthService
 {
+
+    /// <summary>
     ///    Account : HungTD34
     ///    Description : This class is for user authentication, new account registration, user email authentication
-    ///    Create : 2023/05/04
+    ///    Create : 2023/05/04 
+    ///    Account : HungTD34
+    /// </summary>
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
@@ -32,7 +36,10 @@ namespace StarCinema_Api.Services.AuthService
             _config = config;
             _emailService = emailService;
         }
-        //Create new password for account forgot HungTD34
+        /// <summary>
+        /// Create new password for account forgot HungTD34
+        /// </summary>
+        /// <param name="email"></param>
         public ResponseDTO ForgotPassword(string email)
         {
             var user = _userRepository.GetUserByEmail(email);
@@ -61,7 +68,7 @@ namespace StarCinema_Api.Services.AuthService
             user.PasswordSalt = hmac.Key;
             user.PasswordHash = hmac.ComputeHash(passwordBytes);
 
-            //Update user with new password HungTD34
+            ///Update user with new password HungTD34
             _userRepository.UpdateUser(user);
             if (_userRepository.IsSaveChange())
             {
@@ -82,7 +89,10 @@ namespace StarCinema_Api.Services.AuthService
             };
         }
 
-        //Login website HungTD34
+        /// <summary>
+        /// Login website HungTD34
+        /// </summary>
+        /// <param name="authUserDTO"></param>
         public ResponseDTO Login(AuthUserDTO authUserDTO)
         {
             //Check email exists HungTD34
@@ -132,20 +142,31 @@ namespace StarCinema_Api.Services.AuthService
             };
         }
 
-        //Register new account by user HungTD34
+        /// <summary>
+        /// Register new account by user HungTD34
+        /// </summary>
+        /// <param name="registerUserDTO"></param>
         public ResponseDTO Register(RegisterUserDTO registerUserDTO)
         {
             //Check user exists HungTD34
             var currentUser = _userRepository.GetUserByEmail(registerUserDTO.Email);
             if (currentUser != null)
             {
-                throw new BadHttpRequestException("Username is already existed!");
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = "Email đã tồn tại"
+                };
             }
 
             //Check password is matches rePassword HungTD34
             if (registerUserDTO.Password != registerUserDTO.RePassword)
             {
-                throw new BadHttpRequestException("Confirm password is wrong!");
+                return new ResponseDTO()
+                {
+                    code = 400,
+                    message = "Password không đúng"
+                };
             }
 
             //Encrypt password HungTD34
@@ -178,7 +199,11 @@ namespace StarCinema_Api.Services.AuthService
             else throw new BadHttpRequestException("Register faile!");
         }
 
-        //Verify email of user account HungTD34
+        /// <summary>
+        /// Verify email of user account HungTD34
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
         public ResponseDTO VerifyEmail(string email, string token)
         {
             try

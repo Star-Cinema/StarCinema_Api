@@ -4,27 +4,58 @@ using StarCinema_Api.DTOs;
 namespace StarCinema_Api.Services.UserService
 {
     
+    /// <summary>
     ///    Account : HungTD34
     ///    Description : Interface of UserService
     ///    Create : 2023/05/04
+    /// </summary>
      
     public interface IUserService
     {
-        //Get list user with page, pageSize, key search, sortBy HungTD34
+        /// <summary>
+        /// Get list user with page, pageSize, key search, sortBy HungTD34
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="key"></param>
+        /// <param name="sortBy"></param>
         ResponseDTO GetUsers(int? page = 1, int? pageSize = 10, string? key = "", string? sortBy = "id");
-        //Get user by email HungTD34
+        /// <summary>
+        /// Get user by email HungTD34
+        /// </summary>
+        /// <param name="email"></param>
         ResponseDTO GetUserByEmail(string email);
-        //Get user by id HungTD34
+        /// <summary>
+        /// Get user by id HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         ResponseDTO GetUserById(int id);
-        //Disable user HungTD34
+        /// <summary>
+        /// Disable user HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         ResponseDTO DeleteUser(int id);
-        //Update user HungTD34
+        /// <summary>
+        /// Update user HungTD34
+        /// </summary>
+        /// <param name="updateUserDTO"></param>
+        /// <param name="id"></param>
         ResponseDTO UpdateUser(UpdateUserDTO updateUserDTO, int id);
-        //Create new user HungTD34
+        /// <summary>
+        /// Create new user HungTD34
+        /// </summary>
+        /// <param name="createUserDTO"></param>
         ResponseDTO CreateUser(CreateUserDTO createUserDTO);
-        //Change new password user HungTD34
+        /// <summary>
+        /// Change new password user HungTD34
+        /// </summary>
+        /// <param name="changepassDTO"></param>
+        /// <param name="id"></param>
         ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id);
-        //Verify email of user account HungTD34
+        /// <summary>
+        /// Verify email of user account HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         ResponseDTO VerifyEmail(int id);
     }
 }

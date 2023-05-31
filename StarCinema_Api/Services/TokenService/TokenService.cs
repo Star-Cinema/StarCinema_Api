@@ -7,9 +7,11 @@ using StarCinema_Api.Data.Entities;
 namespace StarCinema_Api.Services.TokenService
 {
     
+    /// <summary>
     ///    Account : HungTD34
     ///    Description : This class generates authentication token for user
     ///    Create : 2023/05/04
+    /// </summary>
      
     public class TokenService : ITokenService
     {
@@ -18,7 +20,10 @@ namespace StarCinema_Api.Services.TokenService
         {
             _configuration = configuration;
         }
-        //Create new token HungTD34
+        /// <summary>
+        /// Create new token HungTD34
+        /// </summary>
+        /// <param name="user"></param>
         public string CreateToken(User user)
         {
             //Add claims in to token HungTD34

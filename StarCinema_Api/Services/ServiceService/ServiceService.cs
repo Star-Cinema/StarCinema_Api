@@ -4,18 +4,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StarCinema_Api.Services.ServiceService
 {
-    // TuNT37 Service service
+    /// <summary>
+    /// TuNT37 Service service
+    /// </summary>
     public class ServiceService : IServiceService
     {
         private readonly IServiceRepository _serviceRepository;
 
-        // TuNT37 constructor
+        /// <summary>
+        /// TuNT37 constructor
+        /// </summary>
+        /// <param name="serviceRepository"></param>
         public ServiceService(IServiceRepository serviceRepository)
         {
             _serviceRepository = serviceRepository;
         }
 
-        // TuNT37 Delete Service
+        /// <summary>
+        /// TuNT37 Delete Service
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> DeleteService(int id)
         {
             try
@@ -49,7 +58,11 @@ namespace StarCinema_Api.Services.ServiceService
             }
         }
 
-        // TuNT37 Update Service
+        /// <summary>
+        /// TuNT37 Update Service
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> UpdateService(ServiceDTO services)
         {
             try
@@ -82,7 +95,11 @@ namespace StarCinema_Api.Services.ServiceService
             }
         }
 
-        // TuNT37 Create Service 
+        /// <summary>
+        /// TuNT37 Create Service 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> CreateService(ServiceDTO services)
         {
             try
@@ -116,7 +133,13 @@ namespace StarCinema_Api.Services.ServiceService
             }
         }
 
-        // TuNT37 Get All Services with page, pageSize
+        /// <summary>
+        /// TuNT37 Get All Services with page, pageSize
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetAllServices(string? keySearch, int page, int pageSize)
         {
             try
@@ -139,7 +162,11 @@ namespace StarCinema_Api.Services.ServiceService
             }
         }
 
-        // TuNT37 Get Service By id 
+        /// <summary>
+        /// TuNT37 Get Service By id 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetServiceById(int id)
         {
             try

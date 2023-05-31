@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StarCinema_Api.Data.Entities;
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Services.BookingService;
 using StarCinema_Api.Services.FilmsService;
 
-// TuNT37 Booking controller 
 namespace StarCinema_Api.Controllers
 {
+    /// <summary>
+    /// TuNT37 Booking controller 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class BookingsController : ControllerBase
@@ -20,7 +23,13 @@ namespace StarCinema_Api.Controllers
             _bookingService = bookingService;
         }
 
-        // TuNT37 Api Get transaction history booking of user 
+        /// <summary>
+        /// TuNT37 Api Get transaction history booking of user 
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        //[Authorize]
         [HttpGet("GetTransactionHistory")]
         public async Task<ActionResult> GetTransactionHistory(int page, int pageSize)
         {
@@ -31,7 +40,11 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// <summary>
+        /// TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpGet("GetRevenue12Month")]
         public async Task<ActionResult> GetRevenue12Month()
         {
@@ -39,7 +52,11 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api get Statistical in Dashboard screen
+        /// <summary>
+        /// TuNT37 Api get Statistical in Dashboard screen
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpGet("GetStatistical")]
         public async Task<ActionResult> GetStatistical()
         {
@@ -47,7 +64,13 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api get all Seats not booked
+        /// <summary>
+        /// TuNT37 Api get all Seats not booked
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
+        //[Authorize]
         [HttpGet("GetSeatsNotBooked")]
         public async Task<ActionResult> GetSeatsNotBooked(int filmId, int scheduleId)
         {
@@ -55,7 +78,13 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api get all Seatsof room
+        /// <summary>
+        /// TuNT37 Api get all Seatsof room
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
+        //[Authorize]
         [HttpGet("GetSeats")]
         public async Task<ActionResult> GetSeats(int filmId, int scheduleId)
         {
@@ -63,7 +92,11 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Admin: Api get all films to select films when booking
+        /// <summary>
+        /// TuNT37 Admin: Api get all films to select films when booking
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet("GetAllFilms")]
         public async Task<ActionResult> GetAllFilms()
         {
@@ -71,7 +104,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Get booking by Id
+        /// <summary>
+        /// TuNT37 Api Get booking by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> GetBookingById(int id)
         {
@@ -86,7 +124,11 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Get all booking 
+        /// <summary>
+        /// TuNT37 Api Get all booking 
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
         [HttpGet("")]
         public async Task<ActionResult> GetAllBookings()
         {
@@ -94,7 +136,14 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Api Get all booking by page, pagesize
+        /// <summary>
+        /// TuNT37 Api Get all booking by page, pagesize
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpGet("GetAllByPage")]
         public async Task<ActionResult> GetAllByPage(string? keySearch, int page, int pageSize)
         {
@@ -102,7 +151,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Admin: Api Create booking
+        /// <summary>
+        /// TuNT37 Admin: Api Create booking
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpPost("CreateBookingByAdmin")]
         public async Task<IActionResult> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO)
         {
@@ -121,7 +175,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Admin: Api Create booking
+        /// <summary>
+        /// TuNT37 Admin: Api Create booking
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <returns></returns>
+        [Authorize]
         [HttpPost("CreateBookingByUser")]
         public async Task<IActionResult> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO)
         {
@@ -140,7 +199,12 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Admin: update booking
+        /// <summary>
+        /// TuNT37 Admin: update booking
+        /// </summary>
+        /// <param name="bookingDTO"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateBooking(BookingDTO bookingDTO)
         {
@@ -155,11 +219,16 @@ namespace StarCinema_Api.Controllers
             return StatusCode(resData.code, resData);
         }
 
-        // TuNT37 Admin: Api delete booking
+        /// <summary>
+        /// TuNT37 Admin: Api delete booking
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "admin")]
         [HttpDelete]
         public async Task<IActionResult> DeteleBooking(int id)
         {
-            if (id == null)
+            if (id < 0)
             {
                 return BadRequest(new ResponseDTO
                 {

@@ -3,40 +3,69 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Repositories.BookingRepository
 {
-    // TuNT37 interface booking repository 
+    /// <summary>
+    /// TuNT37 interface booking repository 
+    /// </summary>
     public interface IBookingRepository : IBaseRepository<Bookings>
     {
-        // Get Transaction History of User
+        /// <summary>
+        /// Get Transaction History of User
+        /// </summary>
         Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id ,int page, int pageSize);
 
-        // change status booking to expired 
+        /// <summary>
+        /// change status booking to expired 
+        /// </summary>
         void UpdateBookingsToExpired();
 
-        // change status booking to success 
+        /// <summary>
+        /// change status booking to success 
+        /// </summary>
         void UpdateBookingToSuccess(int bookingId);
 
-        // Get Revenue12Month in chart of dashboard screen
+        /// <summary>
+        /// Get Revenue12Month in chart of dashboard screen
+        /// </summary>
         Task<RevenueChartDTO> GetRevenue12Month();
 
-        // Get Statistical in dashboard screen
+        /// <summary>
+        /// Get Statistical in dashboard screen
+        /// </summary>
         Task<StatisticalDTO> GetStatistical();
 
-        // Admin: Get all films to choose film when create booking
+        /// <summary>
+        /// Admin: Get all films to choose film when create booking
+        /// </summary>
         Task<List<Films>> GetAllFilms();
 
-        // Get all Seats not booked 
+        /// <summary>
+        /// Get all Seats not booked 
+        /// </summary>
         Task<List<Seats>> GetSeatsNotBooked(int filmId, int scheduleId);
 
-        // Get all Seats of room 
+        /// <summary>
+        /// Get all Seats of room 
+        /// </summary>
         Task<List<SeatsDTO>> GetSeats(int filmId, int scheduleId);
 
-        // Get all booking by page, pageSize 
+        /// <summary>
+        /// Get all booking by page, pageSize 
+        /// </summary>
         Task<PaginationDTO<BookingDTO>> GetAllByPage(string? keySearch, int page, int pageSize);
 
+        /// <summary>
+        /// Get Detail Booking By Id
+        /// </summary>
         Task<BookingDTO> GetDetailBookingById(int id);
 
+        /// <summary>
+        /// Create Booking By Admin
+        /// </summary>
         Task<bool> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int userId);
 
+        /// <summary>
+        /// Create Booking By User
+        /// </summary>
         Task<BookingUserDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId);
         void DeleteBooking(Bookings bookings);
 

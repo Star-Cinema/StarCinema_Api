@@ -8,22 +8,46 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StarCinema_Api.Repositories.ServiceRepository
 {
-    // TuNT37 interface service repository
+    /// <summary>
+    /// TuNT37 interface service repository
+    /// </summary>
     public interface IServiceRepository : IBaseRepository<Data.Entities.Services>
     {
-        // TuNT37 Delete Service
+        /// <summary>
+        /// TuNT37 Delete Service
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<bool> DeleteService(int id);
 
-        // TuNT37 Create Service
+        /// <summary>
+        /// TuNT37 Create Service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
         Task<Data.Entities.Services> UpdateService(ServiceDTO service);
 
-        // TuNT37 Create Service
+        /// <summary>
+        /// TuNT37 Create Service
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
         Task<ServiceDTO> CreateService(ServiceDTO service);
 
-        // TuNT37 Get all Services by page, pageSize 
+        /// <summary>
+        /// TuNT37 Get all Services by page, pageSize 
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         Task<PaginationDTO<Data.Entities.Services>> GetAllServices(string? keySearch, int page, int pageSize);
 
-        // TuNT37 Get Service by ID
+        /// <summary>
+        /// TuNT37 Get Service by ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Task<Data.Entities.Services> GetServiceById(int id);
 
 

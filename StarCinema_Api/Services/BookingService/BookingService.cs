@@ -11,7 +11,9 @@ using System.Collections.Generic;
 
 namespace StarCinema_Api.Services.BookingService
 {
-    // TuNT37 booking service
+    /// <summary>
+    /// TuNT37 booking service
+    /// </summary>
     public class BookingService : IBookingService
     {
 
@@ -19,7 +21,6 @@ namespace StarCinema_Api.Services.BookingService
         private readonly IVnPayService _vnPayService;
         private readonly IMapper _mapper;
 
-        // TuNT37 constructor and injection 
         public BookingService(IBookingRepository bookingsRepository, IMapper mapper, IVnPayService vnPayService)
         {
             _bookingsRepository = bookingsRepository;
@@ -27,7 +28,13 @@ namespace StarCinema_Api.Services.BookingService
             _mapper = mapper;
         }
 
-        // TuNT37 Get Transaction History of User
+        /// <summary>
+        /// TuNT37 Get Transaction History of User
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetTransactionHistory(int id, int page, int pageSize)
         {
             try
@@ -61,7 +68,10 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// <summary>
+        /// TuNT37 Get Revenue12Month in chart of dashboard screen
+        /// </summary>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetRevenue12Month()
         {
             try
@@ -84,7 +94,10 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Get Statistical in dashboard screen
+        /// <summary>
+        /// TuNT37 Get Statistical in dashboard screen
+        /// </summary>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetStatistical()
         {
             try
@@ -107,7 +120,12 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 get all seats not booked
+        /// <summary>
+        /// TuNT37 get all seats not booked
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetSeatsNotBooked(int filmId, int scheduleId)
         {
             try
@@ -130,7 +148,12 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 get all seat
+        /// <summary>
+        /// TuNT37 get all seat
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="scheduleId"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetSeats(int filmId, int scheduleId)
         {
             try
@@ -153,7 +176,10 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Admin: get all films to choose film when create booking
+        /// <summary>
+        /// TuNT37 Admin: get all films to choose film when create booking
+        /// </summary>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetAllFilms()
         {
             try
@@ -176,7 +202,12 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Create booking by admin 
+        /// <summary>
+        /// TuNT37 Create booking by admin 
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> CreateBookingByAdmin(BookingAddEditDTO bookingAddEditDTO, int UserId)
         {
             try
@@ -200,14 +231,19 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 create booking by user 
+        /// <summary>
+        /// TuNT37 create booking by user 
+        /// </summary>
+        /// <param name="bookingAddEditDTO"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId)
         {
             try
             {
                 _bookingsRepository.UpdateBookingsToExpired();
                 var result = await _bookingsRepository.CreateBookingByUser(bookingAddEditDTO, userId);                
-                var vnPay = await _vnPayService.CreateUrlPayment(result.bookingId, result.PriceTicket, result.PriceService );
+                var vnPay = await _vnPayService.CreateUrlPayment(result.BookingId, result.PriceTicket, result.PriceService );
                 return vnPay;
             }
             catch (Exception ex)
@@ -220,7 +256,11 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // Delete booking
+        /// <summary>
+        /// Delete booking
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> DeleteBooking(int id)
         {
             var currentBooking = await _bookingsRepository.GetByIdAsync(id);
@@ -240,7 +280,10 @@ namespace StarCinema_Api.Services.BookingService
             };
         }
 
-        // TuNT37 get all booking
+        /// <summary>
+        /// TuNT37 get all booking
+        /// </summary>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetAllBookings()
         {
             try
@@ -274,7 +317,13 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Get all booking by page, pageSize 
+        /// <summary>
+        /// TuNT37 Get all booking by page, pageSize 
+        /// </summary>
+        /// <param name="keySearch"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetAllByPage(string? keySearch, int page, int pageSize)
         {
             try
@@ -297,7 +346,11 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 Get Booking By id 
+        /// <summary>
+        /// TuNT37 Get Booking By id 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> GetBookingById(int id)
         {
             try
@@ -331,7 +384,11 @@ namespace StarCinema_Api.Services.BookingService
             }
         }
 
-        // TuNT37 update booking 
+        /// <summary>
+        /// TuNT37 update booking 
+        /// </summary>
+        /// <param name="bookingDTO"></param>
+        /// <returns></returns>
         public async Task<ResponseDTO> UpdateBooking(BookingDTO bookingDTO)
         {
             try

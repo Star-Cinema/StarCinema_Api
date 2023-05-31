@@ -3,22 +3,44 @@ using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Services
 {
-    /*
-        Account : AnhNT282
-        Description : Interface service for entity schedule
-        Date created : 2023/05/19
-    */
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Interface service for entity schedule
+    /// Date created : 2023/05/19
+    /// </summary>
     public interface ISchedulesService
     {
-        // Get all schedules AnhNT282
+        /// <summary>
+        /// Get all schedules AnhNT282
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="roomId"></param>
+        /// <param name="date"></param>
+        /// <param name="sortDate"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         Task<ResponseDTO> GetAllSchedules(int? filmId, int? roomId, DateTime? date, string? sortDate, int? page, int? limit);
-        // Get schedule by id AnhNT282
+        /// <summary>
+        /// Get schedule by id AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         Task<ResponseDTO> GetScheduleById(int id);
-        // Create schedule AnhNT282
+        /// <summary>
+        /// Create schedule AnhNT282
+        /// </summary>
+        /// <param name="schedule"></param>
         Task<ResponseDTO> CreateSchedule(ScheduleDTO schedule);
-        // Update schedule AnhNT282
+        /// <summary>
+        /// Update schedule AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="schedule"></param>
         Task<ResponseDTO> UpdateSchedule(int id, ScheduleDTO schedule);
-        // Delete schedule AnhNT282
+        /// <summary>
+        /// Delete schedule AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         Task<ResponseDTO> DeleteSchedule(int id);
     }
 }

@@ -3,23 +3,44 @@
 namespace StarCinema_Api.Repositories.PaymentRepository
 {
     /*
-        Account : AnhNT282
-        Description : Interface repository for entity payment
-        Date created : 2023/05/19
+        
+        
+        
     */
+    /// <summary>
+    /// Account : AnhNT282
+    /// Description : Interface repository for entity payment
+    /// Date created : 2023/05/19
+    /// </summary>
     public interface IPaymentRepository
     {
-        // Get all payment AnhNT282
+        /// <summary>
+        /// Get all payment AnhNT282
+        /// </summary>
         Task<List<Payment>> GetPaymentListAsync();
-        // Create payment AnhNT282
+        /// <summary>
+        /// Create payment AnhNT282
+        /// </summary>
+        /// <param name="payment"></param>
         Task<bool> CreatePaymentAsync(Payment payment);
-        // Delete payment AnhNT282
+        /// <summary>
+        /// Delete payment AnhNT282
+        /// </summary>
+        /// <param name="payment"></param>
         void DeletePayment(Payment payment);
-        // Get payment by id AnhNT282
+        /// <summary>
+        /// Get payment by id AnhNT282
+        /// </summary>
+        /// <param name="id"></param>
         Task<Payment> GetPaymentById(long id);
-        // Save change DbContext
+        /// <summary>
+        /// Save change DbContext
+        /// </summary>
         Task<bool> IsSaveChange();
-        // Check the payment of the booking already exists or not AnhNT282
+        /// <summary>
+        /// Check the payment of the booking already exists or not AnhNT282
+        /// </summary>
+        /// <param name="bookingId"></param>
         Task<bool> IsPaymentOfBookingAlreadyExists(int bookingId);
     }
 }

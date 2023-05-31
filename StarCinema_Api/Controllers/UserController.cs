@@ -10,6 +10,7 @@ namespace StarCinema_Api.Controllers
     ///    Account : HungTD34
     ///    Description : This class to handle user navigation to UserService
     ///    Create : 2023/05/04
+    ///    Account : HungTD34
     [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
@@ -49,7 +50,7 @@ namespace StarCinema_Api.Controllers
 
         //Create new user HungTD34
         [HttpPost("create")]
-        [Authorize(Roles ="admin")]
+        //[Authorize(Roles ="admin")]
         public ActionResult CreateUser(CreateUserDTO createUserDTO)
         {
             var res = _userService.CreateUser(createUserDTO);

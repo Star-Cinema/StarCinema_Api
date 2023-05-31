@@ -2,26 +2,49 @@
 
 namespace StarCinema_Api.Repositories.UserRepository
 {
-    /*
-        Account : HungTD34
-        Description : Interface of UserRepository
-        Create : 2023/05/04
-     */
+    /// <summary>
+    /// Account : HungTD34
+    /// Description : Interface of UserRepository
+    /// Create : 2023/05/04
+    /// </summary>
     public interface IUserRepository
     {
-        //Get list user with page, pageSize, key search, sortBy HungTD34
+        /// <summary>
+        /// Get list user with page, pageSize, key search, sortBy HungTD34
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="key"></param>
+        /// <param name="sortBy"></param>
         List<User> GetUsers(int? page = 1, int? pageSize = 10, string? key = "", string? sortBy = "id");
-        //Get user by email HungTD34
+        /// <summary>
+        /// Get user by email HungTD34
+        /// </summary>
+        /// <param name="email"></param>
         User GetUserByEmail(string email);
-        //Get user by id HungTD34
+        /// <summary>
+        /// Get user by id HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         User GetUserById(int id);
-        //Update user HungTD34
+        /// <summary>
+        /// Update user HungTD34
+        /// </summary>
+        /// <param name="user"></param>
         void UpdateUser(User user);
-        //Delete user HungTD34
+        /// <summary>
+        /// Delete user HungTD34
+        /// </summary>
+        /// <param name="user"></param>
         void DeleteUser(User user);
-        //Create new user HungTD34
+        /// <summary>
+        /// Create new user HungTD34
+        /// </summary>
+        /// <param name="user"></param>
         void CreateUser(User user);
-        //Check database is savechange HungTD34
+        /// <summary>
+        /// Check database is savechange HungTD34
+        /// </summary>
         bool IsSaveChange();
     }
 }

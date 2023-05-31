@@ -75,7 +75,7 @@ namespace StarCinema_Api.Services.VnPayService
             vnpay.AddRequestData("vnp_CurrCode", "VND");
 
             vnpay.AddRequestData("vnp_Locale", "vn");
-            vnpay.AddRequestData("vnp_OrderInfo", "BookingId=" + bookingID + " priceTicket=" + priceTicket + " priceService=" + priceService);
+            vnpay.AddRequestData("vnp_OrderInfo", "BookingId=" + bookingID + " PriceTicket=" + priceTicket + " PriceService=" + priceService);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
 
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);

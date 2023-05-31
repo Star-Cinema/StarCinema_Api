@@ -89,10 +89,9 @@ namespace StarCinema_Api.Repositories.FilmsRepository
             var query = _context.Films
                 .Where(s => s.IsDelete == false &&
                 //s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day
-                s.Schedules.Any(s => s.StartTime.Date <= DateTime.Today.Date)
-                && s.Schedules.Any(s => s.StartTime.Date >= DateTime.Today.Date)
+                s.Schedules.Any(s => DateTime.Compare(s.StartTime, DateTime.Now)  > 0 )
+                //&& s.Schedules.Any(s => s.StartTime.Date >= DateTime.Today.Date)
                 )
-
                 .Select(x => new Films
                 {
                     Id = x.Id,

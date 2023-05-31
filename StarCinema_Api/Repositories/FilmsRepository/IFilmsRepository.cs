@@ -18,6 +18,7 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         Task<PaginationDTO<Films>> GetAllFilms(string? search,
             int page = 0, int limit = 10);
         Task<List<Films>> GetNowShowingFilms();
+        Task<List<Films>> GetNextShowingFilms();
         Task<List<Films>> GetUpComingFilms();
         Task<Films> GetFilmById(int filmId);
         void CreateFilm(Films film);

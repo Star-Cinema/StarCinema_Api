@@ -83,6 +83,39 @@ namespace StarCinema_Api.Repositories.FilmsRepository
         /// </summary>
         /// <returns></returns>
 
+        public async Task<List<Films>> GetNextShowingFilms()
+        {
+
+            var query = _context.Films
+                .Where(s => s.IsDelete == false &&
+                //s.Schedules.OrderBy(e => e.StartTime).First().StartTime.Day <= DateTime.Today.Day
+                s.Schedules.Any(s => DateTime.Compare(s.StartTime, DateTime.Now) > 0)
+                )
+
+                .Select(x => new Films
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Producer = x.Producer,
+                    Director = x.Director,
+                    Duration = x.Duration,
+                    Description = x.Description,
+                    Country = x.Country,
+                    Release = x.Release,
+                    IsDelete = x.IsDelete,
+                    VideoLink = x.VideoLink,
+                    Category = x.Category,
+                    Images = x.Images,
+                    Schedules = x.Schedules
+                })
+                .AsQueryable();
+
+
+            var films = await query.ToListAsync();
+
+            return films;
+        }
+
         public async Task<List<Films>> GetNowShowingFilms()
         {
 

@@ -50,7 +50,7 @@ namespace StarCinema_Api.Controllers
 
         //Create new user HungTD34
         [HttpPost("create")]
-        [Authorize(Roles ="admin")]
+        //[Authorize(Roles ="admin")]
         public ActionResult CreateUser(CreateUserDTO createUserDTO)
         {
             var res = _userService.CreateUser(createUserDTO);

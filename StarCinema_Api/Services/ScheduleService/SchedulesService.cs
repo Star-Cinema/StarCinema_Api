@@ -51,7 +51,7 @@ namespace StarCinema_Api.Services
             try
             {
                 // Check filmID, roomId
-                var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
+                var film = _filmsRepository.GetFilmById(scheduleDTO.FilmId);
                 var room = _roomRepository.GetById(scheduleDTO.RoomId);
                 Task.WaitAll(film);
                 if (film.Result == null) return new ResponseDTO
@@ -228,7 +228,7 @@ namespace StarCinema_Api.Services
             try
             {
                 // Check filmId, roomId
-                var film = _filmsRepository.getFilmById(scheduleDTO.FilmId);
+                var film = _filmsRepository.GetFilmById(scheduleDTO.FilmId);
                 var room = _roomRepository.GetById(scheduleDTO.RoomId);
                 var scheduleCurrent = _schedulesRepository.GetScheduleById(id);
 

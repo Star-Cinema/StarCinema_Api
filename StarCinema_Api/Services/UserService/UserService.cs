@@ -9,9 +9,11 @@ using System.Text;
 namespace StarCinema_Api.Services.UserService
 {
 
+    /// <summary>
     ///   Account : HungTD34
     ///   Description : This class is for manipulating the database. Handle create, update, disable, get, get list, verify email of users
     ///   Create : 2023/05/04
+    /// </summary>
 
     public class UserService : IUserService
     {
@@ -25,7 +27,11 @@ namespace StarCinema_Api.Services.UserService
             _emailService = emailService;
         }
 
-        //Change new password user HungTD34
+        /// <summary>
+        /// Change new password user HungTD34
+        /// </summary>
+        /// <param name="changepassDTO"></param>
+        /// <param name="id"></param>
         public ResponseDTO ChangePassUser(ChangepassDTO changepassDTO, int id)
         {
             //Check user exists HungTD34
@@ -88,7 +94,10 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
-        //Create new user HungTD34
+        /// <summary>
+        /// Create new user HungTD34
+        /// </summary>
+        /// <param name="createUserDTO"></param>
         public ResponseDTO CreateUser(CreateUserDTO createUserDTO)
         {
             //Mapping User from CreateUserDTO HungTD34
@@ -126,7 +135,10 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
-        //Disable user HungTD34
+        /// <summary>
+        /// Disable user HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         public ResponseDTO DeleteUser(int id)
         {
             //Check user exists HungTD34
@@ -158,7 +170,10 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
-        //Get user by email HungTD34
+        /// <summary>
+        /// Get user by email HungTD34
+        /// </summary>
+        /// <param name="email"></param>
         public ResponseDTO GetUserByEmail(string email)
         {
             try
@@ -205,7 +220,10 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
-        //Get user by id HungTD34
+        /// <summary>
+        /// Get user by id HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         public ResponseDTO GetUserById(int id)
         {
             try
@@ -252,7 +270,13 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
-        //Get list user with page, pageSize, key search, sortBy HungTD34
+        /// <summary>
+        /// Get list user with page, pageSize, key search, sortBy HungTD34
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="key"></param>
+        /// <param name="sortBy"></param>
         public ResponseDTO GetUsers(int? page = 1, int? pageSize = 10, string? key = "", string? sortBy = "id")
         {
             try
@@ -297,7 +321,11 @@ namespace StarCinema_Api.Services.UserService
             }
         }
 
-        //Update user HungTD34
+        /// <summary>
+        /// Update user HungTD34
+        /// </summary>
+        /// <param name="updateUserDTO"></param>
+        /// <param name="id"></param>
         public ResponseDTO UpdateUser(UpdateUserDTO updateUserDTO, int id)
         {
             var user = _userRepository.GetUserById(id);
@@ -337,7 +365,10 @@ namespace StarCinema_Api.Services.UserService
             };
         }
 
-        //Verify email of user account HungTD34
+        /// <summary>
+        /// Verify email of user account HungTD34
+        /// </summary>
+        /// <param name="id"></param>
         public ResponseDTO VerifyEmail(int id)
         {
             var user = _userRepository.GetUserById(id);

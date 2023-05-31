@@ -23,6 +23,7 @@ namespace StarCinema_Api.Services.FilmsService
         Task<ResponseDTO> GetFilmById(int id);
         Task<ResponseDTO> CreateFilm(FilmDTO filmDTO);
         Task<ResponseDTO> UpdateFilm(int id, FilmDTO filmDTO);
+        Task<ResponseDTO> getNextShowingFilms();
         Task<ResponseDTO> DeleteFilmById(int id);
     }
 }

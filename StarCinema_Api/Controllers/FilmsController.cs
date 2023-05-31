@@ -69,6 +69,14 @@ namespace StarCinema_Api.Controllers
             var resData = await _filmsService.getNowShowingFilms();
             return StatusCode(resData.code, resData);
         }
+        // VyVNK1  GET: api/Films
+        // GET NOW SHOWING FILM
+        [HttpGet("nextShowing")]
+        public async Task<ActionResult> getNextShowingFilms()
+        {
+            var resData = await _filmsService.getNextShowingFilms();
+            return StatusCode(resData.code, resData);
+        }
 
         // GET: api/Films
         // GET UPCOMING FILM

@@ -1,11 +1,11 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FileName: CategoriesRepository.cs
-//FileType: Visual C# Source file
-//Author : VyVNK1
-//Created On : 20/05/2023
-//Last Modified On : 24/05/2023
-//Copy Rights : FA Academy
-//Description : Category Repository
+///FileName: CategoriesRepository.cs
+///FileType: Visual C# Source file
+///Author : VyVNK1
+///Created On : 20/05/2023
+///Last Modified On : 24/05/2023
+///Copy Rights : FA Academy
+///Description : Category Repository
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 using StarCinema_Api.DTOs;
@@ -15,7 +15,9 @@ using StarCinema_Api.Data.Entities;
 
 namespace StarCinema_Api.Repositories.CategoriesRepository
 {
-    // VYVNK1 Create class CategoriesRepository implement interface ICategoriesRepository
+    /// <summary>
+    /// VYVNK1 Create class CategoriesRepository implement interface ICategoriesRepository
+    /// </summary>
     public class CategoriesRepository : ICategoriesRepository
     {
         private readonly MyDbContext _context;
@@ -24,8 +26,14 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
             _context = context;
         }
 
-        //VyVNK1 METHOD: GET ALL Categories 
-        public async Task<PaginationDTO<Categories>> getAllCategories(string? name, int page = 0, int limit = 1000)
+        /// <summary>
+        /// VyVNK1 METHOD: GET ALL Categories 
+        /// </summary>
+        /// <param name="name">for search</param>
+        /// <param name="page">for pagination</param>
+        /// <param name="limit">for pagination</param>
+        /// <returns></returns>
+        public async Task<PaginationDTO<Categories>> GetAllCategories(string? name, int page = 0, int limit = 1000)
         {
             var query = _context.Categories
                 .Where(s => s.IsTrash == false)
@@ -38,23 +46,25 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
                 .AsQueryable();
             if (name != null)
             {
-                //query = query.Where(s => s.Name == name);
                 query = query.Where(s => s.Name.Contains(name));
             }
-            var Categories = await query.ToListAsync();
+            var categories = await query.ToListAsync();
             var pagination = new PaginationDTO<Categories>();
 
-            pagination.TotalCount = Categories.Count;
-            //Categories = Categories.Skip(limit * page).Take(limit).ToList();
+            pagination.TotalCount = categories.Count;
             pagination.PageSize = limit;
             pagination.Page = page;
-            pagination.ListItem = Categories;
+            pagination.ListItem = categories;
             return pagination;
         }
 
 
-        // VyVNK1 METHOD: GET Categories BY ID 
-        public async Task<Categories> getCategoriesById(int CategoriesId)
+        /// <summary>
+        /// VyVNK1 METHOD: GET Categories BY ID 
+        /// </summary>
+        /// <param name="CategoriesId">getCategoriesById</param>
+        /// <returns></returns>
+        public async Task<Categories> GetCategoriesById(int categoriesId)
         {
 
             return await _context.Categories
@@ -64,26 +74,35 @@ namespace StarCinema_Api.Repositories.CategoriesRepository
                     Name = x.Name,
                     Films = x.Films
                 })
-                .Where(s => s.Id == CategoriesId).FirstOrDefaultAsync();
+                .Where(s => s.Id == categoriesId).FirstOrDefaultAsync();
         }
 
-        // VyVNK1 METHOD CREATE Categories
-        public void CreateCategories(Categories Categories)
+        /// <summary>
+        /// VyVNK1 METHOD CREATE Categories
+        /// </summary>
+        /// <param name="Categories"></param>
+        public void CreateCategories(Categories categories)
         {
-            _context.Categories.Add(Categories);
+            _context.Categories.Add(categories);
         }
 
 
-        //  VyVNK1 METHOD DELETE Categories
-        public void DeleteCategories(Categories Categories)
+        /// <summary>
+        ///  VyVNK1 METHOD DELETE Categories
+        /// </summary>
+        /// <param name="Categories"></param>
+        public void DeleteCategories(Categories categories)
         {
-            _context.Categories.Remove(Categories);
+            _context.Categories.Remove(categories);
         }
 
-        //  VyVNK1  METHOD UPDATE Categories
-        public void UpdateCategories(Categories Categories)
+        /// <summary>
+        ///  VyVNK1  METHOD UPDATE Categories
+        /// </summary>
+        /// <param name="Categories"></param>
+        public void UpdateCategories(Categories categories)
         {
-            _context.Entry(Categories).State = EntityState.Modified;
+            _context.Entry(categories).State = EntityState.Modified;
         }
 
         public bool SaveChange()

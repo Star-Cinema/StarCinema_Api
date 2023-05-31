@@ -21,42 +21,37 @@ namespace StarCinema_Api.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoriesService _CategoriesService;
+        private readonly ICategoriesService _categoriesService;
 
-        public CategoriesController(ICategoriesService CategoriesService)
+        public CategoriesController(ICategoriesService categoriesService)
         {
-            _CategoriesService = CategoriesService;
+            _categoriesService = categoriesService;
         }
 
         // VYVNK1 POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<IActionResult> CreateCategories(CategoriesDTO CategoriesDTO)
+        public async Task<IActionResult> CreateCategories(CategoriesDTO categoriesDTO)
         {
-            var resData = await _CategoriesService.CreateCategories(CategoriesDTO);
+            var resData = await _categoriesService.CreateCategories(categoriesDTO);
             return StatusCode(resData.code, resData);
         }
 
         // VYVNK1 PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategories(int id, CategoriesDTO Categories)
+        public async Task<IActionResult> UpdateCategories(int id, CategoriesDTO categories)
         {
-            var resData = await _CategoriesService.UpdateCategories(id, Categories);
+            var resData = await _categoriesService.UpdateCategories(id, categories);
             return StatusCode(resData.code, resData);
         }
 
         // VYVNK1 DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteCategories(int id, CategoriesDTO Categories)
-        //{
-        //    var resData = await _CategoriesService.DeleteCategoriesById(id, Categories);
-        //    return StatusCode(resData.code, resData);
-        //}
 
         public async Task<IActionResult> DeleteCategories(int id)
         {
-            var resData = await _CategoriesService.DeleteCategoriesById(id);
+            var resData = await _categoriesService.DeleteCategoriesById(id);
             return StatusCode(resData.code, resData);
         }
 
@@ -64,7 +59,7 @@ namespace StarCinema_Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetCategories(string? name, int page = 0, int limit = 10)
         {
-            var resData = await _CategoriesService.GetAllCategories(name);
+            var resData = await _categoriesService.GetAllCategories(name);
             return StatusCode(resData.code, resData);
         }
 
@@ -72,7 +67,7 @@ namespace StarCinema_Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetCategoriesById(int id)
         {
-            var resData = await _CategoriesService.GetCategoriesById(id);
+            var resData = await _categoriesService.GetCategoriesById(id);
             return StatusCode(resData.code, resData);
         }
     }

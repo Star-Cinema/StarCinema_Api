@@ -12,8 +12,8 @@ using StarCinema_Api.Data;
 namespace StarCinema_Api.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230531124157_initDb")]
-    partial class initDb
+    [Migration("20230531162421_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

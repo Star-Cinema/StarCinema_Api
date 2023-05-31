@@ -10,17 +10,16 @@
 ///
 using StarCinema_Api.DTOs;
 using StarCinema_Api.Data.Entities;
-using StarCinema_Api.DTOs;
 
 namespace StarCinema_Api.Repositories.FilmsRepository
 {
     public interface IFilmsRepository
     {
-        Task<PaginationDTO<Films>> getAllFilms(string? search,
+        Task<PaginationDTO<Films>> GetAllFilms(string? search,
             int page = 0, int limit = 10);
-        Task<List<Films>> getNowShowingFilms();
-        Task<List<Films>> getUpComingFilms();
-        Task<Films> getFilmById(int filmId);
+        Task<List<Films>> GetNowShowingFilms();
+        Task<List<Films>> GetUpComingFilms();
+        Task<Films> GetFilmById(int filmId);
         void CreateFilm(Films film);
         void CreateImage(Images image);
         void UpdateImage(int filmId, string path);

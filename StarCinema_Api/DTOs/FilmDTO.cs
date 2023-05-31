@@ -1,11 +1,11 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FileName: FilmDTO.cs
-//FileType: Visual C# Source file
-//Author : VyVNK1
-//Created On : 20/05/2023
-//Last Modified On : 24/05/2023
-//Copy Rights : FA Academy
-//Description : Film DTO
+///FileName: FilmDTO.cs
+///FileType: Visual C# Source file
+///Author : VyVNK1
+///Created On : 20/05/2023
+///Last Modified On : 24/05/2023
+///Copy Rights : FA Academy
+///Description : Film DTO
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///
 using StarCinema_Api.Data.Entities;

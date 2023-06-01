@@ -67,6 +67,20 @@ namespace StarCinema_Api.Data.Seed
             };
             await context.Films.AddRangeAsync(films);
 
+            List<Images> images = new List<Images>()
+            {
+                new Images() {FilmId = 1, Name = "1", Path = "1"},
+                new Images() {FilmId = 2, Name = "2", Path = "2"},
+                new Images() {FilmId = 3, Name = "3", Path = "3"},
+                new Images() {FilmId = 4, Name = "4", Path = "4"},
+                new Images() {FilmId = 5, Name = "5", Path = "5"},
+                new Images() {FilmId = 6, Name = "6", Path = "6"},
+                new Images() {FilmId = 7, Name = "7", Path = "7"},
+                new Images() {FilmId = 8, Name = "8", Path = "8"},
+            };
+            await context.Images.AddRangeAsync(images);
+
+
             List<Schedules> schedules = new List<Schedules>()
             {
                 new Schedules() {StartTime = new DateTime(2023,05,31,09,00,00), EndTime= new DateTime(2023,05,31,11,00,00), FilmId = 1, RoomId = 1 },
@@ -226,7 +240,7 @@ namespace StarCinema_Api.Data.Seed
                     Name = "Nguyen Van Tuan05", Phone="0935699934", Dob= new DateTime(2001,06,01,19,00,00),
                     IsDelete=false, RoleId=2, Gender=true, IsEmailVerified=false  },
                 new User() { Email="hungklyhongkl@gmail.com", PasswordSalt = passwordSalt, PasswordHash=passwordHash,
-                    Name = "Trần Văn Hùng", Phone="0935699934", Dob= new DateTime(2001,06,01,19,00,00),
+                    Name = "Trần Đức Hùng", Phone="0326614248", Dob= new DateTime(2001,07,26,00,00,00),
                     IsDelete=false, RoleId=2, Gender=true, IsEmailVerified=false  },
             };
             await context.Users.AddRangeAsync(users);

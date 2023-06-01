@@ -13,4 +13,10 @@ II. Install
 2. Change connection string match current local data-source.
 3. Start with debug.
 
-
+III. Access Website StarCinema Admin
+1. Role Admin:
+  + Email: admin@gmail.com
+  + Password: 123456
+2. Role User:
+  + Email: user01@gmail.com
+  + Password: 123456

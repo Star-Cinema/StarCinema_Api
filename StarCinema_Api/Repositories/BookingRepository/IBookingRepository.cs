@@ -22,6 +22,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
         /// change status booking to success 
         /// </summary>
         void UpdateBookingToSuccess(int bookingId);
+        /// <summary>
+        /// change status booking to cancel 
+        /// </summary>
+        void UpdateBookingToCancel(int bookingId);
 
         /// <summary>
         /// Get Revenue12Month in chart of dashboard screen
@@ -67,7 +71,14 @@ namespace StarCinema_Api.Repositories.BookingRepository
         /// Create Booking By User
         /// </summary>
         Task<BookingUserDTO> CreateBookingByUser(BookingAddEditDTO bookingAddEditDTO, int userId);
+        /// <summary>
+        /// Delete Booking
+        /// </summary>
         void DeleteBooking(Bookings bookings);
+        /// <summary>
+        /// Add field urlPayment
+        /// </summary>
+        void AddUrlPayment(Bookings booking, string urlPayment);
 
     }
 }

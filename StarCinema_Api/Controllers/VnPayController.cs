@@ -57,8 +57,7 @@ namespace StarCinema_Api.Controllers
         [HttpGet(Name ="re-payment")]
         public async Task<IActionResult> RePayment(int bookingId)
         {
-            var vnpayData = Request.Query;
-            var resData = await _vnPayService.RePayment(vnpayData);
+            var resData = await _vnPayService.RePayment(bookingId);
             return StatusCode(resData.code, resData);
         }
 

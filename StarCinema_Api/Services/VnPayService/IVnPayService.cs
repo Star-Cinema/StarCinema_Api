@@ -21,5 +21,10 @@ namespace StarCinema_Api.Services.VnPayService
         /// </summary>
         /// <param name="vnpayData"></param>
         Task<ResponseDTO> ReturnPayment(IQueryCollection vnpayData);
+        /// <summary>
+        /// Re payment
+        /// </summary>
+        /// <param name="bookingId"></param>
+        Task<ResponseDTO> RePayment(int bookingId);
     }
 }

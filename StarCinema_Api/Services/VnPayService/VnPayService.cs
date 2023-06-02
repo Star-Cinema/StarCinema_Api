@@ -248,6 +248,29 @@ namespace StarCinema_Api.Services.VnPayService
             }
         }
 
+        public async Task<ResponseDTO> RePayment(int bookingId)
+        {
+            var booking = await _bookingRepository.GetByIdAsync(bookingId);
+            if(booking == null || booking.IsDelete == true)
+            {
+                return new ResponseDTO
+                {
+                    code = 404,
+                    message = $"Does not exist booking with id {bookingId}"
+                };
+            }
+            if (booking.Status != "Pending") return new ResponseDTO
+            {
+                code = 404,
+                message = "Booking has been overdue"
+            };
+            return new ResponseDTO
+            {
+                code = 200,
+                message = "Success",
+                data = booking.UrlPayment
+            };
+        }
     }
 
 }

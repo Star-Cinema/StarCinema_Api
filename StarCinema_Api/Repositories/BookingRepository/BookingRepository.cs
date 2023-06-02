@@ -305,6 +305,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 newBooking.UserId = (int)userId;  // get current user 
                 newBooking.CreateAt = DateTime.Now;     // wait discus
                 newBooking.Status = "Success";
+                newBooking.UrlPayment = "";
                 newBooking.Services = new List<Data.Entities.Services>();
                 newBooking.Services.AddRange(listServices);
                 await context.Bookings.AddAsync(newBooking);
@@ -383,6 +384,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                 newBooking.UserId = (int)userId;  // get current user 
                 newBooking.CreateAt = DateTime.Now;     // wait discus
                 newBooking.Status = "Pending";
+                newBooking.UrlPayment = "";
                 newBooking.Services = new List<Data.Entities.Services>();
                 newBooking.Services.AddRange(listServices);
                 await context.Bookings.AddAsync(newBooking);

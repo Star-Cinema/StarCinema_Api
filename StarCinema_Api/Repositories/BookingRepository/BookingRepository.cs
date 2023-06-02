@@ -29,7 +29,8 @@ namespace StarCinema_Api.Repositories.BookingRepository
         public async Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id, int page, int pageSize)
         {
             var query = (from b in context.Bookings
-                         where b.IsDelete == false && b.Status.Equals("Success")
+                             //where b.IsDelete == false && b.Status.Equals("Success")
+                         where b.IsDelete == false
                          join bd in context.BookingDetails on b.Id equals bd.BookingId
                          join u in context.Users on b.UserId equals u.Id
                          join t in context.Tickets on bd.TicketId equals t.Id
@@ -42,6 +43,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                          {
                              Id = b.Id,
                              UserId = u.Id,
+                             Status = b.Status,
                              CreateAt = b.CreateAt,
                              TotalPriceTickets = totalPriceTickets,
                              TotalPriceServices = totalPriceServices,

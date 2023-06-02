@@ -28,33 +28,35 @@ namespace StarCinema_Api.Repositories.BookingRepository
         /// <returns></returns>
         public async Task<PaginationDTO<BookingDTO>> GetTransactionHistory(int id, int page, int pageSize)
         {
-            var query =  (from b in context.Bookings
-                                where b.IsDelete == false && b.Status.Equals("Success")
-                                join bd in context.BookingDetails on b.Id equals bd.BookingId
-                                join u in context.Users on b.UserId equals u.Id
-                                join t in context.Tickets on bd.TicketId equals t.Id
-                                join s in context.Schedules on t.ScheduleId equals s.Id
-                                join f in context.Films on s.FilmId equals f.Id
-                                let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
-                                            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
-                                let totalPriceServices = b.Services.Sum(e => e.Price)
-                                select new BookingDTO
-                                {
-                                    Id = b.Id,
-                                    UserId = u.Id,
-                                    CreateAt = b.CreateAt,
-                                    TotalPriceTickets = totalPriceTickets,
-                                    TotalPriceServices = totalPriceServices,
-                                    TotalPrice = totalPriceTickets + totalPriceServices,
-                                    FilmName = f.Name,
-                                    UserName = u.Name,
-                                }).AsQueryable();
+            var query = (from b in context.Bookings
+                             //where b.IsDelete == false && b.Status.Equals("Success")
+                         where b.IsDelete == false
+                         join bd in context.BookingDetails on b.Id equals bd.BookingId
+                         join u in context.Users on b.UserId equals u.Id
+                         join t in context.Tickets on bd.TicketId equals t.Id
+                         join s in context.Schedules on t.ScheduleId equals s.Id
+                         join f in context.Films on s.FilmId equals f.Id
+                         let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
+                                     .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
+                         let totalPriceServices = b.Services.Sum(e => e.Price)
+                         select new BookingDTO
+                         {
+                             Id = b.Id,
+                             UserId = u.Id,
+                             Status = b.Status,
+                             CreateAt = b.CreateAt,
+                             TotalPriceTickets = totalPriceTickets,
+                             TotalPriceServices = totalPriceServices,
+                             TotalPrice = totalPriceTickets + totalPriceServices,
+                             FilmName = f.Name,
+                             UserName = u.Name,
+                         }).AsQueryable();
 
             if (id > 0)
             {
                 query = query.Where(e => e.UserId == id);
             }
-            
+
             var listBooking = query.Distinct().ToList();
             listBooking = listBooking.Skip(10 * 0).Take(10).ToList();
 
@@ -116,15 +118,15 @@ namespace StarCinema_Api.Repositories.BookingRepository
         public async Task<StatisticalDTO> GetStatistical()
         {
             var totalRevenueServicesByMonth = context.Payments
-                    .Where(e=>e.CreatedDate.Month == DateTime.Today.Month).Sum(e => e.PriceService) ;
+                    .Where(e => e.CreatedDate.Month == DateTime.Today.Month).Sum(e => e.PriceService);
             var totalRevenueServicesByLastMonth = context.Payments
-                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-1).Month ).Sum(e => e.PriceService);
+                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-1).Month).Sum(e => e.PriceService);
             var percentRevenueGrowthServices = totalRevenueServicesByLastMonth == 0 ? 0 : ((totalRevenueServicesByMonth - totalRevenueServicesByLastMonth) / (totalRevenueServicesByLastMonth)) * 100;
-            
+
             var totalRevenueTicketsByMonth = context.Payments
                     .Where(e => e.CreatedDate.Month == DateTime.Today.Month).Sum(e => e.PriceTicket);
             var totalRevenueTicketsByLastMonth = context.Payments
-                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-1).Month ).Sum(e => e.PriceTicket);
+                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-1).Month).Sum(e => e.PriceTicket);
             var percentRevenueGrowthTickets = totalRevenueTicketsByLastMonth == 0 ? 0 : ((totalRevenueTicketsByMonth - totalRevenueTicketsByLastMonth) / (totalRevenueTicketsByLastMonth)) * 100;
 
             var totalRevenueByMonth = totalRevenueServicesByMonth + totalRevenueTicketsByMonth;
@@ -153,10 +155,10 @@ namespace StarCinema_Api.Repositories.BookingRepository
         {
             List<double> listtRevenueServices = new List<double>();
             List<double> listtRevenueTicket = new List<double>();
-            for (int i = 0; i < 12 ; i++)
+            for (int i = 0; i < 12; i++)
             {
                 var totalRevenueServicesOfMonth = context.Payments
-                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-i).Month ).Sum(e => e.PriceService);
+                    .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-i).Month).Sum(e => e.PriceService);
                 var totalRevenueTicketsOfMonth = context.Payments
                     .Where(e => e.CreatedDate.Month == DateTime.Now.AddMonths(-i).Month).Sum(e => e.PriceTicket);
                 listtRevenueServices.Add(totalRevenueServicesOfMonth);
@@ -181,31 +183,31 @@ namespace StarCinema_Api.Repositories.BookingRepository
 
             var listSeat = await (from s in context.Seats
                                   where s.RoomId == roomId
-                                 select new Seats
-                                 {
-                                     Id = s.Id,
-                                     Name = s.Name
-                                 }).Distinct().ToListAsync();
+                                  select new Seats
+                                  {
+                                      Id = s.Id,
+                                      Name = s.Name
+                                  }).Distinct().ToListAsync();
 
             var listSeatsBooked = await (from bd in context.BookingDetails
-                         join b in context.Bookings on bd.BookingId equals b.Id
-                         join t in context.Tickets on bd.TicketId equals t.Id
-                         join se in context.Seats on bd.SeatId equals se.Id
-                         join sc in context.Schedules on t.ScheduleId equals sc.Id
-                         join r in context.Rooms on sc.RoomId equals r.Id
-                         where sc.FilmId == filmId && sc.Id == scheduleId
-                            //&& !b.Status.Equals("Exprired") 
-                            && b.Status.Equals("Success")
-                            && r.Id == roomId
-                         select new Seats
-                         {
-                             Id = bd.SeatId,
-                             Name = se.Name
-                         }).Distinct().ToListAsync();
+                                         join b in context.Bookings on bd.BookingId equals b.Id
+                                         join t in context.Tickets on bd.TicketId equals t.Id
+                                         join se in context.Seats on bd.SeatId equals se.Id
+                                         join sc in context.Schedules on t.ScheduleId equals sc.Id
+                                         join r in context.Rooms on sc.RoomId equals r.Id
+                                         where sc.FilmId == filmId && sc.Id == scheduleId
+                                            //&& !b.Status.Equals("Exprired") 
+                                            && b.Status.Equals("Success")
+                                            && r.Id == roomId
+                                         select new Seats
+                                         {
+                                             Id = bd.SeatId,
+                                             Name = se.Name
+                                         }).Distinct().ToListAsync();
 
             var listSeatsNotBooked = (from l in listSeat
-                                     where !(listSeatsBooked.Any(e => e.Id == l.Id))
-                                     select l).ToList();
+                                      where !(listSeatsBooked.Any(e => e.Id == l.Id))
+                                      select l).ToList();
 
             return listSeatsNotBooked;
         }
@@ -275,7 +277,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
         /// <returns></returns>
         public async Task<List<Films>> GetAllFilms()
         {
-            var result = await context.Films.Where(e=>e.IsDelete == false).ToListAsync();
+            var result = await context.Films.Where(e => e.IsDelete == false).ToListAsync();
             return result;
         }
 
@@ -445,28 +447,79 @@ namespace StarCinema_Api.Repositories.BookingRepository
         /// <returns></returns>
         public async Task<PaginationDTO<BookingDTO>> GetAllByPage(string? keySearch, int page, int pageSize)
         {
-            var query =  (from b in context.Bookings
-                                join p in context.Payments on b.Id equals p.bookingId
-                                join bd in context.BookingDetails on b.Id equals bd.BookingId
-                                join u in context.Users on b.UserId equals u.Id
-                                join t in context.Tickets on bd.TicketId equals t.Id
-                                join s in context.Schedules on t.ScheduleId equals s.Id
-                                join f in context.Films on s.FilmId equals f.Id
-                                where b.IsDelete == false 
-                               select new BookingDTO
-                                {
-                                    Id = b.Id,
-                                    UserId = u.Id,
-                                    CreateAt = b.CreateAt,
-                                    Status = b.Status,
-                                    TotalPriceTickets = p.PriceTicket == null ? 0 : p.PriceTicket,
-                                    TotalPriceServices = p.PriceService == null ? 0 : p.PriceService,
-                                    TotalPrice = p.PriceTicket + p.PriceService,
-                                    FilmName = f.Name,
-                                    UserName = u.Name,
-                                }).AsQueryable();
-            
-            if(keySearch != null)
+            //var query = (from b in context.Bookings
+            //             join p in context.Payments on b.Id equals p.bookingId
+            //             join bd in context.BookingDetails on b.Id equals bd.BookingId
+            //             join u in context.Users on b.UserId equals u.Id
+            //             join t in context.Tickets on bd.TicketId equals t.Id
+            //             join s in context.Schedules on t.ScheduleId equals s.Id
+            //             join f in context.Films on s.FilmId equals f.Id
+            //             where b.IsDelete == false
+            //             select new BookingDTO
+            //             {
+            //                 Id = b.Id,
+            //                 UserId = u.Id,
+            //                 CreateAt = b.CreateAt,
+            //                 Status = b.Status,
+            //                 TotalPriceTickets = p.PriceTicket == null ? 0 : p.PriceTicket,
+            //                 TotalPriceServices = p.PriceService == null ? 0 : p.PriceService,
+            //                 TotalPrice = p.PriceTicket + p.PriceService,
+            //                 FilmName = f.Name,
+            //                 UserName = u.Name,
+            //             }).AsQueryable();
+
+            var query = (from b in context.Bookings
+                         join bd in context.BookingDetails on b.Id equals bd.BookingId
+                         join u in context.Users on b.UserId equals u.Id
+                         join t in context.Tickets on bd.TicketId equals t.Id
+                         join s in context.Schedules on t.ScheduleId equals s.Id
+                         join f in context.Films on s.FilmId equals f.Id
+                         let totalPriceTickets = (context.BookingDetails.Include(e => e.Ticket)
+                                            .Where(e => e.BookingId == b.Id).Sum(x => x.Ticket.Price))
+                         let totalPriceServices = b.Services.Sum(e => e.Price)
+
+                         where b.IsDelete == false
+                         select new BookingDTO
+                         {
+                             Id = b.Id,
+                             UserId = u.Id,
+                             CreateAt = b.CreateAt,
+                             Status = b.Status,
+                             TotalPriceTickets = totalPriceTickets,
+                             TotalPriceServices = totalPriceServices,
+                             TotalPrice = totalPriceTickets + totalPriceServices,
+                             FilmName = f.Name,
+                             UserName = u.Name,
+                         }).AsQueryable();
+
+            //var query2 = (from b in context.Bookings
+            //              join p in context.Payments on b.Id equals p.bookingId
+            //              join bd in context.BookingDetails on b.Id equals bd.BookingId
+            //              join u in context.Users on b.UserId equals u.Id
+            //              join t in context.Tickets on bd.TicketId equals t.Id
+            //              join s in context.Schedules on t.ScheduleId equals s.Id
+            //              join f in context.Films on s.FilmId equals f.Id
+            //              where b.IsDelete == false
+            //              select new BookingDTO
+            //              {
+            //                  Id = b.Id,
+            //                  UserId = u.Id,
+            //                  CreateAt = b.CreateAt,
+            //                  Status = b.Status,
+            //                  FilmName = f.Name,
+            //                  UserName = u.Name,
+            //              }).AsQueryable();
+
+            //if (keySearch != null)
+            //{
+            //    query2 = query2.Where(e => e.FilmName.Contains(keySearch) || e.UserName.Contains(keySearch)
+            //                || e.Id.Equals(keySearch));
+            //}
+
+            //var listBooking2 = query2.Distinct().ToList();
+
+
+            if (keySearch != null)
             {
                 query = query.Where(e => e.FilmName.Contains(keySearch) || e.UserName.Contains(keySearch)
                             || e.Id.Equals(keySearch));

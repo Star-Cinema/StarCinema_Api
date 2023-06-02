@@ -59,7 +59,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
             }
 
             var listBooking = query.Distinct().ToList();
-            listBooking = listBooking.Skip(10 * 0).Take(10).ToList();
+            listBooking = listBooking.Skip(pageSize * (page-1)).Take(pageSize).ToList();
 
             var pagination = new PaginationDTO<BookingDTO>();
 

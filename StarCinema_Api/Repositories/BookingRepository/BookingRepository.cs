@@ -50,6 +50,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                              TotalPrice = totalPriceTickets + totalPriceServices,
                              FilmName = f.Name,
                              UserName = u.Name,
+                             UrlPayment = b.UrlPayment
                          }).AsQueryable();
 
             if (id > 0)
@@ -492,6 +493,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                              TotalPrice = totalPriceTickets + totalPriceServices,
                              FilmName = f.Name,
                              UserName = u.Name,
+                             UrlPayment = b.UrlPayment
                          }).AsQueryable();
 
             //var query2 = (from b in context.Bookings
@@ -565,6 +567,7 @@ namespace StarCinema_Api.Repositories.BookingRepository
                                    TotalPrice = p.PriceTicket + p.PriceService,
                                    FilmName = f.Name,
                                    UserName = u.Name,
+                                   UrlPayment = b.UrlPayment
                                }).FirstOrDefaultAsync();
             return query;
         }

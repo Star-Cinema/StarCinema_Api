@@ -188,6 +188,8 @@ namespace StarCinema_Api.Services.VnPayService
                 }
                 else
                 {
+                    _bookingRepository.UpdateBookingToCancel(bookingId);
+                    _bookingRepository.Save();
                     return new ResponseDTO
                     {
                         code = 500,
@@ -197,6 +199,8 @@ namespace StarCinema_Api.Services.VnPayService
             }
             else
             {
+                _bookingRepository.UpdateBookingToCancel(bookingId);
+                _bookingRepository.Save();
                 return new ResponseDTO
                 {
                     code = 500,

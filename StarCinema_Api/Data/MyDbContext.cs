@@ -25,6 +25,11 @@ namespace StarCinema_Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<BookingDetail>()
+                        .HasOne(b => b.Ticket) 
+                        .WithMany(t => t.BookingDetails)
+                        .HasForeignKey(t => t.TicketId)
+                        .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

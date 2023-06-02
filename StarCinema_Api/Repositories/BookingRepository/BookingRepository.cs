@@ -103,6 +103,13 @@ namespace StarCinema_Api.Repositories.BookingRepository
             context.Bookings.Update(booking);
             context.SaveChanges();
         }
+        public void UpdateBookingToCancel(int bookingId)
+        {
+            var booking = context.Bookings.Where(e => e.Id == bookingId).FirstOrDefault();
+            booking.Status = "Cancel";
+            context.Bookings.Update(booking);
+            context.SaveChanges();
+        }
 
         /// <summary>
         /// TuNT37 Get Statistical in dashboard screen
@@ -560,5 +567,9 @@ namespace StarCinema_Api.Repositories.BookingRepository
             return query;
         }
 
+        public void AddUrlPayment(Bookings booking, string urlPayment)
+        {
+            context.Entry(booking).State = EntityState.Modified;
+        }
     }
 }

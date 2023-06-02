@@ -21,6 +21,7 @@ namespace StarCinema_Api.DTOs
         public string? FilmName { get; set; }
 
         public string? UserName { get; set; }
+        public string? UrlPayment { get; set; }
 
         public List<BookingDetail>? BookingDetails { get; set; }
         public List<Data.Entities.Services>? Services { get; set; }

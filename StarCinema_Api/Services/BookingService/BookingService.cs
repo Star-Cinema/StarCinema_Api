@@ -212,7 +212,6 @@ namespace StarCinema_Api.Services.BookingService
         {
             try
             {
-                _bookingsRepository.UpdateBookingsToExpired();
                 var result = await _bookingsRepository.CreateBookingByAdmin(bookingAddEditDTO, UserId) ;
                
                 return new ResponseDTO
@@ -241,7 +240,6 @@ namespace StarCinema_Api.Services.BookingService
         {
             try
             {
-                _bookingsRepository.UpdateBookingsToExpired();
                 var result = await _bookingsRepository.CreateBookingByUser(bookingAddEditDTO, userId);                
                 var vnPay = await _vnPayService.CreateUrlPayment(result.BookingId, result.PriceTicket, result.PriceService );
                 var booking = await _bookingsRepository.GetByIdAsync(result.BookingId);

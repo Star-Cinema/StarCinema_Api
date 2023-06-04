@@ -80,6 +80,10 @@ services.AddScoped<IBookingService, BookingService>();
 services.AddScoped<IRoomRepository, RoomRepository>();
 services.AddScoped<IVnPayService, VnPayService>();
 services.AddScoped<IPaymentService, PaymentService>();
+
+// Background service
+services.AddHostedService<BookingExpirationService>();
+
 services.AddScoped<IEmailService , EmailService>();
 services.AddAutoMapper(typeof(MapperProfile).Assembly);
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
